@@ -260,42 +260,36 @@ int main() {
 
 /* SLIDE 8 — Attendance if/else demo */
 function initAttendanceDemo() {
-  const slider = document.getElementById('attendance-slider');
+  const slider    = document.getElementById('attendance-slider');
   const sliderVal = document.getElementById('attendance-val');
   const resultEl  = document.getElementById('attendance-result');
   const codeEl    = document.getElementById('attendance-code');
 
+  if (!slider) return;
+
   function update(val) {
     if (sliderVal) sliderVal.textContent = val + '%';
-
     const isAllowed = val >= 75;
     if (resultEl) {
       resultEl.textContent = isAllowed ? '✅ Allowed' : '❌ Not Allowed';
-      resultEl.style.color = isAllowed ? 'var(--accent-green)' : '#f87171';
-      resultEl.style.background = isAllowed ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';
-      resultEl.style.border = isAllowed ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(239,68,68,0.3)';
+      resultEl.style.color      = isAllowed ? 'var(--accent-green)' : '#f87171';
+      resultEl.style.background = isAllowed ? 'rgba(34,197,94,0.1)'  : 'rgba(239,68,68,0.1)';
+      resultEl.style.border     = isAllowed ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(239,68,68,0.3)';
     }
-
     if (codeEl) {
-      const plain = val >= 75
-        ? `if (attendance &gt;= 75) {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Allowed";<br>
-           } else {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Not Allowed";<br>
-           }`
-        : `if (attendance &gt;= 75) {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Allowed";<br>
-           } else {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Not Allowed"; <span style="color:var(--text-dim)">// ← this runs</span><br>
-           }`;
-      codeEl.innerHTML = plain;
+      codeEl.innerHTML = val >= 75
+        ? `if (attendance &gt;= 75) {<br>&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Allowed";<br>} else {<br>&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Not Allowed";<br>}`
+        : `if (attendance &gt;= 75) {<br>&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Allowed";<br>} else {<br>&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Not Allowed"; <span style="color:var(--text-dim)">// ← this runs</span><br>}`;
     }
   }
 
-  if (slider) {
-    slider.addEventListener('input', () => update(parseInt(slider.value)));
-    update(parseInt(slider.value));
-  }
+  // Idempotent — replace listener by cloning the slider element
+  const newSlider = slider.cloneNode(true);
+  slider.parentNode.replaceChild(newSlider, slider);
+  newSlider.addEventListener('input', () => update(parseInt(newSlider.value)));
+
+  // Run immediately so result box is populated on first view
+  update(parseInt(newSlider.value));
 }
 
 /* SLIDE 13 — Even/Odd challenge runner */
