@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Problems — CS Chapter Workshop</title>
+  <link rel="stylesheet" href="css/workshop.css" />
+  <style>
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); margin: 0; padding: 0; }
+    .page { max-width: 1000px; margin: 0 auto; padding: 40px 32px; }
+    .pp-header { text-align: center; margin-bottom: 40px; }
+    .pp-header h1 { font-size: 2.4em; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--accent-purple) 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 8px; }
+    .pp-header p  { color: var(--text-muted); }
+    .prob-list { display: flex; flex-direction: column; gap: 18px; }
+    .prob-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s; }
+    .prob-card:hover { border-color: var(--border-glow); }
+    .prob-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .prob-num  { font-family: var(--font-mono); font-size: 1.4em; font-weight: 900; color: var(--accent-cyan); min-width: 36px; }
+    .prob-title { font-size: 1.05em; font-weight: 800; color: var(--text-primary); flex: 1; }
+    .prob-tags  { display: flex; gap: 6px; flex-wrap: wrap; }
+    .prob-body  { padding: 16px 20px; }
+    .prob-desc  { font-size: 0.9em; color: var(--text-muted); line-height: 1.6; margin: 0 0 12px; }
+    .prob-io    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .prob-io-box { background: var(--bg-terminal); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+    .prob-io-label { font-size: 0.68em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .prob-io-val   { font-family: var(--font-mono); font-size: 0.85em; color: #e2e8f0; }
+    .hint-toggle { background: none; border: 1px solid rgba(251,191,36,0.25); color: var(--accent-yellow); border-radius: 7px; padding: 7px 16px; font-size: 0.8em; font-weight: 700; cursor: pointer; transition: all 0.18s; font-family: var(--font-sans); }
+    .hint-toggle:hover { background: rgba(251,191,36,0.1); }
+    .hint-text { display: none; margin-top: 10px; padding: 10px 14px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 8px; font-size: 0.85em; color: var(--text-muted); }
+    .hint-text.open { display: block; }
+    .diff-easy   { background: rgba(34,197,94,0.12); color: var(--accent-green); border: 1px solid rgba(34,197,94,0.25); border-radius: 999px; padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
+    .diff-medium { background: rgba(251,191,36,0.12); color: var(--accent-yellow); border: 1px solid rgba(251,191,36,0.25); border-radius: 999px; padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 24px; transition: all 0.18s; }
+    .back-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    .concept-tag { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.2); border-radius: 6px; padding: 2px 8px; font-size: 0.72em; font-weight: 600; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-btn">← Back to Workshop</a>
+
+  <div class="pp-header">
+    <h1>Practice Problems 🏋️</h1>
+    <p>10 beginner problems to try this week. Try each one yourself before looking at hints.</p>
+  </div>
+
+  <div class="prob-list">
+
+    <!-- 1 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">01</div>
+        <div class="prob-title">Hello World</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">cout</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Print the text "Hello, World!" to the screen. The classic first program every developer writes.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">None</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Hello, World!</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Use <code style="font-family:monospace;color:#00d4ff">cout &lt;&lt; "Hello, World!";</code> inside your main() function.</div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">02</div>
+        <div class="prob-title">Add Two Numbers</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">cin</span>
+          <span class="concept-tag">variables</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read two integers from input and print their sum.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5 7</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">12</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Declare two int variables. Read them with <code style="font-family:monospace;color:#00d4ff">cin &gt;&gt; a &gt;&gt; b;</code> then print <code style="font-family:monospace;color:#00d4ff">a + b</code>.</div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">03</div>
+        <div class="prob-title">Larger of Two Numbers</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">if/else</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read two integers. Print the larger one. If they are equal, print either.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">15 9</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Read a and b. Use <code style="font-family:monospace;color:#00d4ff">if (a &gt; b)</code> to check which is larger. Don't forget the else branch.</div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">04</div>
+        <div class="prob-title">Even or Odd</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">if/else</span>
+          <span class="concept-tag">%</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read a number. Print "Even" if it is divisible by 2, otherwise print "Odd".</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">7</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Odd</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text"><code style="font-family:monospace;color:#00d4ff">n % 2</code> gives the remainder when divided by 2. If remainder is 0 → Even. Otherwise → Odd.</div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">05</div>
+        <div class="prob-title">Positive, Negative, or Zero</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">if/else if</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read a number. Print "Positive" if &gt; 0, "Negative" if &lt; 0, or "Zero" if equal to 0.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">-5</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Negative</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Use an if / else if / else chain. Three conditions: n &gt; 0, n &lt; 0, and the else covers n == 0.</div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">06</div>
+        <div class="prob-title">Simple Calculator</div>
+        <div class="prob-tags">
+          <span class="diff-medium">Medium</span>
+          <span class="concept-tag">if/else</span>
+          <span class="concept-tag">operators</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read two numbers and an operator (+, -, *, /). Perform and print the result.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">10 + 5</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Read the operator as a <code style="font-family:monospace;color:#00d4ff">char</code>. Use if/else to check which operator was entered and perform the right operation.</div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">07</div>
+        <div class="prob-title">Multiplication Table</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">loops</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read a number n. Print its multiplication table from 1 to 10.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">5 x 1 = 5<br>5 x 2 = 10<br>...<br>5 x 10 = 50</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Use a for loop from i=1 to i=10. Inside the loop: <code style="font-family:monospace;color:#00d4ff">cout &lt;&lt; n &lt;&lt; " x " &lt;&lt; i &lt;&lt; " = " &lt;&lt; n*i;</code></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">08</div>
+        <div class="prob-title">Sum 1 to N</div>
+        <div class="prob-tags">
+          <span class="diff-easy">Easy</span>
+          <span class="concept-tag">loops</span>
+          <span class="concept-tag">variables</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read a number N. Print the sum of all integers from 1 to N.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Start with <code style="font-family:monospace;color:#00d4ff">int sum = 0;</code>. Use a loop from 1 to N. Inside the loop: <code style="font-family:monospace;color:#00d4ff">sum = sum + i;</code>. Print sum after the loop.</div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">09</div>
+        <div class="prob-title">Marks Calculator</div>
+        <div class="prob-tags">
+          <span class="diff-medium">Medium</span>
+          <span class="concept-tag">if/else if</span>
+          <span class="concept-tag">variables</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Read marks (0–100). Print the grade: A (≥80), B (≥60), C (≥40), or FAIL (&lt;40).</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">72</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">B</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Use an if / else if / else if / else chain. Check conditions from highest (>=80) downward. Order matters here!</div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="prob-card">
+      <div class="prob-header">
+        <div class="prob-num">10</div>
+        <div class="prob-title">Number Guessing Game</div>
+        <div class="prob-tags">
+          <span class="diff-medium">Medium</span>
+          <span class="concept-tag">if/else</span>
+          <span class="concept-tag">while</span>
+        </div>
+      </div>
+      <div class="prob-body">
+        <p class="prob-desc">Pick a secret number (hardcode it). Keep asking the user to guess until they get it right. Tell them if their guess is too high or too low.</p>
+        <div class="prob-io">
+          <div class="prob-io-box"><div class="prob-io-label">Example Run</div><div class="prob-io-val">Guess: 50 → Too high<br>Guess: 25 → Too low<br>Guess: 37 → Correct! 🎉</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Concepts Used</div><div class="prob-io-val">while loop + if/else + cin in loop</div></div>
+        </div>
+        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
+        <div class="hint-text">Set <code style="font-family:monospace;color:#00d4ff">int secret = 42;</code> Use a while loop that keeps going until guess == secret. Inside, check if too high, too low, or correct.</div>
+      </div>
+    </div>
+
+  </div><!-- /prob-list -->
+
+  <div style="text-align:center;margin-top:36px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+    <p style="font-size:0.9em;font-weight:700;color:var(--text-primary);margin:0 0 6px">🌐 Online IDE to run your code</p>
+    <p style="font-size:0.85em;color:var(--text-muted);margin:0 0 12px">No installation needed → <strong>onlinegdb.com</strong> (select C++ from the dropdown)</p>
+    <p style="font-size:0.8em;color:var(--text-dim);margin:0">
+      📋 Cheat sheet → <a href="cheatsheet.html" style="color:var(--accent-cyan)">cheatsheet.html</a>
+      &nbsp;|&nbsp;
+      🚀 Workshop → <a href="index.html" style="color:var(--accent-cyan)">index.html</a>
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

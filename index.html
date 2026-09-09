@@ -1,0 +1,1582 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro to Programming 🚀 — CS Chapter Workshop</title>
+  <link rel="stylesheet" href="dist/reveal.css" />
+  <link rel="stylesheet" href="dist/theme/black.css" />
+  <link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="css/workshop.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+<!-- Workshop Progress Bar -->
+<div id="workshop-progress">
+  <span class="prog-label">1 / 19</span>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:5%"></div></div>
+  <div class="prog-right">
+    <span style="font-size:0.9em">⏱ ~45 min</span>
+    <span class="badge">CS CHAPTER</span>
+  </div>
+</div>
+
+<!-- Team Scoreboard (optional) -->
+<div id="scoreboard">
+  <div class="score-team"><span class="team-label">TEAM A</span><span class="team-pts" id="score-team-a">0</span></div>
+  <div class="score-team"><span class="team-label">TEAM B</span><span class="team-pts" id="score-team-b">0</span></div>
+</div>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- ====================================================
+     SLIDE 1 — HERO / ICEBREAKER
+     ==================================================== -->
+<section class="hero-slide" data-background-color="#0d0f1a">
+  <div class="hero-eyebrow">✦ CS CHAPTER WORKSHOP ✦</div>
+  <h1 class="hero-title">INTRO TO<br>PROGRAMMING</h1>
+  <p class="hero-subtitle">From Zero to Your First Program 🚀</p>
+  <div class="hero-meta">
+    <span class="badge">BEGINNERS WELCOME</span>
+    <span class="badge badge-purple">~45 MINUTES</span>
+    <span class="badge badge-green">INTERACTIVE</span>
+  </div>
+
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;max-width:580px;width:100%;margin-top:4px">
+    <p style="font-weight:700;font-size:1em;margin:0 0 6px;color:var(--text-primary)">🎤 Be honest —</p>
+    <p style="font-weight:900;font-size:1.3em;margin:0 0 16px;color:var(--text-primary)">Who here has NEVER written a program?</p>
+    <div class="icebreaker-opts">
+      <button class="ice-opt-btn" data-ice-type="never">😭 NEVER</button>
+      <button class="ice-opt-btn" data-ice-type="little">🤏 A LITTLE</button>
+      <button class="ice-opt-btn" data-ice-type="regular">💻 I CODE REGULARLY</button>
+    </div>
+    <div class="ice-response" id="ice-response"></div>
+  </div>
+
+  <div class="meme-card" style="position:absolute;right:48px;top:50%;transform:translateY(-50%);max-width:260px">
+    <span class="meme-top">🧑‍💻</span>
+    <div class="meme-title">"First time writing code"</div>
+    <div class="meme-caption">I have no idea what I'm doing.</div>
+  </div>
+
+  <aside class="notes">
+SLIDE 1 — ICEBREAKER (~2 min)
+
+"Hey everyone, welcome to the CS Chapter Workshop! Super glad you're here."
+"Real quick before we start — totally honest question."
+Click the icebreaker buttons. Ask the room to raise hands first.
+
+NEVER → "Perfect. You're EXACTLY who this is built for. Zero experience? You're starting fresh. Best way."
+A LITTLE → "Nice, small head start. Feel free to help your neighbour."
+REGULARLY → "Bro. Don't spoil the answers. Stick around — it gets fun."
+
+Goal: Relax the room. Zero intimidation. Make everyone feel safe.
+[Presenter: share a quick memory of your own first day with code here — kept casual]
+
+Transition: "Alright — so what IS programming, actually? Let me explain with food."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 2 — THE MAGGI ROBOT
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 2</span>
+    <h2>🍜 How Would You Teach a Robot to Make Maggi?</h2>
+    <div class="divider"></div>
+    <p class="muted">Computers do <em>exactly</em> what you tell them. Nothing more.</p>
+  </div>
+
+  <div class="slide-two-col ratio-40-60" style="align-items:start">
+    <div>
+      <div class="card card-accent-top" style="text-align:center;padding:24px">
+        <div style="font-size:3em">🤖</div>
+        <div style="font-weight:900;font-size:1.1em;margin:8px 0">ROBOT</div>
+        <div style="font-family:var(--font-mono);color:var(--text-muted);font-size:0.82em">Waiting for instructions...</div>
+      </div>
+      <div style="margin-top:12px;text-align:center">
+        <button class="btn btn-primary btn-sm" id="maggi-reveal-btn">▶ Show Step 1</button>
+      </div>
+      <div id="maggi-result-q" style="display:none;margin-top:14px" class="card card-accent-top yellow">
+        <p style="font-weight:700;margin:0 0 10px;color:var(--accent-yellow);font-size:0.9em">⚡ What if we skip a step?</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="😐 Robots don't 'figure out' — they execute instructions literally. Missing a step = wrong result." style="text-align:left;font-size:0.82em">🤔 Robot figures it out</button>
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="✅ Exactly! Missing or wrong instructions → wrong results. That's programming in a nutshell." style="text-align:left;font-size:0.82em">📋 Robot follows instructions</button>
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="😂 Dramatic, but not far off. Forgetting the water would be... bad." style="text-align:left;font-size:0.82em">💀 Robot explodes</button>
+        </div>
+        <div id="maggi-resp" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;font-size:0.82em;color:var(--text-primary)"></div>
+      </div>
+    </div>
+
+    <div>
+      <ul class="step-list" id="maggi-steps">
+        <li style="opacity:0"><span class="step-num">01</span>Take water 💧</li>
+        <li style="opacity:0"><span class="step-num">02</span>Boil the water 🔥</li>
+        <li style="opacity:0"><span class="step-num">03</span>Add noodles 🍜</li>
+        <li style="opacity:0"><span class="step-num">04</span>Add masala packet 🌶️</li>
+        <li style="opacity:0"><span class="step-num">05</span>Cook for 2 minutes ⏱️</li>
+        <li style="opacity:0"><span class="step-num">06</span>Serve hot 🍽️</li>
+      </ul>
+      <div class="card mt-2" style="background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2)">
+        <div class="flow-h" style="justify-content:flex-start;gap:10px;flex-wrap:wrap">
+          <div class="flow-node secondary" style="min-width:90px;padding:8px 12px;font-size:0.82em">PROBLEM</div>
+          <div class="flow-arrow-h" style="font-size:1.2em">→</div>
+          <div class="flow-node secondary" style="min-width:90px;padding:8px 12px;font-size:0.82em">INSTRUCTIONS</div>
+          <div class="flow-arrow-h" style="font-size:1.2em">→</div>
+          <div class="flow-node accent" style="min-width:90px;padding:8px 12px;font-size:0.82em">RESULT</div>
+        </div>
+        <p style="margin:10px 0 0;font-size:0.82em;color:var(--text-muted)">
+          <strong style="color:var(--accent-cyan)">Programming</strong> = giving a computer clear, step-by-step instructions to solve a problem.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 2 — MAGGI ROBOT (~3 min)
+
+"Okay forget code for a second. Imagine you're teaching a ROBOT to make Maggi."
+"Not a smart robot. A dumb one. Does EXACTLY what you say. Nothing more."
+
+Click to reveal steps one by one. Let students call them out before you reveal.
+
+"What if we skip step 2 — the boiling?" Ask the room. Then reveal response.
+
+KEY POINT: "The computer is the robot. YOUR code is the recipe."
+"Wrong steps → wrong result. Missing step → crash. Extra step → weird behavior."
+
+[Presenter: 'I once forgot a semicolon and my program refused to compile for 45 minutes.']
+
+Transition: "So how does the computer read our recipe in the first place?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 3 — HOW DOES CODE BECOME A PROGRAM?
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge">SLIDE 3</span>
+    <h2>⚙️ How Does Code Become a Program?</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="slide-two-col">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px" id="compiler-pipeline">
+      <div class="flow-node primary" style="width:180px">👤 YOU</div>
+      <div class="flow-arrow">↓<span>write code in</span></div>
+      <div class="flow-node secondary" style="width:180px">📝 C++</div>
+      <div class="flow-arrow">↓<span>goes into</span></div>
+      <div class="flow-node secondary" style="width:180px">🔧 COMPILER</div>
+      <div class="flow-arrow">↓<span>translated for</span></div>
+      <div class="flow-node secondary" style="width:180px">💻 COMPUTER</div>
+      <div class="flow-arrow">↓<span>produces</span></div>
+      <div class="flow-node accent" style="width:180px">✅ OUTPUT</div>
+      <button class="btn btn-primary btn-sm mt-2" id="pipeline-play-btn">▶ Animate Pipeline</button>
+    </div>
+
+    <div>
+      <div class="card card-accent-top mb-2">
+        <h3 style="margin-top:0">The Simple Version</h3>
+        <ul class="step-list" style="gap:8px">
+          <li><span class="step-num">1</span>We write instructions in <strong>C++</strong> — readable by humans AND tools.</li>
+          <li><span class="step-num">2</span>The <strong>compiler</strong> translates it into machine code the CPU understands.</li>
+          <li><span class="step-num">3</span>The CPU executes it and produces <strong>output</strong>.</li>
+        </ul>
+      </div>
+      <div id="mcq-compiler-container"></div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 3 — COMPILER (~2 min)
+
+"Computers don't speak C++. They speak machine code — billions of 0s and 1s."
+"The compiler is a translator. It converts our human-readable code into CPU instructions."
+
+Click ▶ Animate — watch the pipeline light up.
+
+MCQ: "Does a computer directly understand C++?" → Answer B (No)
+"Nobody panic if wrong — we literally just explained it 10 seconds ago."
+
+Transition: "Time to write our first actual program."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 4 — YOUR FIRST PROGRAM
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 4</span>
+    <h2>🖥️ Your First Program</h2>
+    <div class="divider"></div>
+    <p class="muted">Take a guess before we reveal the output.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+          <span class="terminal-title">main.cpp</span>
+        </div>
+        <div class="terminal-body">
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+
+    cout &lt;&lt; "Hello World!";
+
+    return 0;
+}
+        </div>
+      </div>
+      <div class="card mt-2" style="background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2)">
+        <p style="margin:0;font-size:0.85em">
+          <code style="color:var(--accent-cyan);font-family:var(--font-mono)">cout &lt;&lt; "Hello World!"</code>
+          <br><span style="color:var(--text-muted)">This line <strong style="color:var(--text-primary)">prints to the screen</strong>.<br>
+          cout = <em>character output</em>. &lt;&lt; points the text toward the screen.</span>
+        </p>
+      </div>
+      <div class="meme-card mt-2">
+        <span class="meme-top">😲</span>
+        <div class="meme-title">"First program works"</div>
+        <div class="meme-caption">"Wait... it actually worked?"</div>
+      </div>
+    </div>
+    <div>
+      <div id="mcq-helloworld-container"></div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 4 — FIRST PROGRAM (~3 min)
+
+Show code. Don't explain first — ask the MCQ.
+"What does this print? Genuine guess — no cheating."
+
+Reveal answer: A — Hello World!
+
+AFTER reveal, walk through the code:
+- #include iostream → loads print tools
+- using namespace std → shorthand so we don't write std::cout every time
+- int main() → every C++ program starts here
+- cout << "Hello World!" → sends text to screen
+- return 0 → tells OS the program ended fine
+
+"Don't memorise all of this today. The ONE thing that matters: cout prints stuff."
+
+Transition: "Let's actually RUN one. Right now."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 5 — LIVE CODE RUNNER
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 5</span>
+    <h2>⚡ Live Code Runner</h2>
+    <div class="divider"></div>
+    <p class="muted">Let's run something. Right now. For real.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="code-runner" id="runner-hello">
+        <div class="code-runner-header">
+          <div class="code-runner-header-left">
+            <div class="cr-dot red"></div><div class="cr-dot yellow"></div><div class="cr-dot green"></div>
+            <span class="cr-filename">hello.cpp</span>
+          </div>
+        </div>
+        <div class="code-editor-area"><!-- JS fills this --></div>
+        <div class="cr-btn-row">
+          <button class="cr-run-btn">▶ Run</button>
+          <button class="cr-reset-btn">↺ Reset</button>
+          <div class="cr-extra-btns"></div>
+        </div>
+        <div class="code-output">
+          <div class="output-header">OUTPUT</div>
+          <div class="output-body"><span class="out-prompt cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card card-accent-top purple">
+        <h3 style="margin-top:0">✏️ Personalise It</h3>
+        <p style="color:var(--text-muted);font-size:0.88em;margin-bottom:12px">
+          Type your message below → click <strong>Change Message</strong> in the runner → hit <strong>Run</strong>.
+        </p>
+        <label style="font-size:0.78em;color:var(--text-muted);font-family:var(--font-mono);display:block;margin-bottom:6px">New message:</label>
+        <input id="hello-msg-input" type="text" placeholder="Hello, Future Coder!"
+          style="width:100%;background:var(--bg-terminal);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.88em;outline:none;box-sizing:border-box" />
+        <p style="margin:12px 0 0;font-size:0.82em;color:var(--text-muted)">
+          💡 You just changed a program. That IS coding.
+        </p>
+      </div>
+
+      <div class="card mt-2" style="background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.25)">
+        <p style="margin:0;font-size:0.9em;font-weight:700;color:var(--accent-green)">🎯 MOMENT #1 — I CAN CODE</p>
+        <p style="margin:6px 0 0;font-size:0.82em;color:var(--text-muted)">
+          You changed the message. You ran the program. You made a computer do something <em>you</em> told it to.
+        </p>
+      </div>
+
+      <div class="card mt-2">
+        <p style="margin:0;font-size:0.82em;font-weight:700;color:var(--accent-yellow)">⚡ Team Challenge</p>
+        <p style="margin:4px 0 8px;font-size:0.78em;color:var(--text-muted)">Award a point to the team that shouts the best message:</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" data-score-team="A" data-points="1">+1 Team A</button>
+          <button class="btn btn-outline btn-sm" data-score-team="B" data-points="1">+1 Team B</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 5 — LIVE CODE RUNNER (~4 min)
+
+Click ▶ Run. Watch the output animate.
+
+"Who wants to change the message?"
+Get a volunteer. Type their message in the input. Click Change Message. Run again.
+Do this 2–3 times. The room usually reacts — especially when their name appears.
+
+"Congratulations. You just ran your first program." — Pause for effect.
+
+MOMENT: This is where the energy changes. People go from spectators to participants.
+
+Optional team scoring: award a point for the most creative message.
+
+Transition: "But programs only printing fixed text is kind of boring. What if it changes based on numbers? Based on INPUT?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 6 — INPUT → PROCESS → OUTPUT
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge">SLIDE 6</span>
+    <h2>📥 Input → Process → Output</h2>
+    <div class="divider"></div>
+    <p class="muted">Every useful program follows this pattern.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="io-big" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <div class="io-box">
+          <div class="io-label">INPUT</div>
+          <div class="io-val" id="io-input-box" style="font-size:1.2em;min-width:80px">10, 20</div>
+        </div>
+        <div class="io-arrow">→</div>
+        <div class="io-box">
+          <div class="io-label">PROCESS</div>
+          <div class="io-val" id="io-proc-box" style="font-size:1.2em;min-width:80px;border-color:var(--accent-purple)">+</div>
+        </div>
+        <div class="io-arrow">→</div>
+        <div class="io-box">
+          <div class="io-label">OUTPUT</div>
+          <div class="io-val" id="io-out-box" style="font-size:1.2em;min-width:80px;border-color:var(--accent-green)">30</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <input id="io-num-a" type="number" value="10" style="width:72px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-primary);font-family:var(--font-mono);font-size:1em;outline:none;text-align:center" />
+        <span style="color:var(--text-muted);font-size:1.3em;font-family:var(--font-mono)">+</span>
+        <input id="io-num-b" type="number" value="20" style="width:72px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-primary);font-family:var(--font-mono);font-size:1em;outline:none;text-align:center" />
+        <button class="btn btn-cyan btn-sm" id="io-demo-run">▶ Animate</button>
+      </div>
+
+      <div class="terminal" style="font-size:0.82em">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+          <span class="terminal-title">io_explained.cpp</span>
+        </div>
+        <div class="terminal-body" style="font-size:0.82em">
+int a, b;
+cin  &gt;&gt; a &gt;&gt; b;  // reads input
+cout &lt;&lt; a + b;    // prints output
+        </div>
+      </div>
+
+      <div class="card mt-2" style="font-size:0.82em">
+        <code style="color:var(--accent-cyan);font-family:var(--font-mono)">cin</code> = reads from keyboard &nbsp;|&nbsp;
+        <code style="color:var(--accent-green);font-family:var(--font-mono)">cout</code> = prints to screen
+      </div>
+    </div>
+
+    <div>
+      <div class="code-runner" id="runner-addition">
+        <div class="code-runner-header">
+          <div class="code-runner-header-left">
+            <div class="cr-dot red"></div><div class="cr-dot yellow"></div><div class="cr-dot green"></div>
+            <span class="cr-filename">addition.cpp</span>
+          </div>
+        </div>
+        <div class="code-editor-area"></div>
+        <div class="cr-input-section">
+          <span class="cr-input-label">Enter two numbers (e.g. 7 8):</span>
+          <input type="text" class="cr-input-field" placeholder="7 8" />
+        </div>
+        <div class="cr-btn-row">
+          <button class="cr-run-btn">▶ Run</button>
+          <button class="cr-reset-btn">↺ Reset</button>
+        </div>
+        <div class="code-output">
+          <div class="output-header">OUTPUT</div>
+          <div class="output-body"><span class="out-prompt cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 6 — INPUT/OUTPUT (~3 min)
+
+"Every useful program: takes input, does something, gives output."
+Click Animate — watch the IO boxes pulse.
+
+"Someone give me two numbers." Use those in the runner.
+Try 2–3 different pairs. Show that different input = different output.
+
+cin = computer LISTENING. cout = computer TALKING.
+"Like a calculator — you type numbers (input), it adds them (process), shows answer (output)."
+
+Transition: "But where does the computer PUT those numbers while working? It needs to remember them."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 7 — VARIABLES = BOXES
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 7</span>
+    <h2>📦 Variables = Named Boxes</h2>
+    <div class="divider"></div>
+    <p class="muted">A variable is a named box that stores a value in memory.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="var-box-container mb-2">
+        <div class="var-box">
+          <div class="var-name">age</div>
+          <div class="var-value-box">18</div>
+          <div class="var-type">int</div>
+        </div>
+        <div class="var-box">
+          <div class="var-name">marks</div>
+          <div class="var-value-box purple">92</div>
+          <div class="var-type">int</div>
+        </div>
+        <div class="var-box">
+          <div class="var-name">gpa</div>
+          <div class="var-value-box green">8.5</div>
+          <div class="var-type">double</div>
+        </div>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+          <span class="terminal-title">variables.cpp</span>
+        </div>
+        <div class="terminal-body" style="font-size:0.8em">
+int    age    = 18;
+int    marks  = 92;
+double gpa    = 8.5;
+char   grade  = 'A';
+string name   = "Rahul";
+bool   passed = true;
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="type-demo">
+        <h3 style="margin-top:0;color:var(--accent-yellow)">🧪 Explore Data Types</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <button class="btn btn-outline btn-sm" data-type="int" style="font-family:var(--font-mono)">int</button>
+          <button class="btn btn-outline btn-sm" data-type="double" style="font-family:var(--font-mono)">double</button>
+          <button class="btn btn-outline btn-sm" data-type="char" style="font-family:var(--font-mono)">char</button>
+          <button class="btn btn-outline btn-sm" data-type="string" style="font-family:var(--font-mono)">string</button>
+          <button class="btn btn-outline btn-sm" data-type="bool" style="font-family:var(--font-mono)">bool</button>
+        </div>
+        <div class="card" style="min-height:90px">
+          <div id="type-desc" style="color:var(--text-muted);font-size:0.85em;margin-bottom:10px">Click a type above to explore it →</div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div class="var-value-box" id="type-var-box" style="width:72px;height:52px;font-size:1.1em">?</div>
+            <code id="type-code" style="font-family:var(--font-mono);font-size:0.82em;color:var(--text-muted)">select a type</code>
+          </div>
+        </div>
+      </div>
+      <div id="mcq-vartype-container" class="mt-2"></div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 7 — VARIABLES (~3 min)
+
+"The computer needs to REMEMBER things. Variables are how."
+"Think of it as a labelled box. Write 'age' on the box. Put 18 inside it."
+
+Click through type buttons. Keep each explanation one sentence:
+- int → whole numbers (age, score, count)
+- double → decimals (GPA, price, temperature)
+- char → single character (your grade letter: 'A', 'B')
+- string → words / sentences (your name, city)
+- bool → only true or false (passed exam? logged in?)
+
+MCQ: Which type for age? → A (int)
+
+"You don't need to memorise this. Just know: you pick the right box for the job."
+
+Transition: "Now — what if the program needs to DECIDE something based on these values?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 8 — IF / ELSE
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 8</span>
+    <h2>🔀 if / else — Making Decisions</h2>
+    <div class="divider"></div>
+    <p class="muted">Can I sit for the exam?</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="terminal mb-2">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+          <span class="terminal-title">attendance.cpp</span>
+        </div>
+        <div class="terminal-body" style="font-size:0.82em" id="attendance-code">
+int attendance = 74;
+
+if (attendance &gt;= 75) {
+    cout &lt;&lt; "Allowed";
+} else {
+    cout &lt;&lt; "Not Allowed";
+}
+        </div>
+      </div>
+
+      <div class="card card-accent-top">
+        <h3 style="margin-top:0;font-size:0.92em">🎚️ Drag to try different values</h3>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <input type="range" id="attendance-slider" min="50" max="100" value="74"
+            style="flex:1;accent-color:var(--accent-cyan);cursor:pointer" />
+          <span id="attendance-val" style="font-family:var(--font-mono);font-weight:700;color:var(--accent-cyan);min-width:48px">74%</span>
+        </div>
+        <div id="attendance-result"
+          style="text-align:center;padding:12px 16px;border-radius:10px;font-family:var(--font-mono);font-weight:900;font-size:1.2em;transition:all 0.3s;border:1px solid var(--border)">
+          —
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card card-accent-top purple mb-2">
+        <h3 style="margin-top:0">Human Logic → Code</h3>
+        <div class="flow-diagram">
+          <div class="flow-node secondary" style="width:100%">attendance = ?</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node primary" style="width:100%">IF attendance ≥ 75</div>
+          <div style="display:flex;gap:12px;width:100%;justify-content:space-around;margin-top:4px">
+            <div style="text-align:center">
+              <div style="color:var(--text-dim);font-size:0.72em;margin-bottom:4px">TRUE</div>
+              <div class="flow-node success" style="padding:8px 14px;font-size:0.82em">✅ Allowed</div>
+            </div>
+            <div style="text-align:center">
+              <div style="color:var(--text-dim);font-size:0.72em;margin-bottom:4px">FALSE</div>
+              <div class="flow-node" style="padding:8px 14px;font-size:0.82em;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);color:#f87171">❌ Not Allowed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="meme-card">
+        <span class="meme-top">😰</span>
+        <div class="meme-title">"Attendance ≥ 75"</div>
+        <div class="meme-caption">Me at 11pm checking if I can sit for the exam tomorrow.</div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 8 — IF/ELSE (~3 min)
+
+"Who here has checked their attendance at like midnight?" (hands go up — guaranteed)
+
+Drag the slider slowly: 74 → Not Allowed, 75 → Allowed.
+"See that? The >= means 'greater than OR equal to'. 75 itself IS allowed."
+
+Code structure:
+- if (condition) → runs if TRUE
+- else → runs if FALSE
+
+"This is how EVERY decision in every program works."
+"Your phone deciding whether to show notifications? if/else."
+"Your UPI app deciding if you have enough balance? if/else."
+
+Transition: "Let's test if you've got this."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 9 — GUESS THE OUTPUT
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 9</span>
+    <h2>🎯 Guess the Output</h2>
+    <div class="divider"></div>
+    <p class="muted">No cheating. Take a real guess first.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div id="mcq-guessoutput-container"></div>
+    </div>
+    <div>
+      <div class="card card-accent-top yellow">
+        <h3 style="margin-top:0;color:var(--accent-yellow)">🧠 Trace Through It</h3>
+        <ul class="step-list" style="gap:6px">
+          <li><span class="step-num">1</span>marks = <strong>35</strong></li>
+          <li><span class="step-num">2</span>Is 35 &gt;= 40? → <strong style="color:#f87171">FALSE</strong></li>
+          <li><span class="step-num">3</span>Run the <code style="font-family:var(--font-mono);color:#a78bfa">else</code> block</li>
+          <li><span class="step-num">4</span>Print <strong style="color:#f87171">"FAIL"</strong></li>
+        </ul>
+      </div>
+      <div class="card mt-2" style="background:rgba(0,212,255,0.05)">
+        <p style="margin:0;font-size:0.85em">
+          <strong style="color:var(--accent-cyan)">MOMENT #2</strong><br>
+          <span style="color:var(--text-muted)">You just predicted what a program does before running it. That's a real developer skill.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 9 — GUESS OUTPUT (~2 min)
+
+"Okay. No hints. What does this print?"
+Give 20–30 seconds. "Who says PASS? FAIL?"
+
+Reveal: FAIL — 35 is not >= 40.
+
+Follow-up auto-appears: "What if marks = 40?"
+Walk through: 40 >= 40 is TRUE → PASS. Boundary is inclusive.
+
+"MOMENT: You just predicted code output. That's a real skill you now have."
+
+Transition: "Now — what if we need to do something... a hundred times?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 10 — LOOPS
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 10</span>
+    <h2>🔁 Loops — Stop Repeating Yourself</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="card mb-2" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.04)">
+        <p style="color:#f87171;font-weight:700;font-size:0.82em;margin:0 0 8px">❌ WITHOUT loops (print numbers 1 to 5):</p>
+        <div style="font-family:var(--font-mono);font-size:0.78em;color:var(--text-muted);line-height:2">
+          cout &lt;&lt; 1;<br>
+          cout &lt;&lt; 2;<br>
+          cout &lt;&lt; 3;<br>
+          cout &lt;&lt; 4;<br>
+          cout &lt;&lt; 5;<br>
+          <span style="color:#f87171">...×100 = 💀 Not happening.</span>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)">
+        <p style="color:var(--accent-green);font-weight:700;font-size:0.82em;margin:0 0 8px">✅ WITH a loop — same result, 3 lines:</p>
+        <div class="terminal-body" style="font-size:0.82em;padding:0">
+for(int i = 1; i &lt;= 5; i++) {
+    cout &lt;&lt; i &lt;&lt; " ";
+}
+        </div>
+        <p style="color:var(--accent-green);font-size:0.82em;margin:8px 0 0;font-family:var(--font-mono)">Output: 1 2 3 4 5</p>
+      </div>
+
+      <div class="meme-card mt-2">
+        <span class="meme-top">🤯</span>
+        <div class="meme-title">"Discovering loops"</div>
+        <div class="meme-caption">"So I didn't have to write the same line 100 times??"</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin-top:0;color:var(--accent-cyan)">How the Loop Executes</h3>
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div class="loop-viz">
+          <div class="loop-box start" id="loop-start">START<br><span style="font-size:0.78em;opacity:0.8">i = 1</span></div>
+          <div class="loop-arrow-small">↓</div>
+          <div class="loop-box check" id="loop-check">CHECK<br><span style="font-size:0.78em">i &lt;= 5 ?</span></div>
+          <div class="loop-arrow-small">↓</div>
+          <div class="loop-box body" id="loop-body">BODY<br><span style="font-size:0.78em">cout &lt;&lt; i</span></div>
+          <div class="loop-arrow-small">↓</div>
+          <div class="loop-box update" id="loop-update">UPDATE<br><span style="font-size:0.78em">i++</span></div>
+          <div class="loop-arrow-small" style="font-size:0.72em;color:var(--text-dim)">↺ loop back</div>
+          <div class="loop-box end" id="loop-end">END<br><span style="font-size:0.78em">i &gt; 5</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding-top:4px">
+          <div class="loop-counter">
+            <div class="lc-label">CURRENT i</div>
+            <div class="lc-val" id="loop-counter-val">—</div>
+            <div class="lc-iter" id="loop-iter-count">press play</div>
+          </div>
+          <button class="btn btn-cyan btn-sm" id="loop-play-btn">▶ Play Loop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 10 — LOOPS (~3 min)
+
+"I want to print numbers 1 to 100. Should I write cout 100 times?"
+Show the ❌ version. Pause. Let it sink in. Usually gets a laugh.
+
+"There's a better way." Reveal ✅.
+
+Click ▶ Play Loop — narrate as it runs:
+"i=1, is 1 <= 5? Yes. Print 1. i becomes 2. Is 2 <= 5? Yes..."
+"i becomes 6. Is 6 <= 5? No. STOP."
+
+for loop has 3 parts:
+1. int i = 1 → start here
+2. i <= 5 → keep going while this is true
+3. i++ → add 1 to i each time
+
+"You will use loops in EVERY program you ever write."
+
+Transition: "Quick quiz — can you predict what a loop prints?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 11 — LOOP MCQ
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge">SLIDE 11</span>
+    <h2>🧠 Predict the Loop Output</h2>
+    <div class="divider"></div>
+    <p class="muted">Trace it step by step like the computer would.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div id="mcq-loopoutput-container"></div>
+    </div>
+    <div>
+      <div class="card card-accent-top green">
+        <h3 style="margin-top:0">Step-by-step trace</h3>
+        <div style="font-family:var(--font-mono);font-size:0.8em">
+          <div style="display:grid;grid-template-columns:40px 70px 90px 60px;gap:4px;color:var(--text-dim);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px">
+            <span>i</span><span>i≤3?</span><span>prints</span><span>i++</span>
+          </div>
+          <div style="display:grid;grid-template-columns:40px 70px 90px 60px;gap:4px;color:var(--accent-cyan);padding:2px 0">
+            <span>1</span><span style="color:var(--accent-green)">✓ YES</span><span><strong>1</strong></span><span>→ 2</span>
+          </div>
+          <div style="display:grid;grid-template-columns:40px 70px 90px 60px;gap:4px;color:var(--accent-cyan);padding:2px 0">
+            <span>2</span><span style="color:var(--accent-green)">✓ YES</span><span><strong>2</strong></span><span>→ 3</span>
+          </div>
+          <div style="display:grid;grid-template-columns:40px 70px 90px 60px;gap:4px;color:var(--accent-cyan);padding:2px 0">
+            <span>3</span><span style="color:var(--accent-green)">✓ YES</span><span><strong>3</strong></span><span>→ 4</span>
+          </div>
+          <div style="display:grid;grid-template-columns:40px 70px 90px 60px;gap:4px;color:var(--text-dim);padding:2px 0">
+            <span>4</span><span style="color:#f87171">✗ NO</span><span>STOP</span><span>—</span>
+          </div>
+        </div>
+        <p style="margin:10px 0 0;font-weight:700;color:var(--accent-green);font-family:var(--font-mono)">Output: 123 &nbsp;(loop ran 3 times)</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 11 — LOOP MCQ (~2 min)
+
+"Walk through this loop step by step. What gets printed?"
+Give 20 seconds. Then reveal: 123.
+
+"Loop ran 3 times — from i=1 to i=3."
+"When i became 4, condition 4 <= 3 was FALSE. Stop."
+
+"Who traced through it properly?" Acknowledge them — that's the right approach.
+"Reading code line by line, like the computer does = essential skill."
+
+Transition: "Alright — variables, conditions, loops. You have the tools. Now how do you USE them to solve a problem?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 12 — THINK BEFORE YOU CODE
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-yellow" style="background:rgba(251,191,36,0.15);color:var(--accent-yellow);border-color:rgba(251,191,36,0.3)">SLIDE 12</span>
+    <h2>🧠 Think Before You Code</h2>
+    <div class="divider"></div>
+    <p class="muted">The best coders think more than they type.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="challenge-header">
+        <span class="ch-icon">🤔</span>
+        <div class="ch-text">
+          <h3>Problem</h3>
+          <p>Find the <strong>larger</strong> of two numbers.</p>
+        </div>
+      </div>
+      <div class="card card-accent-top mb-2" style="border-top-color:var(--accent-yellow)">
+        <p style="font-weight:700;color:var(--accent-yellow);margin:0 0 8px;font-size:0.88em">NO CODE YET — tell me the steps:</p>
+        <ul class="step-list" id="algo-steps" style="min-height:60px"></ul>
+        <button class="step-reveal-btn" id="algo-reveal-btn" style="margin-top:10px">▶ Step 1 / 5</button>
+      </div>
+      <div id="algo-code-reveal" style="display:none">
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+            <span class="terminal-title">larger.cpp</span>
+          </div>
+          <div class="terminal-body" style="font-size:0.82em">
+int a = 15, b = 9;
+if (a &gt; b)
+    cout &lt;&lt; a;
+else
+    cout &lt;&lt; b;
+// Output: 15
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card card-accent-top purple">
+        <h3 style="margin-top:0">The Programming Process</h3>
+        <div class="flow-diagram">
+          <div class="flow-node secondary" style="width:100%">🧩 PROBLEM</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node primary" style="width:100%">📋 ALGORITHM<br><span style="font-size:0.75em;opacity:0.75">step-by-step plan</span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node secondary" style="width:100%">💻 CODE</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node accent" style="width:100%">✅ OUTPUT</div>
+        </div>
+      </div>
+      <div class="card mt-2" style="background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.2)">
+        <p style="margin:0;font-size:0.88em;font-weight:700;color:var(--accent-yellow)">💡 An algorithm is just a step-by-step plan.</p>
+        <p style="margin:6px 0 0;font-size:0.82em;color:var(--text-muted)">Think it through on paper or in your head first. Then code it. The hard part is the thinking — not the typing.</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 12 — THINK BEFORE CODE (~3 min)
+
+"Before I show you any code — give me the STEPS to solve this. Like a recipe."
+"Don't think about C++ syntax at all. Just tell me how you'd do it as a human."
+
+Click ▶ Step by step — reveal each step. Let students call them out first.
+After all 5 steps: "THAT is the algorithm. Now watch how short the code is."
+Reveal code.
+
+"The thinking was hard. The code was 4 lines."
+"Most beginners rush to type. Don't. Think first. THEN code."
+
+[Presenter: 'I spent 3 hours coding before realizing I'd misunderstood the problem. 10 minutes of thinking upfront would have saved me.']
+
+Transition: "Alright — your turn. Time to solve one yourself."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 13 — MINI CODING CHALLENGE
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 13</span>
+    <h2>⚔️ Mini Coding Challenge</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="challenge-header">
+        <span class="ch-icon">🎯</span>
+        <div class="ch-text">
+          <h3>MISSION</h3>
+          <p>Take a number. Is it <strong>EVEN</strong> or <strong>ODD</strong>?</p>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <p style="font-weight:700;color:var(--accent-yellow);font-size:0.85em;margin:0 0 10px">💡 Hints — use only if you're genuinely stuck</p>
+        <div class="hints-container">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="hint-btn" data-hint-target="hint1">HINT 1</button>
+            <div class="hint-reveal" id="hint1">Even numbers divide by 2 with no remainder. Odd ones have a remainder of 1.</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="hint-btn" data-hint-target="hint2">HINT 2</button>
+            <div class="hint-reveal" id="hint2">The <code style="font-family:var(--font-mono);color:var(--accent-cyan)">%</code> operator gives the remainder after division. 10 % 3 = 1. 10 % 2 = 0.</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="hint-btn" data-hint-target="hint3">HINT 3</button>
+            <div class="hint-reveal" id="hint3">If <code style="font-family:var(--font-mono);color:var(--accent-cyan)">n % 2 == 0</code> → Even. Otherwise → Odd. Use if/else.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.25);text-align:center;padding:16px">
+        <div style="font-family:var(--font-mono);font-size:2.2em;font-weight:900;color:#a78bfa" id="challenge-timer">2:30</div>
+        <div style="font-size:0.72em;color:var(--text-dim);margin-bottom:8px">THINK TIME</div>
+        <button class="btn btn-outline btn-sm" id="timer-start-btn">▶ Start Timer</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card mb-2" style="border-color:rgba(251,191,36,0.3)">
+        <p style="font-weight:700;color:var(--accent-yellow);margin:0 0 10px;font-size:0.85em">Solution (reveal after timer)</p>
+        <button class="btn btn-yellow btn-sm" id="solution-reveal-btn">👁 Reveal Solution</button>
+        <div id="solution-block" style="display:none;margin-top:12px">
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div><div class="terminal-dot yellow"></div><div class="terminal-dot green"></div>
+              <span class="terminal-title">evenodd.cpp</span>
+            </div>
+            <div class="terminal-body" style="font-size:0.8em">
+if (n % 2 == 0)
+    cout &lt;&lt; "Even";
+else
+    cout &lt;&lt; "Odd";
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-runner" id="runner-evenodd">
+        <div class="code-runner-header">
+          <div class="code-runner-header-left">
+            <div class="cr-dot red"></div><div class="cr-dot yellow"></div><div class="cr-dot green"></div>
+            <span class="cr-filename">evenodd.cpp</span>
+          </div>
+        </div>
+        <div class="code-editor-area"></div>
+        <div class="cr-input-section">
+          <span class="cr-input-label">Enter a number:</span>
+          <input type="text" class="cr-input-field" placeholder="e.g. 7" />
+        </div>
+        <div class="cr-btn-row">
+          <button class="cr-run-btn">▶ Run</button>
+          <button class="cr-reset-btn">↺ Reset</button>
+        </div>
+        <div class="code-output">
+          <div class="output-header">OUTPUT</div>
+          <div class="output-body"><span class="out-prompt cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 13 — CHALLENGE (~5 min)
+
+"Your turn. 2.5 minutes. No Googling. No copying."
+"Don't worry about perfect syntax — focus on the LOGIC first."
+Click ▶ Start Timer.
+
+Walk around or ask a co-presenter to help stuck students.
+Encouragement: "Even if you just figured out you need % — you're on the right track."
+
+After timer: "Who got the logic?" Acknowledge even partial answers warmly.
+"If you got the logic but not the exact syntax — that's actually the harder part. Syntax you can look up. Thinking you can't."
+
+Click Reveal Solution. Walk through:
+- % is modulo — gives remainder after division
+- n % 2 == 0 → even (divides cleanly)
+- else → odd
+
+Run it live with numbers from the audience. Try 4, 7, 100, 1.
+
+MOMENT #3: "You just solved your first programming problem."
+
+Transition: "But what happens when your code doesn't work?"
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 14 — DEBUGGING
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171;border-color:rgba(239,68,68,0.3)">SLIDE 14</span>
+    <h2>💀 Debugging — When Code Breaks</h2>
+    <div class="divider"></div>
+    <p class="muted">Your code WILL break. That's part of programming.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="card mb-2" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.04)">
+        <p style="color:#f87171;font-weight:700;font-size:0.85em;margin:0 0 10px">🐛 Spot the bug:</p>
+        <div class="terminal-body" id="debug-code" style="padding:12px 16px;font-size:0.85em;background:var(--bg-terminal);border-radius:8px">
+int marks = 50;
+
+if (marks = 40)
+    cout &lt;&lt; "Pass";
+        </div>
+        <button class="btn btn-red btn-sm mt-2" id="debug-reveal-btn">🔍 Find the Bug</button>
+        <div id="debug-fix" style="display:none;margin-top:12px;padding:12px 14px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:8px;font-size:0.85em">
+          <strong style="color:var(--accent-green)">Fix:</strong>
+          <code style="font-family:var(--font-mono)"> marks = 40 </code>
+          <span style="color:var(--text-muted)">→</span>
+          <code style="font-family:var(--font-mono);color:var(--accent-cyan)"> marks == 40</code>
+          <div style="margin-top:8px;color:var(--text-muted);font-size:0.9em">
+            <strong style="color:#f87171">=</strong> assigns a value &nbsp;|&nbsp;
+            <strong style="color:var(--accent-cyan)">=&nbsp;=</strong> compares two values
+          </div>
+        </div>
+      </div>
+      <div id="mcq-debug-container"></div>
+    </div>
+
+    <div>
+      <div class="card card-accent-top mb-2">
+        <h3 style="margin-top:0">3 Types of Errors</h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="padding:12px 14px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.22);border-radius:10px">
+            <span class="error-type syntax">SYNTAX ERROR</span>
+            <p style="font-size:0.8em;color:var(--text-muted);margin:6px 0 0">Code violates language rules. Missing <code style="font-family:var(--font-mono)">;</code>, typo in keyword. Caught at compile time — easiest to fix.</p>
+          </div>
+          <div style="padding:12px 14px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.22);border-radius:10px">
+            <span class="error-type runtime">RUNTIME ERROR</span>
+            <p style="font-size:0.8em;color:var(--text-muted);margin:6px 0 0">Compiles but crashes while running. Dividing by zero, accessing invalid memory.</p>
+          </div>
+          <div style="padding:12px 14px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.22);border-radius:10px">
+            <span class="error-type logical">LOGICAL ERROR</span>
+            <p style="font-size:0.8em;color:var(--text-muted);margin:6px 0 0">Runs fine but gives wrong output. Hardest to catch. Using <code style="font-family:var(--font-mono)">=</code> instead of <code style="font-family:var(--font-mono)">=&nbsp;=</code> is a classic one.</p>
+          </div>
+        </div>
+      </div>
+      <div class="meme-card">
+        <span class="meme-top">😤</span>
+        <div class="meme-title">"Missing semicolon"</div>
+        <div class="meme-caption">One tiny ; — one huge problem. Every developer's rite of passage.</div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 14 — DEBUGGING (~3 min)
+
+"Your code WILL break. Not might. WILL. Every single developer's code breaks."
+
+"Spot the bug — 20 seconds." Ask the room.
+Click Find the Bug. Walk through the = vs == distinction.
+
+MCQ: Answer B — = is assignment, == is comparison.
+"This is THE most common beginner mistake. Experienced devs still occasionally write it."
+
+Show 3 error types quickly. Don't dwell on each.
+
+KEY MESSAGE: "Errors don't mean you're bad at programming. Errors mean you ARE programming."
+[Presenter: 'I once spent 2 hours because of a missing semicolon. We all have that story.']
+
+Transition: "Okay — you've now seen the full picture. Let's zoom out and see where all this leads."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 15 — WHAT CAN YOU BUILD?
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 15</span>
+    <h2>🚀 What Can You Build?</h2>
+    <div class="divider"></div>
+    <p class="muted">Programming is a foundation. What you build on top is up to you.</p>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="flow-diagram">
+        <div class="flow-node primary" style="width:220px">🧱 PROGRAMMING BASICS<br><span style="font-size:0.72em;opacity:0.7">← you are here</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node secondary" style="width:220px">🧩 PROBLEM SOLVING</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node secondary" style="width:220px">📊 DATA STRUCTURES &amp; ALGORITHMS</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node secondary" style="width:220px">🏗️ PROJECTS</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node accent" style="width:220px">💼 REAL EXPERIENCE</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin-top:0">Where programming leads...</h3>
+      <div class="domains-grid">
+        <div class="domain-item"><span class="domain-icon">🌐</span><span class="domain-name">Web Dev</span></div>
+        <div class="domain-item"><span class="domain-icon">📱</span><span class="domain-name">App Dev</span></div>
+        <div class="domain-item"><span class="domain-icon">🤖</span><span class="domain-name">AI / ML</span></div>
+        <div class="domain-item"><span class="domain-icon">🔐</span><span class="domain-name">Cybersecurity</span></div>
+        <div class="domain-item"><span class="domain-icon">⚙️</span><span class="domain-name">Backend</span></div>
+        <div class="domain-item"><span class="domain-icon">🎮</span><span class="domain-name">Game Dev</span></div>
+        <div class="domain-item"><span class="domain-icon">☁️</span><span class="domain-name">Cloud</span></div>
+        <div class="domain-item"><span class="domain-icon">🏆</span><span class="domain-name">Competitive</span></div>
+      </div>
+      <div class="card mt-2" style="background:rgba(0,212,255,0.04);border-color:rgba(0,212,255,0.18)">
+        <p style="margin:0;font-size:0.88em;color:var(--text-muted)">
+          <strong style="color:var(--accent-cyan)">You do NOT need to choose today.</strong><br>
+          You don't need to be an expert in semester 1.<br>
+          You just need to build the foundation — one step at a time.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 15 — WHAT CAN YOU BUILD (~2 min)
+
+"Why does any of this matter? Where does it go?"
+Point at the pyramid: "You're at the bottom right now. That's exactly right."
+
+Walk through domains quickly — don't dwell on any one.
+[Presenter: add which domain YOU went into and a brief 1-sentence why.]
+
+"None of these is better than the others. It depends on what excites YOU."
+
+Transition: "Let me give you a concrete plan for your first year."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 16 — FIRST-YEAR ROADMAP
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-purple">SLIDE 16</span>
+    <h2>🗺️ Your First-Year Roadmap</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="slide-two-col ratio-60-40">
+    <div>
+      <div class="roadmap-timeline">
+        <div class="roadmap-item">
+          <div class="roadmap-dot">M1</div>
+          <div class="roadmap-content">
+            <h4>Month 1 — Programming Basics</h4>
+            <div class="tag-list">
+              <span>Variables</span><span>Input/Output</span><span>if/else</span>
+              <span>Loops</span><span>Functions</span><span>Arrays</span>
+            </div>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot purple">M2–3</div>
+          <div class="roadmap-content">
+            <h4>Month 2–3 — Problem Solving + DSA Basics</h4>
+            <div class="tag-list">
+              <span>Arrays</span><span>Strings</span><span>Searching</span>
+              <span>Sorting</span><span>Stack / Queue</span><span>Recursion later</span>
+            </div>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot green">M3+</div>
+          <div class="roadmap-content">
+            <h4>Month 3+ — Build &amp; Explore</h4>
+            <p>Choose ONE direction. Build something real.</p>
+            <div class="tag-list">
+              <span>Projects</span><span>Git / GitHub</span><span>Hackathons</span><span>Internships</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin-top:0">What should I focus on?</h3>
+      <div class="path-selector">
+        <button class="path-btn" data-path-type="building">🏗️ I like building things</button>
+        <button class="path-btn" data-path-type="solving">🧩 I like problem solving</button>
+        <button class="path-btn" data-path-type="ai">🤖 Interested in AI</button>
+        <button class="path-btn" data-path-type="unknown">🤷 I don't know yet</button>
+      </div>
+      <div class="path-result" id="path-result"></div>
+      <div class="card mt-2" style="background:rgba(251,191,36,0.05);border-color:rgba(251,191,36,0.2)">
+        <p style="margin:0;font-size:0.85em;font-weight:700;color:var(--accent-yellow)">⚠️ Don't learn everything at once.</p>
+        <p style="margin:5px 0 0;font-size:0.8em;color:var(--text-muted)">One thing at a time. Depth &gt; breadth in your first semester.</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 16 — ROADMAP (~3 min)
+
+"Screenshot this. This is the most useful slide."
+
+Month 1: Learn the basics we covered today — plus functions and arrays.
+Month 2–3: Problem solving, intro to DSA. Try LeetCode easy problems.
+Month 3+: Pick a direction. Build something. Even a CLI calculator counts.
+
+Click through the path selector live — ask the audience which one fits them.
+"Who likes building things?" — click building. etc.
+
+"I DON'T KNOW YET is a perfectly valid answer. Most people don't know."
+
+CRITICAL: "Don't try to learn Web + AI + DSA + mobile development all in month 1. You will crash."
+
+Transition: "Let me break this into a 30-day plan you can actually execute."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 17 — 30-DAY CHALLENGE
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 17</span>
+    <h2>📅 Your 30-Day Action Plan</h2>
+    <div class="divider"></div>
+    <p class="muted">Screenshot this. Stick it somewhere you'll see it.</p>
+  </div>
+
+  <div class="thirty-day-grid">
+    <div class="week-card" style="border-top:3px solid var(--accent-cyan)">
+      <div class="wk-header">WEEK 1</div>
+      <div class="wk-title">C++ Basics</div>
+      <ul>
+        <li>Variables &amp; types</li>
+        <li>cin / cout</li>
+        <li>if / else</li>
+        <li>for / while loops</li>
+      </ul>
+    </div>
+    <div class="week-card" style="border-top:3px solid var(--accent-purple)">
+      <div class="wk-header">WEEK 2</div>
+      <div class="wk-title">Logic &amp; Practice</div>
+      <ul>
+        <li>Nested conditions</li>
+        <li>Loop patterns</li>
+        <li>5 practice problems</li>
+        <li>Read error messages</li>
+      </ul>
+    </div>
+    <div class="week-card" style="border-top:3px solid var(--accent-pink)">
+      <div class="wk-header">WEEK 3</div>
+      <div class="wk-title">Functions &amp; Arrays</div>
+      <ul>
+        <li>Functions (why &amp; how)</li>
+        <li>Arrays basics</li>
+        <li>Strings</li>
+        <li>5 more problems</li>
+      </ul>
+    </div>
+    <div class="week-card" style="border-top:3px solid var(--accent-green)">
+      <div class="wk-header">WEEK 4</div>
+      <div class="wk-title">Mini Project 🏗️</div>
+      <ul>
+        <li>Pick ONE project</li>
+        <li>Calculator / quiz game</li>
+        <li>Build it yourself</li>
+        <li>Show someone!</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mt-2" style="padding:14px 18px">
+    <p style="margin:0 0 6px;font-weight:700;font-size:0.85em;color:var(--text-primary)">
+      🎯 "Watching 5 hours of tutorials ≠ coding for 5 hours."
+    </p>
+    <div style="font-size:0.75em;color:var(--text-muted);margin-bottom:6px">Ideal daily ratio (30–60 min/day):</div>
+    <div class="ratio-bar">
+      <div class="rb-learn">20% — Learn</div>
+      <div class="rb-code">80% — Code, break it, debug it, fix it</div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <p style="font-weight:700;font-size:0.8em;color:var(--accent-cyan);margin-bottom:8px;font-family:var(--font-mono)">5 STARTER PROBLEMS TO TRY THIS WEEK:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <span class="badge">Even / Odd</span>
+      <span class="badge badge-purple">Positive / Negative / Zero</span>
+      <span class="badge badge-green">Larger of 2 numbers</span>
+      <span class="badge">Multiplication table</span>
+      <span class="badge badge-purple">Marks calculator</span>
+    </div>
+    <p style="font-size:0.78em;color:var(--text-muted);margin-top:8px">
+      Full practice problems → <strong style="color:var(--accent-cyan)">practice.html</strong> &nbsp;|&nbsp; Cheat sheet → <strong style="color:var(--accent-cyan)">cheatsheet.html</strong>
+    </p>
+  </div>
+
+  <aside class="notes">
+SLIDE 17 — 30-DAY PLAN (~2 min)
+
+"Screenshot this right now."
+
+Walk through each week in ~10 seconds each. Don't over-explain.
+Week 4 is the most important — building something, even small, is transformative.
+
+Point at the ratio bar: "This is the MOST important advice I can give you."
+"Watching 5 hours of YouTube without writing a single line of code = zero improvement."
+"You learn by DOING. Make mistakes. Fix them. That's the process."
+
+5 starter problems — "Even/Odd, you already know. That's your starting point."
+
+Transition: "Last thing — quick knowledge check. Let's see what stuck."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 18 — FINAL KNOWLEDGE CHECK
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-yellow" style="background:rgba(251,191,36,0.15);color:var(--accent-yellow);border-color:rgba(251,191,36,0.3)">SLIDE 18</span>
+    <h2>🎯 Final Knowledge Check</h2>
+    <div class="divider"></div>
+    <p class="muted">4 rapid-fire questions — no pressure, just fun.</p>
+  </div>
+
+  <div id="rapid-quiz-container" style="max-width:680px"></div>
+
+  <aside class="notes">
+SLIDE 18 — FINAL QUIZ (~2 min)
+
+"4 quick questions. Not graded. Just to see what stuck."
+The quiz auto-advances through all 4. Shows XP score at the end.
+
+React to the score: celebrate all levels. Even 1/4 is a win — "that means something stuck."
+
+Optional team competition:
+- Award +1 per correct question per team
+- Use the score buttons that appear earlier
+
+Transition: "One last thing before I let you go."
+  </aside>
+</section>
+
+<!-- ====================================================
+     SLIDE 19 — FINAL CHALLENGE / CLOSING
+     ==================================================== -->
+<section data-background-color="#0d0f1a">
+  <div class="slide-header">
+    <span class="badge badge-green">SLIDE 19</span>
+    <h2>🏁 Mission Complete?</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="slide-two-col">
+    <div>
+      <div class="challenge-header" style="margin-bottom:14px">
+        <span class="ch-icon">🎓</span>
+        <div class="ch-text">
+          <h3>Final Challenge</h3>
+          <p>Input: marks. Output: <strong>PASS</strong> (≥40) or <strong>FAIL</strong>.</p>
+        </div>
+      </div>
+
+      <div class="code-runner" id="runner-final">
+        <div class="code-runner-header">
+          <div class="code-runner-header-left">
+            <div class="cr-dot red"></div><div class="cr-dot yellow"></div><div class="cr-dot green"></div>
+            <span class="cr-filename">final.cpp</span>
+          </div>
+        </div>
+        <div class="code-editor-area"></div>
+        <div class="cr-input-section">
+          <span class="cr-input-label">Enter marks (0–100):</span>
+          <input type="text" class="cr-input-field" placeholder="e.g. 45" />
+        </div>
+        <div class="cr-btn-row">
+          <button class="cr-run-btn">▶ Run</button>
+          <button class="cr-reset-btn">↺ Reset</button>
+        </div>
+        <div class="code-output">
+          <div class="output-header">OUTPUT</div>
+          <div class="output-body"><span class="out-prompt cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card card-accent-top mb-2" style="border-top-color:var(--accent-yellow)">
+        <p style="font-weight:700;font-size:0.92em;color:var(--accent-yellow);margin:0 0 6px">🤔 At the START of this workshop:</p>
+        <p style="color:var(--text-muted);font-size:0.85em;margin:0 0 14px">"How many of you had never coded?"</p>
+        <p style="font-weight:700;font-size:0.92em;color:var(--accent-cyan);margin:0 0 6px">💡 Right NOW:</p>
+        <p style="color:var(--text-muted);font-size:0.85em;margin:0">"How many think they could write this program?"</p>
+      </div>
+
+      <button class="btn btn-green btn-lg w-full" id="mission-complete-btn">✅ MISSION COMPLETE</button>
+
+      <div class="mission-complete" id="mission-complete-block" style="display:none;margin-top:14px">
+        <span class="mc-icon">🚀</span>
+        <div class="mc-title">MISSION COMPLETE</div>
+        <div class="mc-sub" style="margin-top:12px">
+          Now go break some code. 💻<br><br>
+          <em style="color:var(--text-primary);font-size:1em;font-style:normal;font-weight:600">"You don't need to know everything to start.<br>You just need to solve the next small problem."</em>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <p style="font-weight:700;font-size:0.8em;color:var(--accent-cyan);margin:0 0 10px;font-family:var(--font-mono)">RESOURCES</p>
+        <div class="resource-list" style="gap:7px">
+          <div class="resource-item">
+            <span class="ri-icon">📖</span>
+            <div><div class="ri-label">Learn C++</div><div class="ri-sub">learncpp.com — free &amp; excellent</div></div>
+          </div>
+          <div class="resource-item">
+            <span class="ri-icon">🏋️</span>
+            <div><div class="ri-label">Practice Problems</div><div class="ri-sub">codeforces.com / hackerrank.com</div></div>
+          </div>
+          <div class="resource-item">
+            <span class="ri-icon">🛠️</span>
+            <div><div class="ri-label">Online C++ IDE</div><div class="ri-sub">onlinegdb.com — no install needed</div></div>
+          </div>
+          <div class="resource-item">
+            <span class="ri-icon">🐙</span>
+            <div><div class="ri-label">Version Control</div><div class="ri-sub">github.com — start after month 1</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meme-card mt-2">
+        <span class="meme-top">😂</span>
+        <div class="meme-title">"Code worked yesterday"</div>
+        <div class="meme-caption">"I changed nothing. It's broken now. Classic."</div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+SLIDE 19 — CLOSING (~2 min)
+
+Run the final challenge. Get numbers from the audience — 39, 40, 75, 100.
+Let them call out whether it's PASS or FAIL before running.
+
+Ask the powerful before/after question:
+"At the start — hands up, who had never coded?"
+"Now — who thinks they could write this program themselves?"
+
+That moment of raised hands is THE goal of the entire workshop.
+
+Click MISSION COMPLETE. Read the message.
+
+"You learned more today than most people think is possible in 45 minutes."
+"You know what programming IS. You've seen variables, conditions, loops, debugging, problem solving."
+"You have a roadmap. You have starter problems. You have no excuse not to start."
+
+[Presenter: Add CS Chapter contact info, Discord, next event here]
+
+FINAL LINE: "Now go break some code. 💻"
+  </aside>
+</section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<!-- Challenge Timer -->
+<script>
+(function(){
+  var interval=null, seconds=150;
+  function fmt(s){return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;}
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('timer-start-btn');
+    var disp=document.getElementById('challenge-timer');
+    if(!btn||!disp)return;
+    btn.addEventListener('click',function(){
+      if(interval){clearInterval(interval);interval=null;seconds=150;if(disp)disp.textContent=fmt(seconds);disp.style.color='#a78bfa';btn.textContent='▶ Start Timer';return;}
+      btn.textContent='⏸ Reset';
+      interval=setInterval(function(){
+        seconds--;
+        if(disp)disp.textContent=fmt(seconds);
+        if(seconds<=30&&disp)disp.style.color='#f87171';
+        if(seconds<=0){clearInterval(interval);interval=null;if(disp){disp.textContent="TIME'S UP!";disp.style.color='#f87171';}btn.textContent='↺ Reset';}
+      },1000);
+    });
+  });
+})();
+</script>
+
+<!-- Solution reveal -->
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var rb=document.getElementById('solution-reveal-btn');
+  if(rb)rb.addEventListener('click',function(){
+    var b=document.getElementById('solution-block');
+    if(b){b.style.display='block';b.classList.add('animate-fadeinup');}
+    rb.style.opacity='0.5';rb.style.pointerEvents='none';
+  });
+
+  /* Mission complete */
+  var mb=document.getElementById('mission-complete-btn');
+  if(mb)mb.addEventListener('click',function(){
+    var el=document.getElementById('mission-complete-block');
+    if(el){el.style.display='block';el.classList.add('animate-bouncein');}
+    mb.style.display='none';
+  });
+
+  /* Maggi response buttons */
+  document.querySelectorAll('.maggi-resp-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.maggi-resp-btn').forEach(function(b){b.style.opacity='0.4';b.style.pointerEvents='none';});
+      btn.style.opacity='1';btn.style.borderColor='var(--accent-cyan)';
+      var resp=document.getElementById('maggi-resp');
+      if(resp){resp.textContent=btn.dataset.response;resp.style.display='block';resp.classList.add('animate-fadeinup');}
+    });
+  });
+
+  /* Team scoring */
+  document.querySelectorAll('[data-score-team]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var team=btn.dataset.scoreTeam;
+      var pts=parseInt(btn.dataset.points||'1',10);
+      if(window.WorkshopScore)WorkshopScore.add(pts,team);
+      var old=btn.textContent;btn.textContent='+'+pts+' ✓';
+      setTimeout(function(){btn.textContent=old;},800);
+    });
+  });
+});
+</script>
+
+<!-- Reveal.js -->
+<script src="dist/reveal.js"></script>
+<script src="dist/plugin/highlight.js"></script>
+<script src="dist/plugin/notes.js"></script>
+<script src="dist/plugin/zoom.js"></script>
+
+<!-- Workshop scripts -->
+<script src="js/mcq.js"></script>
+<script src="js/codeRunner.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/workshop.js"></script>
+
+</body>
+</html>

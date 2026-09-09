@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ Cheat Sheet — CS Chapter Workshop</title>
+  <link rel="stylesheet" href="css/workshop.css" />
+  <style>
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); margin: 0; padding: 0; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
+    .cs-header { text-align: center; margin-bottom: 40px; }
+    .cs-header h1 { font-size: 2.6em; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 8px; }
+    .cs-header p { color: var(--text-muted); font-size: 1em; }
+    .cs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .cs-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .cs-section-title { padding: 14px 20px; font-weight: 800; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; }
+    .cs-section-title.cyan   { background: rgba(0,212,255,0.12); color: var(--accent-cyan); border-bottom: 1px solid rgba(0,212,255,0.2); }
+    .cs-section-title.purple { background: rgba(124,58,237,0.12); color: #a78bfa; border-bottom: 1px solid rgba(124,58,237,0.2); }
+    .cs-section-title.green  { background: rgba(34,197,94,0.12); color: var(--accent-green); border-bottom: 1px solid rgba(34,197,94,0.2); }
+    .cs-section-title.yellow { background: rgba(251,191,36,0.12); color: var(--accent-yellow); border-bottom: 1px solid rgba(251,191,36,0.2); }
+    .cs-section-title.pink   { background: rgba(244,114,182,0.12); color: var(--accent-pink); border-bottom: 1px solid rgba(244,114,182,0.2); }
+    .cs-body { padding: 16px 20px; }
+    pre { margin: 0; font-family: var(--font-mono); font-size: 0.82em; line-height: 1.8; color: #e2e8f0; white-space: pre-wrap; }
+    .kw  { color: #c084fc; } .fn { color: #60a5fa; } .str { color: #86efac; }
+    .num { color: #fbbf24; } .cmt { color: #475569; } .typ { color: #38bdf8; }
+    .inc { color: #fb923c; } .op  { color: #f472b6; }
+    .note { font-size: 0.8em; color: var(--text-muted); margin-top: 8px; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 6px; border-left: 3px solid var(--accent-cyan); }
+    .warn { border-left-color: var(--accent-yellow); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82em; font-family: var(--font-mono); }
+    th { color: var(--text-dim); font-weight: 700; text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.08em; padding: 4px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    td:first-child { color: var(--accent-cyan); font-weight: 700; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 24px; transition: all 0.18s; }
+    .back-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    @media print { .back-btn { display: none; } body { background: white; color: black; } pre, code { color: black; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-btn">← Back to Workshop</a>
+
+  <div class="cs-header">
+    <h1>C++ Cheat Sheet 📋</h1>
+    <p>CS Chapter Workshop — Intro to Programming &nbsp;|&nbsp; Screenshot or print this page</p>
+  </div>
+
+  <div class="cs-grid">
+
+    <!-- Program structure -->
+    <div class="cs-section">
+      <div class="cs-section-title cyan">🏗️ Basic Program Structure</div>
+      <div class="cs-body">
+<pre><span class="inc">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="typ">int</span> <span class="fn">main</span>() {
+
+    <span class="cmt">// your code here</span>
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+        <div class="note">Every C++ program starts with <code>main()</code>. Don't forget the return 0 at the end.</div>
+      </div>
+    </div>
+
+    <!-- Input / Output -->
+    <div class="cs-section">
+      <div class="cs-section-title green">📥 Input &amp; Output</div>
+      <div class="cs-body">
+<pre><span class="cmt">// Print to screen</span>
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello World!"</span>;
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Value: "</span> <span class="op">&lt;&lt;</span> x;
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> endl;  <span class="cmt">// new line</span>
+
+<span class="cmt">// Read input</span>
+<span class="typ">int</span> n;
+<span class="fn">cin</span> <span class="op">&gt;&gt;</span> n;
+
+<span class="typ">int</span> a, b;
+<span class="fn">cin</span> <span class="op">&gt;&gt;</span> a <span class="op">&gt;&gt;</span> b;</pre>
+      </div>
+    </div>
+
+    <!-- Variables & Data Types -->
+    <div class="cs-section">
+      <div class="cs-section-title purple">📦 Variables &amp; Data Types</div>
+      <div class="cs-body">
+        <table>
+          <tr><th>Type</th><th>What it stores</th><th>Example</th></tr>
+          <tr><td>int</td><td>Whole numbers</td><td>18, -5, 0</td></tr>
+          <tr><td>double</td><td>Decimal numbers</td><td>3.14, 9.81</td></tr>
+          <tr><td>char</td><td>Single character</td><td>'A', 'z'</td></tr>
+          <tr><td>string</td><td>Text / words</td><td>"Hello"</td></tr>
+          <tr><td>bool</td><td>true or false</td><td>true, false</td></tr>
+        </table>
+<pre style="margin-top:12px"><span class="typ">int</span> age = <span class="num">18</span>;
+<span class="typ">double</span> gpa = <span class="num">8.5</span>;
+<span class="typ">string</span> name = <span class="str">"Rahul"</span>;
+<span class="typ">bool</span> passed = <span class="kw">true</span>;</pre>
+      </div>
+    </div>
+
+    <!-- Operators -->
+    <div class="cs-section">
+      <div class="cs-section-title yellow">🔢 Operators</div>
+      <div class="cs-body">
+        <table>
+          <tr><th>Op</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td>+</td><td>Addition</td><td>a + b</td></tr>
+          <tr><td>-</td><td>Subtraction</td><td>a - b</td></tr>
+          <tr><td>*</td><td>Multiplication</td><td>a * b</td></tr>
+          <tr><td>/</td><td>Division</td><td>a / b</td></tr>
+          <tr><td>%</td><td>Remainder (modulo)</td><td>7 % 2 = 1</td></tr>
+          <tr><td>==</td><td>Equal to</td><td>a == b</td></tr>
+          <tr><td>!=</td><td>Not equal</td><td>a != b</td></tr>
+          <tr><td>&gt;</td><td>Greater than</td><td>a &gt; b</td></tr>
+          <tr><td>&lt;</td><td>Less than</td><td>a &lt; b</td></tr>
+          <tr><td>&gt;=</td><td>Greater or equal</td><td>a &gt;= b</td></tr>
+          <tr><td>&lt;=</td><td>Less or equal</td><td>a &lt;= b</td></tr>
+        </table>
+        <div class="note warn">⚠️ <strong>= assigns</strong> a value. &nbsp;<strong>== compares</strong> two values. Never mix them up!</div>
+      </div>
+    </div>
+
+    <!-- if / else -->
+    <div class="cs-section">
+      <div class="cs-section-title cyan">🔀 if / else</div>
+      <div class="cs-body">
+<pre><span class="kw">if</span> (condition) {
+    <span class="cmt">// runs if condition is TRUE</span>
+} <span class="kw">else</span> {
+    <span class="cmt">// runs if condition is FALSE</span>
+}
+
+<span class="cmt">// Example</span>
+<span class="kw">if</span> (marks &gt;= <span class="num">40</span>) {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"PASS"</span>;
+} <span class="kw">else</span> {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"FAIL"</span>;
+}
+
+<span class="cmt">// else if chain</span>
+<span class="kw">if</span> (marks &gt;= <span class="num">80</span>)      <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"A"</span>;
+<span class="kw">else if</span> (marks &gt;= <span class="num">60</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"B"</span>;
+<span class="kw">else if</span> (marks &gt;= <span class="num">40</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"C"</span>;
+<span class="kw">else</span>                   <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"FAIL"</span>;</pre>
+      </div>
+    </div>
+
+    <!-- for loop -->
+    <div class="cs-section">
+      <div class="cs-section-title green">🔁 for Loop</div>
+      <div class="cs-body">
+<pre><span class="cmt">// Structure</span>
+<span class="kw">for</span>(<span class="typ">int</span> i = start; i &lt;= end; i++) {
+    <span class="cmt">// code repeats</span>
+}
+
+<span class="cmt">// Print 1 to 5</span>
+<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++) {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="str">" "</span>;
+}
+<span class="cmt">// Output: 1 2 3 4 5</span>
+
+<span class="cmt">// Sum 1 to N</span>
+<span class="typ">int</span> sum = <span class="num">0</span>;
+<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    sum = sum + i;
+}
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> sum;</pre>
+        <div class="note">i++ means i = i + 1. The loop runs while the condition is TRUE.</div>
+      </div>
+    </div>
+
+    <!-- while loop -->
+    <div class="cs-section">
+      <div class="cs-section-title purple">🔄 while Loop</div>
+      <div class="cs-body">
+<pre><span class="cmt">// Structure</span>
+<span class="kw">while</span> (condition) {
+    <span class="cmt">// keeps running while TRUE</span>
+}
+
+<span class="cmt">// Count down from 5</span>
+<span class="typ">int</span> i = <span class="num">5</span>;
+<span class="kw">while</span> (i &gt; <span class="num">0</span>) {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="str">" "</span>;
+    i--;
+}
+<span class="cmt">// Output: 5 4 3 2 1</span></pre>
+      </div>
+    </div>
+
+    <!-- Functions -->
+    <div class="cs-section">
+      <div class="cs-section-title yellow">⚙️ Functions (Basics)</div>
+      <div class="cs-body">
+<pre><span class="cmt">// Define a function</span>
+<span class="typ">int</span> <span class="fn">add</span>(<span class="typ">int</span> a, <span class="typ">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="cmt">// Call it in main</span>
+<span class="typ">int</span> <span class="fn">main</span>() {
+    <span class="typ">int</span> result = <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>);
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> result; <span class="cmt">// 8</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+
+<span class="cmt">// void = no return value</span>
+<span class="typ">void</span> <span class="fn">greet</span>() {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello!"</span>;
+}</pre>
+        <div class="note">Functions let you reuse code. Write once, use many times.</div>
+      </div>
+    </div>
+
+    <!-- Common patterns -->
+    <div class="cs-section">
+      <div class="cs-section-title pink">💡 Common Patterns</div>
+      <div class="cs-body">
+<pre><span class="cmt">// Even or Odd</span>
+<span class="kw">if</span> (n <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>)
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Even"</span>;
+<span class="kw">else</span>
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Odd"</span>;
+
+<span class="cmt">// Max of two numbers</span>
+<span class="kw">if</span> (a &gt; b) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> a;
+<span class="kw">else</span>       <span class="fn">cout</span> <span class="op">&lt;&lt;</span> b;
+
+<span class="cmt">// Multiplication table of n</span>
+<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++) {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> n <span class="op">*</span> i <span class="op">&lt;&lt;</span> <span class="str">"\n"</span>;
+}
+
+<span class="cmt">// Positive / Negative / Zero</span>
+<span class="kw">if</span>      (n &gt; <span class="num">0</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Positive"</span>;
+<span class="kw">else if</span> (n &lt; <span class="num">0</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Negative"</span>;
+<span class="kw">else</span>            <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Zero"</span>;</pre>
+      </div>
+    </div>
+
+    <!-- Error types -->
+    <div class="cs-section">
+      <div class="cs-section-title yellow">🐛 Error Types</div>
+      <div class="cs-body">
+        <table>
+          <tr><th>Type</th><th>What it means</th></tr>
+          <tr><td style="color:#f87171">Syntax Error</td><td>Violates language rules. Missing ; or } . Caught at compile time.</td></tr>
+          <tr><td style="color:var(--accent-yellow)">Runtime Error</td><td>Compiles but crashes while running. e.g. divide by zero.</td></tr>
+          <tr><td style="color:#a78bfa">Logical Error</td><td>Runs but gives wrong output. e.g. used = instead of ==.</td></tr>
+        </table>
+        <div class="note warn">⚠️ Most common mistake: <code>if (x = 5)</code> assigns, doesn't compare. Use <code>if (x == 5)</code>.</div>
+      </div>
+    </div>
+
+  </div><!-- /cs-grid -->
+
+  <div style="text-align:center;margin-top:32px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+    <p style="font-size:0.9em;color:var(--text-muted);margin:0 0 10px">
+      🏋️ Practice problems → <a href="practice.html" style="color:var(--accent-cyan);font-weight:700">practice.html</a>
+      &nbsp;|&nbsp;
+      🚀 Back to workshop → <a href="index.html" style="color:var(--accent-cyan);font-weight:700">index.html</a>
+    </p>
+    <p style="font-size:0.8em;color:var(--text-dim);margin:0">CS Chapter Workshop — Intro to Programming</p>
+  </div>
+
+</div>
+</body>
+</html>
