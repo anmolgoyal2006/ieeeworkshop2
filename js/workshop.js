@@ -360,28 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── Team scoring buttons ── */
-  document.querySelectorAll('[data-score-team]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const team   = btn.dataset.scoreTeam;
-      const points = parseInt(btn.dataset.points || '1', 10);
-      WorkshopScore.add(points, team);
-
-      // Flash feedback
-      const old = btn.textContent;
-      btn.textContent = `+${points} ✓`;
-      setTimeout(() => { btn.textContent = old; }, 800);
-    });
-  });
-
 });
 
-/* ============================================================
-   Keyboard shortcuts (presenter shortcuts)
-   ============================================================ */
-document.addEventListener('keydown', e => {
-  // T — toggle team mode
-  if (e.key === 't' && e.ctrlKey) {
-    WorkshopScore.enableTeams();
-  }
-});
+
+

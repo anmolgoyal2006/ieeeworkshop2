@@ -184,34 +184,6 @@
   gap: 12px;
 }
 
-/* â”€â”€ Scoreboard â”€â”€ */
-#scoreboard {
-  position: fixed;
-  top: 38px;
-  right: 20px;
-  z-index: 9998;
-  display: none;
-  gap: 12px;
-}
-
-#scoreboard.visible { display: flex; }
-
-.score-team {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 6px 14px;
-  font-family: var(--font-mono);
-  font-size: 0.75em;
-  font-weight: 700;
-}
-
-.score-team .team-label { color: var(--text-muted); }
-.score-team .team-pts { color: var(--accent-yellow); font-size: 1.2em; }
-
 /* â”€â”€ Section divider line â”€â”€ */
 .divider {
   width: 50px;

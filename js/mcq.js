@@ -9,34 +9,10 @@
 window.WorkshopScore = window.WorkshopScore || {
   total: 0,
   correct: 0,
-  teamA: 0,
-  teamB: 0,
-  teamMode: false,
 
-  add(points, team) {
+  add(points) {
     this.total += points;
     this.correct++;
-    if (this.teamMode) {
-      if (team === 'A') this.teamA += points;
-      else             this.teamB += points;
-    }
-    this._update();
-  },
-
-  _update() {
-    const elA = document.getElementById('score-team-a');
-    const elB = document.getElementById('score-team-b');
-    if (elA) elA.textContent = this.teamA;
-    if (elB) elB.textContent = this.teamB;
-    const sb = document.getElementById('scoreboard');
-    if (sb && this.teamMode) sb.classList.add('visible');
-  },
-
-  enableTeams() {
-    this.teamMode = true;
-    const sb = document.getElementById('scoreboard');
-    if (sb) sb.classList.add('visible');
-    this._update();
   },
 
   getFinalXP() {
@@ -168,7 +144,7 @@ class MCQ {
     this._highlightAnswer();
 
     if (isCorrect) {
-      WorkshopScore.add(this.points, null);
+      WorkshopScore.add(this.points);
       const pts = document.getElementById(`${this.id}_pts`);
       if (pts) {
         pts.textContent = `+${this.points}`;
@@ -545,35 +521,6 @@ class RapidQuiz {
 window.rapidQuizInstance = null;
 
 /* ============================================================
-   Team Score Controls
-   ============================================================ */
-
-function initTeamControls() {
-  const enableBtn = document.getElementById('enable-teams');
-  if (enableBtn) {
-    enableBtn.addEventListener('click', () => {
-      WorkshopScore.enableTeams();
-      enableBtn.textContent = '✓ Teams Active';
-      enableBtn.classList.remove('btn-outline');
-      enableBtn.classList.add('btn-green');
-    });
-  }
-
-  document.querySelectorAll('[data-team-add]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const team   = btn.dataset.teamAdd;
-      const points = parseInt(btn.dataset.points || '1', 10);
-      if (team === 'A') WorkshopScore.teamA += points;
-      else              WorkshopScore.teamB += points;
-      WorkshopScore._update();
-      // Flash animation
-      btn.style.transform = 'scale(1.15)';
-      setTimeout(() => { btn.style.transform = ''; }, 200);
-    });
-  });
-}
-
-/* ============================================================
    DOMContentLoaded — wire everything up
    ============================================================ */
 
@@ -582,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initPathSelector();
   initHints();
   initStepReveal();
-  initTeamControls();
 });
 
 // Expose for use in HTML

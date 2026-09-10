@@ -23,11 +23,6 @@
   </div>
 </div>
 
-<!-- Team Scoreboard (optional) -->
-<div id="scoreboard">
-  <div class="score-team"><span class="team-label">TEAM A</span><span class="team-pts" id="score-team-a">0</span></div>
-  <div class="score-team"><span class="team-label">TEAM B</span><span class="team-pts" id="score-team-b">0</span></div>
-</div>
 
 <div class="reveal">
 <div class="slides">
@@ -328,15 +323,6 @@ Transition: "Let's actually RUN one. Right now."
         <p style="margin:6px 0 0;font-size:0.82em;color:var(--text-muted)">
           You changed the message. You ran the program. You made a computer do something <em>you</em> told it to.
         </p>
-      </div>
-
-      <div class="card mt-2">
-        <p style="margin:0;font-size:0.82em;font-weight:700;color:var(--accent-yellow)">⚡ Team Challenge</p>
-        <p style="margin:4px 0 8px;font-size:0.78em;color:var(--text-muted)">Award a point to the team that shouts the best message:</p>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-outline btn-sm" data-score-team="A" data-points="1">+1 Team A</button>
-          <button class="btn btn-outline btn-sm" data-score-team="B" data-points="1">+1 Team B</button>
-        </div>
       </div>
     </div>
   </div>
@@ -1332,7 +1318,7 @@ Transition: "Let me break this into a 30-day plan you can actually execute."
       <span class="badge badge-purple">Marks calculator</span>
     </div>
     <p style="font-size:0.78em;color:var(--text-muted);margin-top:8px">
-      Full practice problems → <strong style="color:var(--accent-cyan)">practice.html</strong> &nbsp;|&nbsp; Cheat sheet → <strong style="color:var(--accent-cyan)">cheatsheet.html</strong>
+      Full practice problems → <a href="#" onclick="window.open('practice.html?from=' + Reveal.getIndices().h, '_blank'); return false;" target="_blank" style="color:var(--accent-cyan);text-decoration:underline">practice.html</a> &nbsp;|&nbsp; Cheat sheet → <a href="#" onclick="window.open('cheatsheet.html?from=' + Reveal.getIndices().h, '_blank'); return false;" style="color:var(--accent-cyan);text-decoration:underline">cheatsheet.html</a>
     </p>
   </div>
 

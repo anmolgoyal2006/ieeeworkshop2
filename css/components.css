@@ -467,14 +467,6 @@
 
 .ice-response.visible { display: block; }
 
-/* ── Team Score UI ── */
-.team-toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 16px;
-}
-
 /* ── Hint Buttons ── */
 .hint-btn {
   background: rgba(251,191,36,0.1);
