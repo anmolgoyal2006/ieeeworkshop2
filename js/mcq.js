@@ -9,30 +9,10 @@
 window.WorkshopScore = window.WorkshopScore || {
   total: 0,
   correct: 0,
-  add(points, team) {
+
+  add(points) {
     this.total += points;
     this.correct++;
-    if (this.teamMode) {
-      if (team === 'A') this.teamA += points;
-      else             this.teamB += points;
-    }
-    this._update();
-  },
-
-  _update() {
-    const elA = document.getElementById('score-team-a');
-    const elB = document.getElementById('score-team-b');
-    if (elA) elA.textContent = this.teamA;
-    if (elB) elB.textContent = this.teamB;
-    const sb = document.getElementById('scoreboard');
-    if (sb && this.teamMode) sb.classList.add('visible');
-  },
-
-  enableTeams() {
-    this.teamMode = true;
-    const sb = document.getElementById('scoreboard');
-    if (sb) sb.classList.add('visible');
-    this._update();
   },
 
   getFinalXP() {
@@ -164,7 +144,7 @@ class MCQ {
     this._highlightAnswer();
 
     if (isCorrect) {
-      WorkshopScore.add(this.points, null);
+      WorkshopScore.add(this.points);
       const pts = document.getElementById(`${this.id}_pts`);
       if (pts) {
         pts.textContent = `+${this.points}`;
@@ -401,21 +381,16 @@ function initPathSelector() {
    ============================================================ */
 
 function initHints() {
-  // Use event delegation on document so it works regardless of slide timing
-  if (document._hintsInit) return;
-  document._hintsInit = true;
+  document.querySelectorAll('.hint-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.hintTarget;
+      const target = document.getElementById(targetId);
+      if (!target) return;
 
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.hint-btn');
-    if (!btn) return;
-
-    const targetId = btn.dataset.hintTarget;
-    const target   = document.getElementById(targetId);
-    if (!target) return;
-
-    target.classList.add('visible');
-    btn.style.opacity      = '0.5';
-    btn.style.pointerEvents = 'none';
+      target.classList.add('visible');
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+    });
   });
 }
 
@@ -545,23 +520,6 @@ class RapidQuiz {
 // Global reference for reset
 window.rapidQuizInstance = null;
 
-/* team controls removed */;
-  }
-
-  document.querySelectorAll('[data-team-add]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const team   = btn.dataset.teamAdd;
-      const points = parseInt(btn.dataset.points || '1', 10);
-      if (team === 'A') WorkshopScore.teamA += points;
-      else              WorkshopScore.teamB += points;
-      WorkshopScore._update();
-      // Flash animation
-      btn.style.transform = 'scale(1.15)';
-      setTimeout(() => { btn.style.transform = ''; }, 200);
-    });
-  });
-}
-
 /* ============================================================
    DOMContentLoaded — wire everything up
    ============================================================ */
@@ -571,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initPathSelector();
   initHints();
   initStepReveal();
-  initTeamControls();
 });
 
 // Expose for use in HTML

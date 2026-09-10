@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +23,6 @@
   </div>
 </div>
 
-</div>
 
 <div class="reveal">
 <div class="slides">
@@ -1319,7 +1318,7 @@ Transition: "Let me break this into a 30-day plan you can actually execute."
       <span class="badge badge-purple">Marks calculator</span>
     </div>
     <p style="font-size:0.78em;color:var(--text-muted);margin-top:8px">
-      Full practice problems → <strong style="color:var(--accent-cyan)">practice.html</strong> &nbsp;|&nbsp; Cheat sheet → <strong style="color:var(--accent-cyan)">cheatsheet.html</strong>
+      Full practice problems → <a href="#" onclick="window.open('practice.html?from=' + Reveal.getIndices().h, '_blank'); return false;" target="_blank" style="color:var(--accent-cyan);text-decoration:underline">practice.html</a> &nbsp;|&nbsp; Cheat sheet → <a href="#" onclick="window.open('cheatsheet.html?from=' + Reveal.getIndices().h, '_blank'); return false;" style="color:var(--accent-cyan);text-decoration:underline">cheatsheet.html</a>
     </p>
   </div>
 
@@ -1540,7 +1539,15 @@ document.addEventListener('DOMContentLoaded',function(){
     });
   });
 
-  
+  /* Team scoring */
+  document.querySelectorAll('[data-score-team]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var team=btn.dataset.scoreTeam;
+      var pts=parseInt(btn.dataset.points||'1',10);
+      if(window.WorkshopScore)WorkshopScore.add(pts,team);
+      var old=btn.textContent;btn.textContent='+'+pts+' ✓';
+      setTimeout(function(){btn.textContent=old;},800);
+    });
   });
 });
 </script>

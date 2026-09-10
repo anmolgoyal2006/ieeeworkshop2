@@ -327,46 +327,40 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWorkshopProgress(0, Reveal.getTotalSlides());
   }
 
-  /* ── Delegated click handlers for all dynamic slide buttons ── */
-  document.addEventListener('click', e => {
-
-    // Maggi robot response buttons
-    const maggiBtn = e.target.closest('.maggi-resp-btn');
-    if (maggiBtn) {
-      document.querySelectorAll('.maggi-resp-btn').forEach(b => {
+  /* ── Maggi robot response buttons ── */
+  const maggiOpts = document.querySelectorAll('.maggi-resp-btn');
+  maggiOpts.forEach(btn => {
+    btn.addEventListener('click', () => {
+      maggiOpts.forEach(b => {
         b.style.opacity = '0.4';
         b.style.pointerEvents = 'none';
       });
-      maggiBtn.style.opacity = '1';
-      maggiBtn.style.borderColor = 'var(--accent-cyan)';
+      btn.style.opacity = '1';
+      btn.style.borderColor = 'var(--accent-cyan)';
+
       const resp = document.getElementById('maggi-resp');
       if (resp) {
-        resp.textContent = maggiBtn.dataset.response;
+        resp.textContent = btn.dataset.response;
         resp.style.display = 'block';
         resp.classList.add('animate-fadeinup');
       }
-    }
-
-    // Mission complete button
-    if (e.target.closest('#mission-complete-btn')) {
-      const el = document.getElementById('mission-complete-block');
-      const btn = document.getElementById('mission-complete-btn');
-      if (el) { el.style.display = 'block'; el.classList.add('animate-bouncein'); }
-      if (btn) btn.style.display = 'none';
-    }
-
-    // Solution reveal button (slide 13)
-    if (e.target.closest('#solution-reveal-btn')) {
-      const b = document.getElementById('solution-block');
-      const rb = document.getElementById('solution-reveal-btn');
-      if (b) { b.style.display = 'block'; b.classList.add('animate-fadeinup'); }
-      if (rb) { rb.style.opacity = '0.5'; rb.style.pointerEvents = 'none'; }
-    }
-
-  });
     });
   });
 
+  /* ── Mission complete toggle ── */
+  const missionBtn = document.getElementById('mission-complete-btn');
+  if (missionBtn) {
+    missionBtn.addEventListener('click', () => {
+      const el = document.getElementById('mission-complete-block');
+      if (el) {
+        el.style.display = 'block';
+        el.classList.add('animate-bouncein');
+        missionBtn.style.display = 'none';
+      }
+    });
+  }
+
 });
 
-/* ── Keyboard shortcuts ── */
+
+

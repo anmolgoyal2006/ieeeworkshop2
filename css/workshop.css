@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    WORKSHOP.CSS â€” Core design system for Intro to Programming
    CS Chapter Workshop
    ============================================================ */
@@ -183,8 +183,6 @@
   align-items: center;
   gap: 12px;
 }
-
-/* scoreboard removed */
 
 /* â”€â”€ Section divider line â”€â”€ */
 .divider {
@@ -899,12 +897,7 @@
 .dim   { color: var(--text-dim) !important; }
 
 /* â”€â”€ Reveal overrides â”€â”€ */
-.reveal .controls {
-  color: var(--accent-cyan) !important;
-  position: fixed !important;
-  bottom: 16px !important;
-  right: 16px !important;
-}
+.reveal .controls { color: var(--accent-cyan) !important; }
 .reveal .progress { color: var(--accent-cyan) !important; }
 .reveal .progress span { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)) !important; }
 

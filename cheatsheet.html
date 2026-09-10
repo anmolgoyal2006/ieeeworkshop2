@@ -38,7 +38,7 @@
 <body>
 <div class="page">
 
-  <a href="index.html" class="back-btn">← Back to Workshop</a>
+  <a href="#" onclick="var s=new URLSearchParams(location.search).get('from'); window.location='index.html#/'+(s||'0'); return false;" class="back-btn">← Back to Workshop</a>
 
   <div class="cs-header">
     <h1>C++ Cheat Sheet 📋</h1>
