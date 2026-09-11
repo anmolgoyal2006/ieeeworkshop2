@@ -612,7 +612,7 @@
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 240, 255, 0.2);
-  padding: 28px 32px;
+  padding: 28px 32px 36px;
   position: relative;
   transform: scale(0.95);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -659,6 +659,9 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.88em;
+  font-weight: 500;
 }
 
 .kbd-badge {

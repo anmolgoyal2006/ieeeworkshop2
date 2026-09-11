@@ -369,6 +369,12 @@ function initFloatingDock() {
     if (e.key === 'g' || e.key === 'G') {
       if (slideGridBtn) slideGridBtn.click();
     }
+    if (e.key === 's' || e.key === 'S') {
+      // Open Reveal's built-in speaker notes window
+      if (typeof Reveal !== 'undefined' && Reveal.getPlugin('notes')) {
+        Reveal.getPlugin('notes').open();
+      }
+    }
     if (e.key === 'Escape') {
       document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     }
