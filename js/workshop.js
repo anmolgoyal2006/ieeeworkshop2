@@ -1,64 +1,59 @@
 /* ============================================================
-   WORKSHOP.JS — Main orchestrator
+   WORKSHOP.JS — Main Orchestrator & Interactive Controllers
    CS Chapter Workshop — Intro to Programming
-   Boots Reveal.js, wires slide events, initialises all MCQs.
    ============================================================ */
 
 'use strict';
 
 /* ============================================================
-   MCQ Data
+   MCQ DATA DEFINITIONS
    ============================================================ */
 const MCQ_DATA = {
-  /* Slide 3 — Compiler MCQ */
   compiler: {
     id:       'mcq-compiler',
-    question: 'Does a computer directly understand the C++ code we write?',
+    question: 'Does a computer directly understand human-written C++ code?',
     options:  [
-      { key: 'A', text: 'Yes, it runs it directly' },
-      { key: 'B', text: 'No — it needs to be translated first' },
-      { key: 'C', text: 'Only on Sundays 😂' },
-      { key: 'D', text: 'Only if the code is short' }
+      { key: 'A', text: 'Yes, CPU runs C++ text directly' },
+      { key: 'B', text: 'No — it must be compiled into machine code first' },
+      { key: 'C', text: 'Only on Linux machines 😂' },
+      { key: 'D', text: 'Only if the file is small' }
     ],
     correct: 'B',
-    explain: 'Computers only understand machine code (0s and 1s). A compiler translates our human-readable C++ into machine code the processor can execute.',
+    explain: 'Computers only execute binary machine code (0s and 1s). The C++ compiler translates our human-readable instructions into CPU-executable machine instructions.',
     points:  1
   },
 
-  /* Slide 4 — Hello World MCQ */
   helloWorld: {
     id:       'mcq-helloworld',
-    question: 'What do you THINK this program prints?',
+    question: 'What do you predict this program will output?',
     options:  [
       { key: 'A', text: 'Hello World!' },
-      { key: 'B', text: 'Error' },
+      { key: 'B', text: 'Compilation Error' },
       { key: 'C', text: '0' },
       { key: 'D', text: 'Nothing' }
     ],
     correct: 'A',
-    explain: 'cout << "Hello World!" sends the text to the screen. This is literally the first program almost every developer ever writes.',
+    explain: 'cout << "Hello World!" sends the text stream to the screen terminal. This is the universal first milestone for developers.',
     points:  1
   },
 
-  /* Slide 7 — Variable type MCQ */
   varType: {
     id:       'mcq-vartype',
-    question: 'Which data type would you use to store someone\'s age?',
+    question: 'Which C++ data type would you select to store a student\'s age?',
     options:  [
       { key: 'A', text: 'int — whole number' },
       { key: 'B', text: 'string — text' },
-      { key: 'C', text: 'bool — true/false' },
+      { key: 'C', text: 'bool — true/false flag' },
       { key: 'D', text: 'char — single character' }
     ],
     correct: 'A',
-    explain: 'Age is a whole number (18, 21, 50), so int is the right choice. string would store "18" as text, bool is only true/false, and char holds a single letter.',
+    explain: 'Age is a discrete integer (18, 19, 21), making int optimal. string stores text, bool is binary truth, and char is a single byte letter.',
     points:  1
   },
 
-  /* Slide 9 — Guess the Output MCQ */
   guessOutput: {
     id:       'mcq-guessoutput',
-    question: 'What will be printed?',
+    question: 'What will be printed to the console?',
     code: `int marks = 35;
 if (marks >= 40)
     cout << "PASS";
@@ -68,27 +63,26 @@ else
       { key: 'A', text: 'PASS' },
       { key: 'B', text: 'FAIL' },
       { key: 'C', text: '35' },
-      { key: 'D', text: 'Error' }
+      { key: 'D', text: 'Syntax Error' }
     ],
     correct: 'B',
-    explain: '35 is NOT >= 40, so the else branch runs and prints "FAIL". The condition 35 >= 40 is false.',
+    explain: '35 is NOT >= 40, so the condition evaluates to false and executes the else branch, outputting "FAIL".',
     points:  1,
     followUp: {
-      question: 'Now what if marks = 40?',
+      question: '⚡ Follow-up: What if marks = 40 exactly?',
       options:  [
         { key: 'A', text: 'PASS' },
         { key: 'B', text: 'FAIL' }
       ],
       correct: 'A',
-      explain: '40 >= 40 is TRUE (>= means "greater than or equal to"), so it prints "PASS". The boundary matters!',
+      explain: '40 >= 40 is TRUE because >= means "greater than or equal to". Boundary conditions are critical in CSE!',
       points:  1
     }
   },
 
-  /* Slide 11 — Loop MCQ */
   loopOutput: {
     id:       'mcq-loopoutput',
-    question: 'What will be printed?',
+    question: 'What will this loop output?',
     code: `for(int i = 1; i <= 3; i++) {
     cout << i;
 }`,
@@ -99,86 +93,360 @@ else
       { key: 'D', text: '111' }
     ],
     correct: 'A',
-    explain: 'The loop starts at i=1, runs while i<=3, prints i each time (1, 2, 3), then increments. So output is 123. Loop runs exactly 3 times.',
+    explain: 'Loop initializes i=1, prints 1, increments to 2, prints 2, increments to 3, prints 3. At i=4, condition 4<=3 fails and loop terminates.',
     points:  1
   },
 
-  /* Slide 14 — Debug MCQ */
   debug: {
     id:       'mcq-debug',
-    question: 'What\'s wrong with this code?',
+    question: 'What is the bug in this decision statement?',
     code: `if (marks = 40)
     cout << "Pass";`,
     options:  [
-      { key: 'A', text: 'Nothing — it looks fine' },
-      { key: 'B', text: '= should be == for comparison' },
-      { key: 'C', text: 'marks should be a string' },
-      { key: 'D', text: 'if cannot be used here' }
+      { key: 'A', text: 'Nothing — syntax is valid' },
+      { key: 'B', text: '= (assignment) should be == (equality comparison)' },
+      { key: 'C', text: 'marks variable must be in double quotes' },
+      { key: 'D', text: 'if statement requires an else block' }
     ],
     correct: 'B',
-    explain: '= is ASSIGNMENT (stores 40 into marks). == is COMPARISON (checks if marks equals 40). This is one of the most common beginner mistakes — even experienced developers make it occasionally!',
+    explain: 'Single = is variable ASSIGNMENT (sets marks to 40). Double == is EQUALITY COMPARISON. This is the #1 classic bug in beginner C++!',
     points:  1
   }
 };
 
 /* ============================================================
-   Rapid Quiz questions
+   RAPID QUIZ QUESTIONS (Slide 18)
    ============================================================ */
 const RAPID_QUIZ = [
   {
-    question: 'What does <code style="background:rgba(0,212,255,0.1);padding:2px 8px;border-radius:4px;font-family:monospace">cout</code> do?',
+    question: 'What does the <code style="color:var(--accent-cyan)">cout &lt;&lt;</code> stream operator do in C++?',
     options:  [
-      { key: 'A', text: 'Takes input from user' },
-      { key: 'B', text: 'Prints output to screen' },
-      { key: 'C', text: 'Creates a loop' },
-      { key: 'D', text: 'Compares two values' }
+      { key: 'A', text: 'Takes input from the keyboard' },
+      { key: 'B', text: 'Prints output to the console' },
+      { key: 'C', text: 'Declares an infinite loop' },
+      { key: 'D', text: 'Deletes RAM allocation' }
     ],
     correct: 'B',
-    explain:  'cout = "character output". It sends data to the screen. cin is the opposite — it reads input.'
+    explain:  'cout stands for "Character Output" and sends data to the standard output terminal.'
   },
   {
-    question: 'What does if/else help us do?',
+    question: 'What is the primary role of <code style="color:var(--accent-purple)">if / else</code> control flow?',
     options:  [
-      { key: 'A', text: 'Repeat an action' },
-      { key: 'B', text: 'Store data in memory' },
-      { key: 'C', text: 'Make decisions based on conditions' },
-      { key: 'D', text: 'Compile the code' }
+      { key: 'A', text: 'Repeat code 100 times' },
+      { key: 'B', text: 'Allocate heap memory' },
+      { key: 'C', text: 'Make decisions based on condition evaluation' },
+      { key: 'D', text: 'Compile C++ into bytecode' }
     ],
     correct: 'C',
-    explain:  'if/else lets us run different code depending on whether a condition is true or false. It\'s how programs make decisions.'
+    explain:  'Conditional statements let programs branch and take different actions based on dynamic values.'
   },
   {
-    question: 'Why do we use loops?',
+    question: 'Why do software engineers use loops (<code style="color:var(--accent-green)">for / while</code>)?',
     options:  [
-      { key: 'A', text: 'To repeat instructions without rewriting them' },
-      { key: 'B', text: 'To store text in memory' },
-      { key: 'C', text: 'To take user input' },
-      { key: 'D', text: 'To fix syntax errors' }
+      { key: 'A', text: 'To repeat instructions without duplicate code' },
+      { key: 'B', text: 'To convert numbers into text strings' },
+      { key: 'C', text: 'To restart the operating system' },
+      { key: 'D', text: 'To auto-fix compiler bugs' }
     ],
     correct: 'A',
-    explain:  'Loops let us execute the same block of code multiple times. Instead of writing cout 100 times, write it once inside a loop!'
+    explain:  'Loops implement DRY (Don\'t Repeat Yourself) — allowing 1000s of iterations in 3 lines of code.'
   },
   {
-    question: 'What is the FIRST thing you should do when solving a programming problem?',
+    question: 'What is the FIRST thing you should do when given a programming problem?',
     options:  [
-      { key: 'A', text: 'Start typing random code' },
-      { key: 'B', text: 'Copy code from Google' },
-      { key: 'C', text: 'Understand and break down the problem' },
-      { key: 'D', text: 'Use recursion immediately' }
+      { key: 'A', text: 'Start typing syntax immediately' },
+      { key: 'B', text: 'Copy-paste code blindly' },
+      { key: 'C', text: 'Understand problem & formulate step-by-step logic' },
+      { key: 'D', text: 'Give up and ask ChatGPT' }
     ],
     correct: 'C',
-    explain:  'Always think before you type. Understand the problem, break it into steps, then write the algorithm. Coding without thinking leads to messy bugs.'
+    explain:  'Thinking and algorithm planning takes 80% of development. Writing the syntax is just the translation step.'
   }
 ];
 
 /* ============================================================
-   Initialise all MCQs when the slide becomes active
+   CODE RUNNERS INITIALIZATION
    ============================================================ */
+function initCodeRunners() {
+  // 1. Hello World Runner (Slide 5)
+  const runnerHello = new CodeRunner({
+    id: 'runner-hello',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, Future Coder!" << endl;
+    return 0;
+}`,
+    outputLines: [
+      { html: '<span style="color:#a7f3d0">Hello, Future Coder!</span>' }
+    ]
+  });
+
+  const msgInput = document.getElementById('hello-msg-input');
+  if (msgInput) {
+    msgInput.addEventListener('input', () => {
+      const msg = msgInput.value.trim() || 'Hello, Future Coder!';
+      runnerHello.setCode(`#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "${msg.replace(/"/g, '\\"')}" << endl;
+    return 0;
+}`);
+      runnerHello.outputLines = [
+        { html: `<span style="color:#a7f3d0">${msg}</span>` }
+      ];
+    });
+  }
+
+  // 2. Addition Runner (Slide 6)
+  new CodeRunner({
+    id: 'runner-addition',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << "Result: " << (a + b) << endl;
+    return 0;
+}`,
+    hasInput: true,
+    inputLabel: 'Enter two numbers (e.g. 15 25):',
+    onRun: async (val, outEl) => {
+      const parts = val.split(/\s+/).map(Number);
+      const a = !isNaN(parts[0]) ? parts[0] : 10;
+      const b = !isNaN(parts[1]) ? parts[1] : 20;
+      const sum = a + b;
+      await typeOutput(outEl, [
+        { html: `<span style="color:var(--text-muted)">Input received:</span> <span style="color:var(--accent-cyan)">${a}, ${b}</span>` },
+        { html: `<span style="color:#a7f3d0;font-weight:700">Result: ${sum}</span>` }
+      ], 40);
+    }
+  });
+
+  // 3. Even / Odd Runner (Slide 13)
+  new CodeRunner({
+    id: 'runner-evenodd',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    if (n % 2 == 0) {
+        cout << n << " is EVEN" << endl;
+    } else {
+        cout << n << " is ODD" << endl;
+    }
+    return 0;
+}`,
+    hasInput: true,
+    inputLabel: 'Enter any whole integer:',
+    onRun: async (val, outEl) => {
+      const num = parseInt(val, 10) || 7;
+      const isEven = num % 2 === 0;
+      await typeOutput(outEl, [
+        { html: `<span style="color:var(--text-muted)">Testing number:</span> <span style="color:var(--accent-cyan)">${num}</span>` },
+        { html: `<span style="color:${isEven ? '#10b981' : '#fbbf24'};font-weight:700">${num} is ${isEven ? 'EVEN ⚡' : 'ODD 🔥'}</span>` }
+      ], 40);
+    }
+  });
+
+  // 4. Final Challenge Runner (Slide 19)
+  new CodeRunner({
+    id: 'runner-final',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int marks;
+    cin >> marks;
+    if (marks >= 40) {
+        cout << "STATUS: PASS (Exam Cleared!)" << endl;
+    } else {
+        cout << "STATUS: FAIL (Keep practicing!)" << endl;
+    }
+    return 0;
+}`,
+    hasInput: true,
+    inputLabel: 'Enter marks (0 - 100):',
+    onRun: async (val, outEl) => {
+      const marks = parseInt(val, 10) || 45;
+      const isPass = marks >= 40;
+      await typeOutput(outEl, [
+        { html: `<span style="color:var(--text-muted)">Evaluated Marks:</span> <span style="color:var(--accent-cyan)">${marks}</span>` },
+        { html: `<span style="color:${isPass ? '#10b981' : '#f43f5e'};font-weight:900;font-size:1.1em">${isPass ? '🏆 STATUS: PASS — Mission Accomplished!' : '❌ STATUS: FAIL — Need 40+ to Pass!'}</span>` }
+      ], 40);
+    }
+  });
+}
+
+/* ============================================================
+   HUD DOCK & PRESENTATION MODALS
+   ============================================================ */
+function initFloatingDock() {
+  // Laser Pointer Toggle
+  const laserBtn = document.getElementById('dock-laser-btn');
+  // Sound Mute Toggle
+  const audioBtn = document.getElementById('dock-audio-btn');
+  if (audioBtn) {
+    const isMuted = localStorage.getItem('cs_workshop_muted') === 'true';
+    audioBtn.innerHTML = isMuted ? '🔇' : '🔊';
+    audioBtn.classList.toggle('active', !isMuted);
+
+    audioBtn.addEventListener('click', () => {
+      const muted = window.soundEngine.toggleMute();
+      audioBtn.innerHTML = muted ? '🔇' : '🔊';
+      audioBtn.classList.toggle('active', !muted);
+      if (window.showToast) window.showToast(muted ? 'Sound FX Muted' : 'Sound FX Enabled', 'info');
+      if (!muted) window.soundEngine.playSuccess();
+    });
+  }
+
+  // Fullscreen Toggle
+  const fsBtn = document.getElementById('dock-fs-btn');
+  if (fsBtn) {
+    fsBtn.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClick();
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+  }
+
+  // Slide Jump Navigator Modal
+  const slideGridBtn = document.getElementById('dock-slides-btn');
+  const slideModal = document.getElementById('slide-jump-modal');
+  if (slideGridBtn && slideModal) {
+    slideGridBtn.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClick();
+      buildSlideGrid();
+      slideModal.classList.add('open');
+    });
+  }
+
+  // Keyboard Shortcuts Modal
+  const helpBtn = document.getElementById('dock-help-btn');
+  const helpModal = document.getElementById('shortcuts-modal');
+  if (helpBtn && helpModal) {
+    helpBtn.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClick();
+      helpModal.classList.add('open');
+    });
+  }
+
+  // Modal Close buttons
+  document.querySelectorAll('.modal-overlay').forEach(modal => {
+    const closeBtn = modal.querySelector('.modal-close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        if (window.soundEngine) window.soundEngine.playClick();
+        modal.classList.remove('open');
+      });
+    }
+    modal.addEventListener('click', e => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+  });
+
+  // Global Keyboard Shortcuts
+  window.addEventListener('keydown', e => {
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
+    if (e.key === '?') {
+      if (helpModal) helpModal.classList.toggle('open');
+    }
+    if (e.key === 'm' || e.key === 'M') {
+      if (audioBtn) audioBtn.click();
+    }
+    if (e.key === 'f' || e.key === 'F') {
+      if (fsBtn) fsBtn.click();
+    }
+    if (e.key === 'g' || e.key === 'G') {
+      if (slideGridBtn) slideGridBtn.click();
+    }
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+}
+
+/* ── Build Slide Grid for Quick Navigator ── */
+function buildSlideGrid() {
+  const container = document.getElementById('slide-grid-container');
+  if (!container) return;
+
+  const slides = document.querySelectorAll('.reveal .slides > section');
+  const curIdx = Reveal.getIndices().h;
+
+  container.innerHTML = '';
+  slides.forEach((s, idx) => {
+    const titleEl = s.querySelector('h1, h2');
+    const title = titleEl ? titleEl.textContent.replace(/[^\w\s—→?]/gi, '').trim() : `Slide ${idx + 1}`;
+
+    const card = document.createElement('div');
+    card.className = `slide-nav-card ${idx === curIdx ? 'current' : ''}`;
+    card.innerHTML = `
+      <div class="slide-nav-num">SLIDE ${idx + 1}</div>
+      <div class="slide-nav-title">${title}</div>
+    `;
+    card.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClick();
+      Reveal.slide(idx);
+      document.getElementById('slide-jump-modal').classList.remove('open');
+    });
+    container.appendChild(card);
+  });
+}
+
+/* ============================================================
+   CERTIFICATE GENERATOR (Slide 19)
+   ============================================================ */
+function initCertificateModal() {
+  const genBtn = document.getElementById('generate-cert-btn');
+  const certModal = document.getElementById('cert-modal');
+  const nameInput = document.getElementById('cert-name-input');
+  const certNameDisplay = document.getElementById('cert-display-name');
+  const printBtn = document.getElementById('print-cert-btn');
+
+  if (genBtn && certModal) {
+    genBtn.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playVictory();
+      if (window.launchConfetti) window.launchConfetti(0.5, 0.4, 80);
+      certModal.classList.add('open');
+    });
+  }
+
+  if (nameInput && certNameDisplay) {
+    nameInput.addEventListener('input', () => {
+      certNameDisplay.textContent = nameInput.value.trim() || 'FUTURE TECH LEADER';
+    });
+  }
+
+  if (printBtn) {
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+}
+
+/* ============================================================
+   PROGRESS BAR & SLIDE MOUNTING
+   ============================================================ */
+function updateWorkshopProgress(idx, total) {
+  const label = document.querySelector('#workshop-progress .prog-label');
+  const fill  = document.querySelector('#workshop-progress .prog-bar-fill');
+  if (label) label.innerHTML = `<span>⚡ SLIDE ${idx + 1} / ${total}</span>`;
+  if (fill) fill.style.width = `${Math.round(((idx + 1) / total) * 100)}%`;
+}
+
 function mountMCQ(data, containerId) {
   const container = document.getElementById(containerId);
-  if (!container) return;
-  // Avoid double-mounting
-  if (container.dataset.mounted) return;
+  if (!container || container.dataset.mounted) return;
   container.dataset.mounted = 'true';
   new MCQ({
     id:        data.id,
@@ -193,174 +461,77 @@ function mountMCQ(data, containerId) {
   });
 }
 
-/* ============================================================
-   Reveal.js initialisation
-   ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Boot CodeRunners
+    initCodeRunners();
 
-  // Boot Reveal
-  Reveal.initialize({
-    hash:              true,
-    slideNumber:       false,
-    controls:          true,
-    controlsTutorial:  false,
-    progress:          true,
-    center:            false,
-    transition:        'slide',
-    transitionSpeed:   'fast',
-    backgroundTransition: 'fade',
-    width:             1280,
-    height:            800,
-    margin:            0.0,
-    minScale:          0.1,
-    maxScale:          2.0,
-    fragments:         true,
-    fragmentInURL:     false,
-    keyboard:          true,
-    overview:          true,
-    touch:             true,
-    loop:              false,
-    rtl:               false,
-    shuffle:           false,
-    mouseWheel:        false,
-    hideInactiveCursor: true,
-    hideCursorTime:    3000,
-    preloadIframes:    null,
-    autoAnimate:       true,
-    autoAnimateDuration: 0.4,
-    pdfSeparateFragments: false,
-    disableLayout:     false,
-    plugins: [
-      typeof RevealHighlight !== 'undefined' ? RevealHighlight : null,
-      typeof RevealNotes    !== 'undefined' ? RevealNotes    : null,
-      typeof RevealZoom     !== 'undefined' ? RevealZoom     : null
-    ].filter(Boolean)
-  });
+    // Boot Floating HUD Dock & Modals
+    initFloatingDock();
+    initCertificateModal();
 
-  /* ── Slide change handler ── */
-  Reveal.on('slidechanged', event => {
-    const idx    = event.indexh;
-    const total  = Reveal.getTotalSlides();
-
-    // Update progress bar
-    if (window.updateWorkshopProgress) {
-      updateWorkshopProgress(idx, total);
-    }
-
-    // Level toasts
-    if (window.LEVELS) {
-      const level = LEVELS.find(l => l.slide === idx);
-      if (level) showLevelToast(level);
-    }
-
-    // Mount MCQs lazily when their slide is reached
-    const mcqMap = {
-      2:  ['mcq-compiler-container',  MCQ_DATA.compiler],
-      3:  ['mcq-helloworld-container', MCQ_DATA.helloWorld],
-      6:  ['mcq-vartype-container',    MCQ_DATA.varType],
-      8:  ['mcq-guessoutput-container',MCQ_DATA.guessOutput],
-      10: ['mcq-loopoutput-container', MCQ_DATA.loopOutput],
-      13: ['mcq-debug-container',      MCQ_DATA.debug]
-    };
-
-    if (mcqMap[idx]) {
-      const [cid, data] = mcqMap[idx];
-      mountMCQ(data, cid);
-    }
-
-    // Init rapid quiz
-    if (idx === 17 && !window.rapidQuizInstance) {
-      window.rapidQuizInstance = new RapidQuiz('rapid-quiz-container', RAPID_QUIZ);
-    }
-
-    // Re-init loop animation on slide 9 (index 9)
-    if (idx === 9 && window.initLoopAnimation) {
-      initLoopAnimation();
-    }
-
-    // Re-init Maggi animation when slide 1 is reached
-    if (idx === 1 && window.initMaggiAnimation) {
-      initMaggiAnimation();
-    }
-
-    // Re-init compiler pipeline when slide 2 is reached
-    if (idx === 2 && window.initCompilerPipeline) {
-      initCompilerPipeline();
-    }
-
-    // Re-init attendance demo when slide 7 is reached
-    if (idx === 7 && window.initAttendanceDemo) {
-      initAttendanceDemo();
-    }
-
-    // Re-init algorithm builder when slide 11 is reached
-    if (idx === 11 && window.initAlgorithmBuilder) {
-      initAlgorithmBuilder();
-    }
-
-    // Re-init debug slide when slide 13 is reached
-    if (idx === 13 && window.initDebugSlide) {
-      initDebugSlide();
-    }
-
-    // Re-init IO pulse when slide 5 is reached
-    if (idx === 5 && window.initIOPulse) {
-      initIOPulse();
-    }
-
-    // Re-init type selector when slide 6 is reached
-    if (idx === 6 && window.initTypeSelector) {
-      initTypeSelector();
-    }
-  });
-
-  /* ── Fragment shown ── */
-  Reveal.on('fragmentshown', event => {
-    const el = event.fragment;
-    if (el && el.dataset.animation) {
-      el.classList.add('animate-' + el.dataset.animation);
-    }
-  });
-
-  // Initial progress
-  if (window.updateWorkshopProgress) {
-    updateWorkshopProgress(0, Reveal.getTotalSlides());
-  }
-
-  /* ── Maggi robot response buttons ── */
-  const maggiOpts = document.querySelectorAll('.maggi-resp-btn');
-  maggiOpts.forEach(btn => {
-    btn.addEventListener('click', () => {
-      maggiOpts.forEach(b => {
-        b.style.opacity = '0.4';
-        b.style.pointerEvents = 'none';
+    if (typeof Reveal !== 'undefined') {
+      // Boot Reveal.js
+      Reveal.initialize({
+        hash:                 true,
+        slideNumber:          false,
+        controls:             true,
+        controlsTutorial:     false,
+        progress:             true,
+        center:               false,
+        transition:           'slide',
+        transitionSpeed:      'fast',
+        backgroundTransition: 'fade',
+        width:                1280,
+        height:               800,
+        margin:               0.02,
+        minScale:             0.2,
+        maxScale:             2.0,
+        keyboard:             true,
+        touch:                true,
+        overview:             false,
+        plugins: [
+          typeof RevealHighlight !== 'undefined' ? RevealHighlight : null,
+          typeof RevealNotes     !== 'undefined' ? RevealNotes     : null,
+          typeof RevealZoom      !== 'undefined' ? RevealZoom      : null
+        ].filter(Boolean)
       });
-      btn.style.opacity = '1';
-      btn.style.borderColor = 'var(--accent-cyan)';
 
-      const resp = document.getElementById('maggi-resp');
-      if (resp) {
-        resp.textContent = btn.dataset.response;
-        resp.style.display = 'block';
-        resp.classList.add('animate-fadeinup');
-      }
-    });
+      // Slide Change Events
+      Reveal.on('slidechanged', event => {
+        const idx   = event.indexh;
+        const total = Reveal.getTotalSlides();
+        updateWorkshopProgress(idx, total);
+
+        // Mount MCQs on specific slides
+        const mcqMap = {
+          2:  ['mcq-compiler-container',   MCQ_DATA.compiler],
+          3:  ['mcq-helloworld-container', MCQ_DATA.helloWorld],
+          6:  ['mcq-vartype-container',    MCQ_DATA.varType],
+          8:  ['mcq-guessoutput-container',MCQ_DATA.guessOutput],
+          10: ['mcq-loopoutput-container', MCQ_DATA.loopOutput],
+          13: ['mcq-debug-container',      MCQ_DATA.debug]
+        };
+
+        if (mcqMap[idx]) {
+          const [cid, data] = mcqMap[idx];
+          mountMCQ(data, cid);
+        }
+
+        // Mount Rapid Quiz on Slide 18 (index 17)
+        if (idx === 17 && !window.rapidQuizInstance) {
+          window.rapidQuizInstance = new RapidQuiz({
+            container: document.getElementById('rapid-quiz-container'),
+            questions: RAPID_QUIZ
+          });
+        }
+
+        // Audio slide transition tick
+        if (window.soundEngine) window.soundEngine.playClick();
+      });
+
+      // Initial Progress Bar
+      updateWorkshopProgress(0, Reveal.getTotalSlides());
+    }
   });
-
-  /* ── Mission complete toggle ── */
-  const missionBtn = document.getElementById('mission-complete-btn');
-  if (missionBtn) {
-    missionBtn.addEventListener('click', () => {
-      const el = document.getElementById('mission-complete-block');
-      if (el) {
-        el.style.display = 'block';
-        el.classList.add('animate-bouncein');
-        missionBtn.style.display = 'none';
-      }
-    });
-  }
-
-});
-
-
-
+}

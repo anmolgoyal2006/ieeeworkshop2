@@ -3,270 +3,392 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C++ Cheat Sheet — CS Chapter Workshop</title>
+  <title>C++ Cheat Sheet 📋 — CS Chapter Workshop</title>
   <link rel="stylesheet" href="css/workshop.css" />
+  <link rel="stylesheet" href="css/components.css" />
   <style>
-    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); margin: 0; padding: 0; }
-    .page { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
-    .cs-header { text-align: center; margin-bottom: 40px; }
-    .cs-header h1 { font-size: 2.6em; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 8px; }
-    .cs-header p { color: var(--text-muted); font-size: 1em; }
-    .cs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-    .cs-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-    .cs-section-title { padding: 14px 20px; font-weight: 800; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; }
-    .cs-section-title.cyan   { background: rgba(0,212,255,0.12); color: var(--accent-cyan); border-bottom: 1px solid rgba(0,212,255,0.2); }
-    .cs-section-title.purple { background: rgba(124,58,237,0.12); color: #a78bfa; border-bottom: 1px solid rgba(124,58,237,0.2); }
-    .cs-section-title.green  { background: rgba(34,197,94,0.12); color: var(--accent-green); border-bottom: 1px solid rgba(34,197,94,0.2); }
-    .cs-section-title.yellow { background: rgba(251,191,36,0.12); color: var(--accent-yellow); border-bottom: 1px solid rgba(251,191,36,0.2); }
-    .cs-section-title.pink   { background: rgba(244,114,182,0.12); color: var(--accent-pink); border-bottom: 1px solid rgba(244,114,182,0.2); }
-    .cs-body { padding: 16px 20px; }
-    pre { margin: 0; font-family: var(--font-mono); font-size: 0.82em; line-height: 1.8; color: #e2e8f0; white-space: pre-wrap; }
-    .kw  { color: #c084fc; } .fn { color: #60a5fa; } .str { color: #86efac; }
-    .num { color: #fbbf24; } .cmt { color: #475569; } .typ { color: #38bdf8; }
-    .inc { color: #fb923c; } .op  { color: #f472b6; }
-    .note { font-size: 0.8em; color: var(--text-muted); margin-top: 8px; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 6px; border-left: 3px solid var(--accent-cyan); }
-    .warn { border-left-color: var(--accent-yellow); }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .cs-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .cs-header h1 {
+      font-size: 2.8em;
+      font-weight: 900;
+      margin: 0 0 8px;
+    }
+    .search-box-wrap {
+      max-width: 480px;
+      margin: 20px auto 0;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 12px 20px 12px 42px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      outline: none;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
+    }
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 1.1em;
+      pointer-events: none;
+    }
+    .cs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .cs-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+    }
+    .cs-section:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.1);
+    }
+    .cs-section-title {
+      padding: 14px 20px;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cs-section-title.cyan   { background: rgba(0,240,255,0.1); color: var(--accent-cyan); border-bottom: 1px solid rgba(0,240,255,0.2); }
+    .cs-section-title.purple { background: rgba(139,92,246,0.1); color: #c4b5fd; border-bottom: 1px solid rgba(139,92,246,0.2); }
+    .cs-section-title.green  { background: rgba(16,185,129,0.1); color: #6ee7b7; border-bottom: 1px solid rgba(16,185,129,0.2); }
+    .cs-section-title.yellow { background: rgba(251,191,36,0.1); color: #fde047; border-bottom: 1px solid rgba(251,191,36,0.2); }
+    .cs-section-title.pink   { background: rgba(244,63,94,0.1); color: #fda4af; border-bottom: 1px solid rgba(244,63,94,0.2); }
+    .cs-body {
+      padding: 18px 20px;
+    }
+    pre {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      line-height: 1.7;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--bg-terminal);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .kw  { color: #c084fc; font-weight: 600; }
+    .fn  { color: #60a5fa; }
+    .str { color: #86efac; }
+    .num { color: #fbbf24; }
+    .cmt { color: #64748b; font-style: italic; }
+    .typ { color: #38bdf8; font-weight: 600; }
+    .inc { color: #fb923c; }
+    .op  { color: #f472b6; }
+    .note {
+      font-size: 0.82em;
+      color: var(--text-muted);
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-cyan);
+    }
+    .warn { border-left-color: var(--accent-yellow); color: #fef08a; }
     table { width: 100%; border-collapse: collapse; font-size: 0.82em; font-family: var(--font-mono); }
-    th { color: var(--text-dim); font-weight: 700; text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.08em; padding: 4px 8px; border-bottom: 1px solid var(--border); text-align: left; }
-    td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    th { color: var(--text-dim); font-weight: 700; text-transform: uppercase; font-size: 0.72em; letter-spacing: 0.08em; padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    td { padding: 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
     td:first-child { color: var(--accent-cyan); font-weight: 700; }
-    .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 24px; transition: all 0.18s; }
-    .back-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-    @media print { .back-btn { display: none; } body { background: white; color: black; } pre, code { color: black; } }
+    .copy-chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-size: 0.75em;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-chip:hover {
+      background: var(--accent-cyan);
+      color: #070913;
+      font-weight: 700;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; color: black; }
+      pre, code { color: black; }
+    }
   </style>
 </head>
 <body>
+
+<canvas id="ambient-canvas"></canvas>
+<div class="bg-mesh"></div>
+
 <div class="page">
 
-  <a href="#" onclick="var s=new URLSearchParams(location.search).get('from'); window.location='index.html#/'+(s||'0'); return false;" class="back-btn">← Back to Workshop</a>
-
-  <div class="cs-header">
-    <h1>C++ Cheat Sheet 📋</h1>
-    <p>CS Chapter Workshop — Intro to Programming &nbsp;|&nbsp; Screenshot or print this page</p>
+  <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+    <a href="#" onclick="var s=new URLSearchParams(location.search).get('from'); window.location='index.html#/'+(s||'0'); return false;" class="btn btn-outline btn-sm">
+      ← Back to Workshop
+    </a>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-cyan btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+      <a href="practice.html" class="btn btn-primary btn-sm">🏋️ Practice Problems →</a>
+    </div>
   </div>
 
-  <div class="cs-grid">
+  <div class="cs-header">
+    <span class="badge badge-purple">CSE FIRST-YEAR QUICK REFERENCE</span>
+    <h1 class="gradient-text">C++ Cheat Sheet 📋</h1>
+    <p class="muted">Essential syntax, control flow, common patterns, and error diagnostics.</p>
 
-    <!-- Program structure -->
-    <div class="cs-section">
-      <div class="cs-section-title cyan">🏗️ Basic Program Structure</div>
+    <div class="search-box-wrap no-print">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="cheat-search" class="search-input" placeholder="Search keywords (e.g. loop, cin, modulo, types)..." />
+    </div>
+  </div>
+
+  <div class="cs-grid" id="cheat-grid">
+
+    <!-- 1. Structure -->
+    <div class="cs-section" data-keywords="structure main boilerplate include iostream syntax">
+      <div class="cs-section-title cyan">
+        <span>🏗️ Basic Program Structure</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
 <pre><span class="inc">#include &lt;iostream&gt;</span>
 <span class="kw">using namespace</span> std;
 
 <span class="typ">int</span> <span class="fn">main</span>() {
 
-    <span class="cmt">// your code here</span>
+    <span class="cmt">// your code logic here</span>
 
     <span class="kw">return</span> <span class="num">0</span>;
 }</pre>
-        <div class="note">Every C++ program starts with <code>main()</code>. Don't forget the return 0 at the end.</div>
+        <div class="note">Every C++ program starts at <code>main()</code>. <code>return 0;</code> indicates successful execution.</div>
       </div>
     </div>
 
-    <!-- Input / Output -->
-    <div class="cs-section">
-      <div class="cs-section-title green">📥 Input &amp; Output</div>
+    <!-- 2. IO -->
+    <div class="cs-section" data-keywords="input output cin cout endl print stream">
+      <div class="cs-section-title green">
+        <span>📥 Console Input &amp; Output</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
-<pre><span class="cmt">// Print to screen</span>
-<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello World!"</span>;
-<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Value: "</span> <span class="op">&lt;&lt;</span> x;
-<span class="fn">cout</span> <span class="op">&lt;&lt;</span> endl;  <span class="cmt">// new line</span>
+<pre><span class="cmt">// Print text and variables</span>
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello World!"</span> <span class="op">&lt;&lt;</span> endl;
+<span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Score: "</span> <span class="op">&lt;&lt;</span> score <span class="op">&lt;&lt;</span> <span class="str">"\n"</span>;
 
-<span class="cmt">// Read input</span>
-<span class="typ">int</span> n;
-<span class="fn">cin</span> <span class="op">&gt;&gt;</span> n;
+<span class="cmt">// Read user input from keyboard</span>
+<span class="typ">int</span> age;
+<span class="fn">cin</span> <span class="op">&gt;&gt;</span> age;
 
+<span class="cmt">// Multiple inputs</span>
 <span class="typ">int</span> a, b;
 <span class="fn">cin</span> <span class="op">&gt;&gt;</span> a <span class="op">&gt;&gt;</span> b;</pre>
       </div>
     </div>
 
-    <!-- Variables & Data Types -->
-    <div class="cs-section">
-      <div class="cs-section-title purple">📦 Variables &amp; Data Types</div>
+    <!-- 3. Variables -->
+    <div class="cs-section" data-keywords="variables data types int double char string bool memory">
+      <div class="cs-section-title purple">
+        <span>📦 Variables &amp; Data Types</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
         <table>
-          <tr><th>Type</th><th>What it stores</th><th>Example</th></tr>
-          <tr><td>int</td><td>Whole numbers</td><td>18, -5, 0</td></tr>
-          <tr><td>double</td><td>Decimal numbers</td><td>3.14, 9.81</td></tr>
-          <tr><td>char</td><td>Single character</td><td>'A', 'z'</td></tr>
-          <tr><td>string</td><td>Text / words</td><td>"Hello"</td></tr>
-          <tr><td>bool</td><td>true or false</td><td>true, false</td></tr>
+          <tr><th>Type</th><th>Bytes</th><th>Example</th></tr>
+          <tr><td>int</td><td>4 B</td><td>18, -5, 100</td></tr>
+          <tr><td>double</td><td>8 B</td><td>3.1415, 9.85</td></tr>
+          <tr><td>char</td><td>1 B</td><td>'A', 'z' (single quotes)</td></tr>
+          <tr><td>string</td><td>Dyn</td><td>"Hello CSE" (double quotes)</td></tr>
+          <tr><td>bool</td><td>1 B</td><td>true, false</td></tr>
         </table>
 <pre style="margin-top:12px"><span class="typ">int</span> age = <span class="num">18</span>;
-<span class="typ">double</span> gpa = <span class="num">8.5</span>;
+<span class="typ">double</span> gpa = <span class="num">9.2</span>;
 <span class="typ">string</span> name = <span class="str">"Rahul"</span>;
-<span class="typ">bool</span> passed = <span class="kw">true</span>;</pre>
+<span class="typ">bool</span> isCoder = <span class="kw">true</span>;</pre>
       </div>
     </div>
 
-    <!-- Operators -->
-    <div class="cs-section">
-      <div class="cs-section-title yellow">🔢 Operators</div>
+    <!-- 4. Operators -->
+    <div class="cs-section" data-keywords="operators arithmetic modulo comparison equal assignment math">
+      <div class="cs-section-title yellow">
+        <span>🔢 Common Operators</span>
+      </div>
       <div class="cs-body">
         <table>
-          <tr><th>Op</th><th>Meaning</th><th>Example</th></tr>
-          <tr><td>+</td><td>Addition</td><td>a + b</td></tr>
-          <tr><td>-</td><td>Subtraction</td><td>a - b</td></tr>
-          <tr><td>*</td><td>Multiplication</td><td>a * b</td></tr>
-          <tr><td>/</td><td>Division</td><td>a / b</td></tr>
-          <tr><td>%</td><td>Remainder (modulo)</td><td>7 % 2 = 1</td></tr>
-          <tr><td>==</td><td>Equal to</td><td>a == b</td></tr>
-          <tr><td>!=</td><td>Not equal</td><td>a != b</td></tr>
-          <tr><td>&gt;</td><td>Greater than</td><td>a &gt; b</td></tr>
-          <tr><td>&lt;</td><td>Less than</td><td>a &lt; b</td></tr>
-          <tr><td>&gt;=</td><td>Greater or equal</td><td>a &gt;= b</td></tr>
-          <tr><td>&lt;=</td><td>Less or equal</td><td>a &lt;= b</td></tr>
+          <tr><th>Op</th><th>Action</th><th>Example</th></tr>
+          <tr><td>+  -  *  /</td><td>Arithmetic</td><td>a + b, a / b</td></tr>
+          <tr><td>%</td><td>Modulo (Remainder)</td><td>10 % 3 = 1</td></tr>
+          <tr><td>==</td><td>Equal comparison</td><td>if (a == b)</td></tr>
+          <tr><td>!=</td><td>Not equal</td><td>if (a != 0)</td></tr>
+          <tr><td>&gt;  &lt;</td><td>Greater / Less</td><td>if (age &gt; 18)</td></tr>
+          <tr><td>&gt;= &lt;=</td><td>Greater/Less equal</td><td>if (marks &gt;= 40)</td></tr>
+          <tr><td>&amp;&amp;  ||</td><td>Logical AND / OR</td><td>(a &gt; 0 &amp;&amp; b &gt; 0)</td></tr>
         </table>
-        <div class="note warn">⚠️ <strong>= assigns</strong> a value. &nbsp;<strong>== compares</strong> two values. Never mix them up!</div>
+        <div class="note warn">⚠️ <strong>= is ASSIGNMENT</strong> (stores value). <strong>== is EQUALITY</strong> (tests condition).</div>
       </div>
     </div>
 
-    <!-- if / else -->
-    <div class="cs-section">
-      <div class="cs-section-title cyan">🔀 if / else</div>
+    <!-- 5. Decisions -->
+    <div class="cs-section" data-keywords="if else conditions branch decisions comparison">
+      <div class="cs-section-title cyan">
+        <span>🔀 Decision Making (if / else)</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
-<pre><span class="kw">if</span> (condition) {
-    <span class="cmt">// runs if condition is TRUE</span>
-} <span class="kw">else</span> {
-    <span class="cmt">// runs if condition is FALSE</span>
-}
-
-<span class="cmt">// Example</span>
-<span class="kw">if</span> (marks &gt;= <span class="num">40</span>) {
+<pre><span class="kw">if</span> (marks &gt;= <span class="num">40</span>) {
     <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"PASS"</span>;
 } <span class="kw">else</span> {
     <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"FAIL"</span>;
 }
 
-<span class="cmt">// else if chain</span>
-<span class="kw">if</span> (marks &gt;= <span class="num">80</span>)      <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"A"</span>;
-<span class="kw">else if</span> (marks &gt;= <span class="num">60</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"B"</span>;
-<span class="kw">else if</span> (marks &gt;= <span class="num">40</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"C"</span>;
+<span class="cmt">// Multiple branches</span>
+<span class="kw">if</span> (marks &gt;= <span class="num">90</span>)      <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"A+"</span>;
+<span class="kw">else if</span> (marks &gt;= <span class="num">75</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"A"</span>;
+<span class="kw">else if</span> (marks &gt;= <span class="num">40</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"PASS"</span>;
 <span class="kw">else</span>                   <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"FAIL"</span>;</pre>
       </div>
     </div>
 
-    <!-- for loop -->
-    <div class="cs-section">
-      <div class="cs-section-title green">🔁 for Loop</div>
+    <!-- 6. Loops -->
+    <div class="cs-section" data-keywords="loops for while repeat iterations iteration">
+      <div class="cs-section-title green">
+        <span>🔁 Loops (for &amp; while)</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
-<pre><span class="cmt">// Structure</span>
-<span class="kw">for</span>(<span class="typ">int</span> i = start; i &lt;= end; i++) {
-    <span class="cmt">// code repeats</span>
-}
-
-<span class="cmt">// Print 1 to 5</span>
+<pre><span class="cmt">// for loop (start; condition; update)</span>
 <span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++) {
     <span class="fn">cout</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="str">" "</span>;
 }
 <span class="cmt">// Output: 1 2 3 4 5</span>
 
-<span class="cmt">// Sum 1 to N</span>
-<span class="typ">int</span> sum = <span class="num">0</span>;
-<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
-    sum = sum + i;
-}
-<span class="fn">cout</span> <span class="op">&lt;&lt;</span> sum;</pre>
-        <div class="note">i++ means i = i + 1. The loop runs while the condition is TRUE.</div>
-      </div>
-    </div>
-
-    <!-- while loop -->
-    <div class="cs-section">
-      <div class="cs-section-title purple">🔄 while Loop</div>
-      <div class="cs-body">
-<pre><span class="cmt">// Structure</span>
-<span class="kw">while</span> (condition) {
-    <span class="cmt">// keeps running while TRUE</span>
-}
-
-<span class="cmt">// Count down from 5</span>
-<span class="typ">int</span> i = <span class="num">5</span>;
-<span class="kw">while</span> (i &gt; <span class="num">0</span>) {
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="str">" "</span>;
-    i--;
-}
-<span class="cmt">// Output: 5 4 3 2 1</span></pre>
-      </div>
-    </div>
-
-    <!-- Functions -->
-    <div class="cs-section">
-      <div class="cs-section-title yellow">⚙️ Functions (Basics)</div>
-      <div class="cs-body">
-<pre><span class="cmt">// Define a function</span>
-<span class="typ">int</span> <span class="fn">add</span>(<span class="typ">int</span> a, <span class="typ">int</span> b) {
-    <span class="kw">return</span> a + b;
-}
-
-<span class="cmt">// Call it in main</span>
-<span class="typ">int</span> <span class="fn">main</span>() {
-    <span class="typ">int</span> result = <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>);
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> result; <span class="cmt">// 8</span>
-    <span class="kw">return</span> <span class="num">0</span>;
-}
-
-<span class="cmt">// void = no return value</span>
-<span class="typ">void</span> <span class="fn">greet</span>() {
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello!"</span>;
+<span class="cmt">// while loop (while true)</span>
+<span class="typ">int</span> count = <span class="num">3</span>;
+<span class="kw">while</span> (count &gt; <span class="num">0</span>) {
+    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> count <span class="op">&lt;&lt;</span> <span class="str">" "</span>;
+    count--;
 }</pre>
-        <div class="note">Functions let you reuse code. Write once, use many times.</div>
+        <div class="note"><code>i++</code> increases by 1. <code>i--</code> decreases by 1.</div>
       </div>
     </div>
 
-    <!-- Common patterns -->
-    <div class="cs-section">
-      <div class="cs-section-title pink">💡 Common Patterns</div>
+    <!-- 7. Common Patterns -->
+    <div class="cs-section" data-keywords="patterns even odd max min table sum algorithm">
+      <div class="cs-section-title pink">
+        <span>💡 Common Logic Patterns</span>
+        <button class="copy-chip" onclick="copySnippet(this)">Copy</button>
+      </div>
       <div class="cs-body">
-<pre><span class="cmt">// Even or Odd</span>
-<span class="kw">if</span> (n <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>)
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Even"</span>;
-<span class="kw">else</span>
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Odd"</span>;
+<pre><span class="cmt">// 1. Even or Odd</span>
+<span class="kw">if</span> (n <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Even"</span>;
+<span class="kw">else</span>            <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Odd"</span>;
 
-<span class="cmt">// Max of two numbers</span>
+<span class="cmt">// 2. Max of two numbers</span>
 <span class="kw">if</span> (a &gt; b) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> a;
 <span class="kw">else</span>       <span class="fn">cout</span> <span class="op">&lt;&lt;</span> b;
 
-<span class="cmt">// Multiplication table of n</span>
-<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++) {
-    <span class="fn">cout</span> <span class="op">&lt;&lt;</span> n <span class="op">*</span> i <span class="op">&lt;&lt;</span> <span class="str">"\n"</span>;
-}
-
-<span class="cmt">// Positive / Negative / Zero</span>
-<span class="kw">if</span>      (n &gt; <span class="num">0</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Positive"</span>;
-<span class="kw">else if</span> (n &lt; <span class="num">0</span>) <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Negative"</span>;
-<span class="kw">else</span>            <span class="fn">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Zero"</span>;</pre>
+<span class="cmt">// 3. Sum 1 to N</span>
+<span class="typ">int</span> sum = <span class="num">0</span>;
+<span class="kw">for</span>(<span class="typ">int</span> i = <span class="num">1</span>; i &lt;= n; i++) sum += i;</pre>
       </div>
     </div>
 
-    <!-- Error types -->
-    <div class="cs-section">
-      <div class="cs-section-title yellow">🐛 Error Types</div>
+    <!-- 8. Debugging -->
+    <div class="cs-section" data-keywords="errors debug bugs syntax runtime logical semicolon">
+      <div class="cs-section-title yellow">
+        <span>🐛 Error Diagnostics</span>
+      </div>
       <div class="cs-body">
         <table>
-          <tr><th>Type</th><th>What it means</th></tr>
-          <tr><td style="color:#f87171">Syntax Error</td><td>Violates language rules. Missing ; or } . Caught at compile time.</td></tr>
-          <tr><td style="color:var(--accent-yellow)">Runtime Error</td><td>Compiles but crashes while running. e.g. divide by zero.</td></tr>
-          <tr><td style="color:#a78bfa">Logical Error</td><td>Runs but gives wrong output. e.g. used = instead of ==.</td></tr>
+          <tr><th>Error Type</th><th>Cause</th></tr>
+          <tr><td style="color:#f43f5e">Syntax Error</td><td>Missing <code>;</code> or typos. Compiler catches immediately.</td></tr>
+          <tr><td style="color:#fbbf24">Runtime Error</td><td>Divide by zero or invalid RAM index. Crashes while running.</td></tr>
+          <tr><td style="color:#c4b5fd">Logical Error</td><td>Code runs fine but math/logic is wrong (e.g. <code>=</code> vs <code>==</code>).</td></tr>
         </table>
-        <div class="note warn">⚠️ Most common mistake: <code>if (x = 5)</code> assigns, doesn't compare. Use <code>if (x == 5)</code>.</div>
+        <div class="note warn">⚠️ Tip: Always read the line number in the compiler error message!</div>
       </div>
     </div>
 
   </div><!-- /cs-grid -->
 
-  <div style="text-align:center;margin-top:32px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
-    <p style="font-size:0.9em;color:var(--text-muted);margin:0 0 10px">
-      🏋️ Practice problems → <a href="practice.html" style="color:var(--accent-cyan);font-weight:700">practice.html</a>
-      &nbsp;|&nbsp;
-      🚀 Back to workshop → <a href="index.html" style="color:var(--accent-cyan);font-weight:700">index.html</a>
+  <div class="card text-center no-print" style="margin-top:40px;padding:24px">
+    <p style="font-size:0.95em;color:var(--text-muted);margin:0 0 10px">
+      🚀 Ready to test your skills? Try the <a href="practice.html" style="color:var(--accent-cyan);font-weight:700">10 Practice Problems</a> or return to the <a href="index.html" style="color:var(--accent-purple);font-weight:700">Interactive Slides</a>.
     </p>
-    <p style="font-size:0.8em;color:var(--text-dim);margin:0">CS Chapter Workshop — Intro to Programming</p>
   </div>
 
 </div>
+
+<script src="js/animations.js"></script>
+<script>
+function copySnippet(btn) {
+  const pre = btn.closest('.cs-section').querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText);
+  btn.textContent = '✓ Copied!';
+  btn.style.background = 'var(--accent-green)';
+  btn.style.color = '#070913';
+  if (window.soundEngine) window.soundEngine.playSuccess();
+  if (window.showToast) window.showToast('Snippet copied to clipboard!', 'success');
+  setTimeout(() => {
+    btn.textContent = 'Copy';
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 1500);
+}
+
+// Live Search Filter
+document.getElementById('cheat-search').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase().trim();
+  const sections = document.querySelectorAll('.cs-section');
+  sections.forEach(sec => {
+    const kw = (sec.dataset.keywords || '') + ' ' + sec.innerText.toLowerCase();
+    sec.style.display = kw.includes(query) ? 'block' : 'none';
+  });
+});
+</script>
 </body>
 </html>

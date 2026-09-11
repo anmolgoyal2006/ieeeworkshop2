@@ -3,278 +3,639 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practice Problems — CS Chapter Workshop</title>
+  <title>Practice Problems 🏋️ — CS Chapter Workshop</title>
   <link rel="stylesheet" href="css/workshop.css" />
+  <link rel="stylesheet" href="css/components.css" />
   <style>
-    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); margin: 0; padding: 0; }
-    .page { max-width: 1000px; margin: 0 auto; padding: 40px 32px; }
-    .pp-header { text-align: center; margin-bottom: 40px; }
-    .pp-header h1 { font-size: 2.4em; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--accent-purple) 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 8px; }
-    .pp-header p  { color: var(--text-muted); }
-    .prob-list { display: flex; flex-direction: column; gap: 18px; }
-    .prob-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s; }
-    .prob-card:hover { border-color: var(--border-glow); }
-    .prob-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-    .prob-num  { font-family: var(--font-mono); font-size: 1.4em; font-weight: 900; color: var(--accent-cyan); min-width: 36px; }
-    .prob-title { font-size: 1.05em; font-weight: 800; color: var(--text-primary); flex: 1; }
-    .prob-tags  { display: flex; gap: 6px; flex-wrap: wrap; }
-    .prob-body  { padding: 16px 20px; }
-    .prob-desc  { font-size: 0.9em; color: var(--text-muted); line-height: 1.6; margin: 0 0 12px; }
-    .prob-io    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .prob-io-box { background: var(--bg-terminal); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
-    .prob-io-label { font-size: 0.68em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
-    .prob-io-val   { font-family: var(--font-mono); font-size: 0.85em; color: #e2e8f0; }
-    .hint-toggle { background: none; border: 1px solid rgba(251,191,36,0.25); color: var(--accent-yellow); border-radius: 7px; padding: 7px 16px; font-size: 0.8em; font-weight: 700; cursor: pointer; transition: all 0.18s; font-family: var(--font-sans); }
-    .hint-toggle:hover { background: rgba(251,191,36,0.1); }
-    .hint-text { display: none; margin-top: 10px; padding: 10px 14px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 8px; font-size: 0.85em; color: var(--text-muted); }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .pp-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .pp-header h1 {
+      font-size: 2.8em;
+      font-weight: 900;
+      margin: 0 0 8px;
+    }
+    .progress-tracker-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .pt-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .pt-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+    }
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .filter-btn {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.78em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+    }
+    .prob-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .prob-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+    }
+    .prob-card:hover {
+      border-color: rgba(0, 240, 255, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.1);
+    }
+    .prob-card.solved {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.04);
+    }
+    .prob-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 20, 42, 0.8);
+    }
+    .prob-num {
+      font-family: var(--font-mono);
+      font-size: 1.3em;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      min-width: 36px;
+    }
+    .prob-title {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: var(--text-primary);
+      flex: 1;
+    }
+    .prob-tags {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .prob-body {
+      padding: 18px 20px;
+    }
+    .prob-desc {
+      font-size: 0.92em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+    .prob-io {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .prob-io-box {
+      background: var(--bg-terminal);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+    }
+    .prob-io-label {
+      font-size: 0.7em;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+    }
+    .prob-io-val {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: #e2e8f0;
+    }
+    .prob-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hint-toggle {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: var(--accent-yellow);
+      border-radius: 7px;
+      padding: 6px 14px;
+      font-size: 0.82em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+    .hint-toggle:hover {
+      background: rgba(251, 191, 36, 0.2);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
+    }
+    .solve-check-wrap {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82em;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+    .solve-check-wrap input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-green);
+      cursor: pointer;
+    }
+    .hint-text {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      border-radius: var(--radius-sm);
+      font-size: 0.85em;
+      color: #fef08a;
+      line-height: 1.6;
+    }
     .hint-text.open { display: block; }
-    .diff-easy   { background: rgba(34,197,94,0.12); color: var(--accent-green); border: 1px solid rgba(34,197,94,0.25); border-radius: 999px; padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
-    .diff-medium { background: rgba(251,191,36,0.12); color: var(--accent-yellow); border: 1px solid rgba(251,191,36,0.25); border-radius: 999px; padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
-    .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 24px; transition: all 0.18s; }
-    .back-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-    .concept-tag { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.2); border-radius: 6px; padding: 2px 8px; font-size: 0.72em; font-weight: 600; font-family: var(--font-mono); }
+    .diff-easy   { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-full); padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
+    .diff-medium { background: rgba(251, 191, 36, 0.12); color: #fde047; border: 1px solid rgba(251, 191, 36, 0.3); border-radius: var(--radius-full); padding: 2px 10px; font-size: 0.7em; font-weight: 700; }
+    .concept-tag { background: rgba(139, 92, 246, 0.12); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 6px; padding: 2px 8px; font-size: 0.72em; font-weight: 600; font-family: var(--font-mono); }
   </style>
 </head>
 <body>
+
+<canvas id="ambient-canvas"></canvas>
+<div class="bg-mesh"></div>
+
 <div class="page">
 
-  <a href="#" onclick="var s=new URLSearchParams(location.search).get('from'); window.location='index.html#/'+(s||'0'); return false;" class="back-btn">← Back to Workshop</a>
-
-  <div class="pp-header">
-    <h1>Practice Problems 🏋️</h1>
-    <p>10 beginner problems to try this week. Try each one yourself before looking at hints.</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+    <a href="#" onclick="var s=new URLSearchParams(location.search).get('from'); window.location='index.html#/'+(s||'0'); return false;" class="btn btn-outline btn-sm">
+      ← Back to Workshop
+    </a>
+    <div style="display:flex;gap:10px">
+      <a href="cheatsheet.html" class="btn btn-outline btn-sm">📋 Cheat Sheet</a>
+      <button class="btn btn-red btn-sm" onclick="resetAllProgress()">↺ Reset Progress</button>
+    </div>
   </div>
 
-  <div class="prob-list">
+  <div class="pp-header">
+    <span class="badge badge-green">FIRST-YEAR CODING WORKBOOK</span>
+    <h1 class="gradient-text">Practice Problems 🏋️</h1>
+    <p class="muted">10 hands-on starter problems to master C++ foundations this week. Solve each yourself before checking hints!</p>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-tracker-card">
+    <div>
+      <div style="font-size:0.75em;font-family:var(--font-mono);color:var(--text-dim);font-weight:800;letter-spacing:0.1em">COMPLETION STATUS</div>
+      <div id="pt-status-text" style="font-family:var(--font-mono);font-weight:900;font-size:1.1em;color:var(--accent-cyan)">0 / 10 Solved (0%)</div>
+    </div>
+    <div class="pt-bar-wrap">
+      <div id="pt-bar-fill" class="pt-bar-fill" style="width: 0%"></div>
+    </div>
+    <div id="pt-badge" class="badge badge-purple">LEVEL: BEGINNER 🌱</div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <span style="font-size:0.8em;font-family:var(--font-mono);color:var(--text-dim);margin-right:6px">FILTER:</span>
+    <button class="filter-btn active" data-filter="all">All (10)</button>
+    <button class="filter-btn" data-filter="cout">cout</button>
+    <button class="filter-btn" data-filter="cin">cin &amp; Variables</button>
+    <button class="filter-btn" data-filter="if-else">if / else</button>
+    <button class="filter-btn" data-filter="loops">Loops</button>
+    <button class="filter-btn" data-filter="modulo">Modulo %</button>
+  </div>
+
+  <div class="prob-list" id="prob-list">
 
     <!-- 1 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p1" data-tags="cout">
       <div class="prob-header">
         <div class="prob-num">01</div>
-        <div class="prob-title">Hello World</div>
+        <div class="prob-title">Hello, World!</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
           <span class="concept-tag">cout</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Print the text "Hello, World!" to the screen. The classic first program every developer writes.</p>
+        <p class="prob-desc">Print the exact text <code>"Hello, World!"</code> to the console. The legendary first step for every developer.</p>
         <div class="prob-io">
           <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">None</div></div>
           <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Hello, World!</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Use <code style="font-family:monospace;color:#00d4ff">cout &lt;&lt; "Hello, World!";</code> inside your main() function.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p1', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Use <code>cout &lt;&lt; "Hello, World!";</code> inside your <code>main()</code> function.</div>
       </div>
     </div>
 
     <!-- 2 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p2" data-tags="cin">
       <div class="prob-header">
         <div class="prob-num">02</div>
-        <div class="prob-title">Add Two Numbers</div>
+        <div class="prob-title">Sum of Two Numbers</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
           <span class="concept-tag">cin</span>
-          <span class="concept-tag">variables</span>
+          <span class="concept-tag">int</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read two integers from input and print their sum.</p>
+        <p class="prob-desc">Read two integers <code>a</code> and <code>b</code> from the user and print their total sum.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5 7</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">12</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">15 25</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">40</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Declare two int variables. Read them with <code style="font-family:monospace;color:#00d4ff">cin &gt;&gt; a &gt;&gt; b;</code> then print <code style="font-family:monospace;color:#00d4ff">a + b</code>.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p2', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Declare <code>int a, b;</code>, read them with <code>cin &gt;&gt; a &gt;&gt; b;</code>, then output <code>cout &lt;&lt; (a + b);</code>.</div>
       </div>
     </div>
 
     <!-- 3 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p3" data-tags="if-else">
       <div class="prob-header">
         <div class="prob-num">03</div>
-        <div class="prob-title">Larger of Two Numbers</div>
+        <div class="prob-title">Positive, Negative or Zero</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
-          <span class="concept-tag">if/else</span>
+          <span class="concept-tag">if-else</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read two integers. Print the larger one. If they are equal, print either.</p>
+        <p class="prob-desc">Take an integer <code>n</code> as input. Print <code>"Positive"</code> if n &gt; 0, <code>"Negative"</code> if n &lt; 0, or <code>"Zero"</code> if n is 0.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">15 9</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">-9</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Negative</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Read a and b. Use <code style="font-family:monospace;color:#00d4ff">if (a &gt; b)</code> to check which is larger. Don't forget the else branch.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p3', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Use an <code>if (n &gt; 0) ... else if (n &lt; 0) ... else ...</code> ladder.</div>
       </div>
     </div>
 
     <!-- 4 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p4" data-tags="if-else modulo">
       <div class="prob-header">
         <div class="prob-num">04</div>
-        <div class="prob-title">Even or Odd</div>
+        <div class="prob-title">Even or Odd Checker</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
-          <span class="concept-tag">if/else</span>
-          <span class="concept-tag">%</span>
+          <span class="concept-tag">if-else</span>
+          <span class="concept-tag">modulo %</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read a number. Print "Even" if it is divisible by 2, otherwise print "Odd".</p>
+        <p class="prob-desc">Given an integer <code>n</code>, check if it's even or odd using the modulo (remainder) operator.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">7</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Odd</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">14</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Even</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text"><code style="font-family:monospace;color:#00d4ff">n % 2</code> gives the remainder when divided by 2. If remainder is 0 → Even. Otherwise → Odd.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p4', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">If <code>n % 2 == 0</code>, the number divides cleanly by 2 with no remainder → Even!</div>
       </div>
     </div>
 
     <!-- 5 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p5" data-tags="if-else">
       <div class="prob-header">
         <div class="prob-num">05</div>
-        <div class="prob-title">Positive, Negative, or Zero</div>
+        <div class="prob-title">Larger of Two Numbers</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
-          <span class="concept-tag">if/else if</span>
+          <span class="concept-tag">if-else</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read a number. Print "Positive" if &gt; 0, "Negative" if &lt; 0, or "Zero" if equal to 0.</p>
+        <p class="prob-desc">Given two numbers <code>a</code> and <code>b</code>, output the larger value. If both are equal, print either.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">-5</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">Negative</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">42 99</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">99</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Use an if / else if / else chain. Three conditions: n &gt; 0, n &lt; 0, and the else covers n == 0.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p5', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text"><code>if (a &gt; b) cout &lt;&lt; a; else cout &lt;&lt; b;</code></div>
       </div>
     </div>
 
     <!-- 6 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p6" data-tags="loops">
       <div class="prob-header">
         <div class="prob-num">06</div>
-        <div class="prob-title">Simple Calculator</div>
+        <div class="prob-title">Multiplication Table of N</div>
         <div class="prob-tags">
           <span class="diff-medium">Medium</span>
-          <span class="concept-tag">if/else</span>
-          <span class="concept-tag">operators</span>
+          <span class="concept-tag">for loop</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read two numbers and an operator (+, -, *, /). Perform and print the result.</p>
+        <p class="prob-desc">Read an integer <code>n</code> and print its multiplication table from 1 to 10 (each product on a new line).</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">10 + 5</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">5 10 15 20 ... 50</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Read the operator as a <code style="font-family:monospace;color:#00d4ff">char</code>. Use if/else to check which operator was entered and perform the right operation.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p6', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Run a loop: <code>for(int i = 1; i &lt;= 10; i++) { cout &lt;&lt; n * i &lt;&lt; " "; }</code></div>
       </div>
     </div>
 
     <!-- 7 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p7" data-tags="loops">
       <div class="prob-header">
         <div class="prob-num">07</div>
-        <div class="prob-title">Multiplication Table</div>
+        <div class="prob-title">Sum of First N Numbers</div>
         <div class="prob-tags">
-          <span class="diff-easy">Easy</span>
-          <span class="concept-tag">loops</span>
+          <span class="diff-medium">Medium</span>
+          <span class="concept-tag">for loop</span>
+          <span class="concept-tag">accumulator</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read a number n. Print its multiplication table from 1 to 10.</p>
+        <p class="prob-desc">Given <code>n</code>, calculate and print the sum of all whole numbers from 1 up to n (i.e. 1 + 2 + 3 + ... + n).</p>
         <div class="prob-io">
           <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">5 x 1 = 5<br>5 x 2 = 10<br>...<br>5 x 10 = 50</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15  (1+2+3+4+5)</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Use a for loop from i=1 to i=10. Inside the loop: <code style="font-family:monospace;color:#00d4ff">cout &lt;&lt; n &lt;&lt; " x " &lt;&lt; i &lt;&lt; " = " &lt;&lt; n*i;</code></div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p7', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Initialize <code>int sum = 0;</code> before loop, then <code>sum += i;</code> inside the loop.</div>
       </div>
     </div>
 
     <!-- 8 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p8" data-tags="loops">
       <div class="prob-header">
         <div class="prob-num">08</div>
-        <div class="prob-title">Sum 1 to N</div>
+        <div class="prob-title">Count Down from N to 1</div>
         <div class="prob-tags">
           <span class="diff-easy">Easy</span>
-          <span class="concept-tag">loops</span>
-          <span class="concept-tag">variables</span>
+          <span class="concept-tag">while loop</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read a number N. Print the sum of all integers from 1 to N.</p>
+        <p class="prob-desc">Given an integer <code>n</code>, print all numbers counting down from n down to 1 separated by spaces.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">5</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">15</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">4</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">4 3 2 1</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Start with <code style="font-family:monospace;color:#00d4ff">int sum = 0;</code>. Use a loop from 1 to N. Inside the loop: <code style="font-family:monospace;color:#00d4ff">sum = sum + i;</code>. Print sum after the loop.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p8', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Use <code>while (n &gt; 0) { cout &lt;&lt; n &lt;&lt; " "; n--; }</code>.</div>
       </div>
     </div>
 
     <!-- 9 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p9" data-tags="if-else">
       <div class="prob-header">
         <div class="prob-num">09</div>
-        <div class="prob-title">Marks Calculator</div>
+        <div class="prob-title">College Grade Calculator</div>
         <div class="prob-tags">
           <span class="diff-medium">Medium</span>
-          <span class="concept-tag">if/else if</span>
-          <span class="concept-tag">variables</span>
+          <span class="concept-tag">else-if</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Read marks (0–100). Print the grade: A (≥80), B (≥60), C (≥40), or FAIL (&lt;40).</p>
+        <p class="prob-desc">Input a student's marks (0–100). Print: <code>"A"</code> (≥90), <code>"B"</code> (≥75), <code>"C"</code> (≥50), <code>"D"</code> (≥40), or <code>"FAIL"</code> (&lt;40).</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">72</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">82</div></div>
           <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">B</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Use an if / else if / else if / else chain. Check conditions from highest (>=80) downward. Order matters here!</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p9', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Check from top down: <code>if (m &gt;= 90) ... else if (m &gt;= 75) ...</code></div>
       </div>
     </div>
 
     <!-- 10 -->
-    <div class="prob-card">
+    <div class="prob-card" data-id="p10" data-tags="if-else modulo">
       <div class="prob-header">
         <div class="prob-num">10</div>
-        <div class="prob-title">Number Guessing Game</div>
+        <div class="prob-title">FizzBuzz Starter</div>
         <div class="prob-tags">
           <span class="diff-medium">Medium</span>
-          <span class="concept-tag">if/else</span>
-          <span class="concept-tag">while</span>
+          <span class="concept-tag">modulo %</span>
+          <span class="concept-tag">logical &amp;&amp;</span>
         </div>
       </div>
       <div class="prob-body">
-        <p class="prob-desc">Pick a secret number (hardcode it). Keep asking the user to guess until they get it right. Tell them if their guess is too high or too low.</p>
+        <p class="prob-desc">Given <code>n</code>, print <code>"FizzBuzz"</code> if divisible by BOTH 3 and 5, <code>"Fizz"</code> if only divisible by 3, <code>"Buzz"</code> if only divisible by 5, else print <code>n</code>.</p>
         <div class="prob-io">
-          <div class="prob-io-box"><div class="prob-io-label">Example Run</div><div class="prob-io-val">Guess: 50 → Too high<br>Guess: 25 → Too low<br>Guess: 37 → Correct! 🎉</div></div>
-          <div class="prob-io-box"><div class="prob-io-label">Concepts Used</div><div class="prob-io-val">while loop + if/else + cin in loop</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Input</div><div class="prob-io-val">15</div></div>
+          <div class="prob-io-box"><div class="prob-io-label">Output</div><div class="prob-io-val">FizzBuzz</div></div>
         </div>
-        <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open')">💡 Hint</button>
-        <div class="hint-text">Set <code style="font-family:monospace;color:#00d4ff">int secret = 42;</code> Use a while loop that keeps going until guess == secret. Inside, check if too high, too low, or correct.</div>
+        <div class="prob-actions">
+          <button class="hint-toggle" onclick="toggleHint(this)">💡 Show Hint</button>
+          <label class="solve-check-wrap">
+            <input type="checkbox" onchange="toggleSolved('p10', this.checked)"> Mark as Solved 🎯
+          </label>
+        </div>
+        <div class="hint-text">Crucial: Check the <code>(n % 3 == 0 &amp;&amp; n % 5 == 0)</code> condition FIRST!</div>
       </div>
     </div>
 
   </div><!-- /prob-list -->
 
-  <div style="text-align:center;margin-top:36px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
-    <p style="font-size:0.9em;font-weight:700;color:var(--text-primary);margin:0 0 6px">🌐 Online IDE to run your code</p>
-    <p style="font-size:0.85em;color:var(--text-muted);margin:0 0 12px">No installation needed → <strong>onlinegdb.com</strong> (select C++ from the dropdown)</p>
-    <p style="font-size:0.8em;color:var(--text-dim);margin:0">
-      📋 Cheat sheet → <a href="cheatsheet.html" style="color:var(--accent-cyan)">cheatsheet.html</a>
-      &nbsp;|&nbsp;
-      🚀 Workshop → <a href="index.html" style="color:var(--accent-cyan)">index.html</a>
-    </p>
-  </div>
-
 </div>
+
+<script src="js/animations.js"></script>
+<script>
+const TOTAL_PROBS = 10;
+
+function getSolvedMap() {
+  try {
+    return JSON.parse(localStorage.getItem('cs_workshop_solved') || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function updateProgress() {
+  const map = getSolvedMap();
+  const solvedCount = Object.values(map).filter(Boolean).length;
+  const pct = Math.round((solvedCount / TOTAL_PROBS) * 100);
+
+  const textEl = document.getElementById('pt-status-text');
+  const fillEl = document.getElementById('pt-bar-fill');
+  const badgeEl = document.getElementById('pt-badge');
+
+  if (textEl) textEl.textContent = `${solvedCount} / ${TOTAL_PROBS} Solved (${pct}%)`;
+  if (fillEl) fillEl.style.width = `${pct}%`;
+
+  if (badgeEl) {
+    if (solvedCount === 10) {
+      badgeEl.className = 'badge badge-green animate-bouncein';
+      badgeEl.textContent = 'STATUS: MASTER DEVELOPER 🏆';
+    } else if (solvedCount >= 6) {
+      badgeEl.className = 'badge badge-purple';
+      badgeEl.textContent = 'STATUS: CODE WARRIOR 🔥';
+    } else if (solvedCount >= 3) {
+      badgeEl.className = 'badge badge-yellow';
+      badgeEl.textContent = 'STATUS: ON A ROLL ⚡';
+    } else {
+      badgeEl.className = 'badge';
+      badgeEl.textContent = 'LEVEL: BEGINNER 🌱';
+    }
+  }
+
+  // Sync checkboxes and styles
+  document.querySelectorAll('.prob-card').forEach(card => {
+    const id = card.dataset.id;
+    const isSolved = !!map[id];
+    card.classList.toggle('solved', isSolved);
+    const cb = card.querySelector('input[type="checkbox"]');
+    if (cb) cb.checked = isSolved;
+  });
+}
+
+function toggleSolved(id, val) {
+  const map = getSolvedMap();
+  map[id] = val;
+  localStorage.setItem('cs_workshop_solved', JSON.stringify(map));
+  if (val) {
+    if (window.soundEngine) window.soundEngine.playSuccess();
+    if (window.launchConfetti) window.launchConfetti(0.5, 0.5, 30);
+    if (window.showToast) window.showToast('Problem marked as solved! 🎯', 'success');
+  }
+  updateProgress();
+}
+
+function resetAllProgress() {
+  if (confirm('Reset your practice problem progress?')) {
+    localStorage.removeItem('cs_workshop_solved');
+    updateProgress();
+    if (window.showToast) window.showToast('Progress reset.', 'info');
+  }
+}
+
+function toggleHint(btn) {
+  if (window.soundEngine) window.soundEngine.playClick();
+  const hint = btn.closest('.prob-body').querySelector('.hint-text');
+  if (!hint) return;
+  hint.classList.toggle('open');
+  btn.textContent = hint.classList.contains('open') ? '🙈 Hide Hint' : '💡 Show Hint';
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (window.soundEngine) window.soundEngine.playClick();
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+
+    document.querySelectorAll('.prob-card').forEach(card => {
+      if (f === 'all' || (card.dataset.tags && card.dataset.tags.includes(f))) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', updateProgress);
+</script>
 </body>
 </html>
