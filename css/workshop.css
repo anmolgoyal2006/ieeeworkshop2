@@ -8,34 +8,36 @@
 
 /* ── CSS Variables & Palette ── */
 :root {
-  --bg-primary:      #070913;
-  --bg-secondary:    #0d1124;
-  --bg-card:         rgba(15, 20, 42, 0.72);
-  --bg-card-solid:   #0f142a;
-  --bg-card-hover:   rgba(22, 30, 62, 0.85);
-  --bg-card2:        rgba(26, 32, 66, 0.65);
-  --bg-terminal:     #080a15;
-  --bg-glass:        rgba(13, 17, 36, 0.65);
+  --bg-primary:      #020a04;
+  --bg-secondary:    #041008;
+  --bg-card:         rgba(4, 14, 8, 0.80);
+  --bg-card-solid:   #050f07;
+  --bg-card-hover:   rgba(6, 22, 12, 0.90);
+  --bg-card2:        rgba(8, 20, 12, 0.72);
+  --bg-terminal:     #020807;
+  --bg-glass:        rgba(4, 12, 7, 0.70);
 
   --accent-cyan:     #00f0ff;
   --accent-cyan-dim: rgba(0, 240, 255, 0.15);
+  --accent-green:    #00ff88;
+  --accent-green-dim:rgba(0, 255, 136, 0.15);
   --accent-purple:   #8b5cf6;
   --accent-violet:   #a855f7;
-  --accent-green:    #10b981;
+  --accent-teal:     #10b981;
   --accent-yellow:   #fbbf24;
   --accent-pink:     #f43f5e;
   --accent-orange:   #f97316;
   --accent-blue:     #3b82f6;
 
-  --text-primary:    #f8fafc;
-  --text-secondary:  #cbd5e1;
-  --text-muted:      #94a3b8;
-  --text-dim:        #475569;
+  --text-primary:    #f0fdf4;
+  --text-secondary:  #d1fae5;
+  --text-muted:      #6ee7b7;
+  --text-dim:        #374151;
 
-  --border:          rgba(255, 255, 255, 0.08);
-  --border-subtle:   rgba(255, 255, 255, 0.04);
-  --border-glow:     rgba(0, 240, 255, 0.4);
-  --border-purple:   rgba(139, 92, 246, 0.4);
+  --border:          rgba(0, 255, 136, 0.10);
+  --border-subtle:   rgba(0, 255, 136, 0.05);
+  --border-glow:     rgba(0, 255, 136, 0.40);
+  --border-purple:   rgba(139, 92, 246, 0.40);
 
   --font-sans:       'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono:       'JetBrains Mono', 'Fira Code', monospace;
@@ -46,12 +48,12 @@
   --radius-lg:       22px;
   --radius-full:     9999px;
 
-  --shadow-sm:       0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow:          0 10px 30px -5px rgba(0, 0, 0, 0.6);
-  --shadow-lg:       0 20px 40px -10px rgba(0, 0, 0, 0.8);
+  --shadow-sm:       0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow:          0 10px 30px -5px rgba(0, 0, 0, 0.7);
+  --shadow-lg:       0 20px 40px -10px rgba(0, 0, 0, 0.9);
   --glow-cyan:       0 0 25px rgba(0, 240, 255, 0.35);
-  --glow-purple:     0 0 25px rgba(139, 92, 246, 0.4);
-  --glow-green:      0 0 25px rgba(16, 185, 129, 0.35);
+  --glow-green:      0 0 25px rgba(0, 255, 136, 0.40);
+  --glow-purple:     0 0 25px rgba(139, 92, 246, 0.40);
 }
 
 /* ── Global Canvas & Reset ── */
@@ -80,18 +82,12 @@ body, html {
   z-index: 0;
   pointer-events: none;
   opacity: 0.65;
+  display: none; /* Three.js canvas replaces this */
 }
 
 /* ── Background Cyber Glow Mesh ── */
 .bg-mesh {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: 
-    radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 60%);
+  display: none; /* Replaced by bg-forest-overlay */
 }
 
 /* ── Reveal Viewport Overrides ── */
@@ -1034,3 +1030,578 @@ body, html {
 .animate-fadein { animation: fadeIn 0.35s ease forwards; }
 .animate-fadeinup { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-bouncein { animation: bounceIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+
+/* ============================================================
+   WORKSHOP.CSS — PART 2: Three.js Scene, GSAP Extras,
+   Micro-Interactions, Premium Animations, Hero Redesign
+   ============================================================ */
+
+/* ── Three.js Background Canvas ── */
+#three-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  display: block !important;
+}
+
+/* ── Layered forest overlay — sits just above Three.js canvas ── */
+.bg-forest-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%,   rgba(0, 40, 15, 0.40) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 5%  95%,  rgba(0, 255, 100, 0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 95% 5%,   rgba(0, 220, 255, 0.04) 0%, transparent 55%);
+}
+
+/* ── Reveal must be transparent so Three.js shows through ── */
+.reveal-viewport {
+  background: transparent !important;
+  z-index: 2 !important;
+}
+.reveal {
+  background: transparent !important;
+  z-index: 2 !important;
+}
+.reveal .slides section {
+  background: transparent !important;
+}
+
+/* bg-forest-overlay handled above */
+
+/* ── Ripple FX (injected via JS) ── */
+.ripple-fx {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,240,255,0.55) 0%, rgba(0,240,255,0) 70%);
+  animation: ripple-expand 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes ripple-expand {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* ── Burst Particles (injected via JS) ── */
+@keyframes burst-fly {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+}
+
+/* ── Click Glow ── */
+@keyframes clickGlow {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  60%  { opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+/* ── XP Float ── */
+@keyframes xpFloat {
+  0%   { transform: translateY(0);   opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+
+/* ── Progress Bar Pulse ── */
+.prog-pulse::after {
+  animation: pulse-glow 0.5s ease-out !important;
+}
+
+@keyframes pulse-glow {
+  0%   { opacity: 1; transform: scaleX(2); }
+  100% { opacity: 0; transform: scaleX(6); }
+}
+
+/* ── HERO SLIDE REDESIGN ── */
+.hero-slide {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient title text */
+.hero-title {
+  background: linear-gradient(135deg,
+    #ffffff 0%,
+    #00ff88 25%,
+    #00f0ff 55%,
+    #8b5cf6 80%,
+    #ffffff 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroGradientShift 6s ease-in-out infinite;
+  filter: drop-shadow(0 4px 20px rgba(0, 240, 255, 0.25));
+}
+
+@keyframes heroGradientShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* Pulsing eyebrow */
+.hero-eyebrow {
+  position: relative;
+}
+.hero-eyebrow::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  animation: shimmer-line 3s ease-in-out infinite;
+}
+
+@keyframes shimmer-line {
+  0%   { opacity: 0.3; transform: scaleX(0.3); }
+  50%  { opacity: 1;   transform: scaleX(1); }
+  100% { opacity: 0.3; transform: scaleX(0.3); }
+}
+
+/* ── NEON GLOW CARDS ── */
+.card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow  0.4s ease,
+              border-color 0.3s ease !important;
+  will-change: transform;
+}
+
+/* Accent glow variants */
+.card-glow-green {
+  border-color: rgba(0, 255, 136, 0.4) !important;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.15), inset 0 0 20px rgba(0, 255, 136, 0.04) !important;
+}
+
+.card-glow-purple {
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.18), inset 0 0 20px rgba(139, 92, 246, 0.04) !important;
+}
+
+/* ── FLOW NODE GLOW ON ACTIVE ── */
+.flow-node {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flow-node.pipeline-active {
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.7), 0 0 60px rgba(0, 240, 255, 0.3) !important;
+  transform: scale(1.06) !important;
+}
+
+/* ── BADGES — animated entrance ── */
+.badge {
+  animation: badgePop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes badgePop {
+  0%   { transform: scale(0.6) translateY(-8px); opacity: 0; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Shimmer sweep on badges */
+.badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.badge:hover::after {
+  transform: translateX(100%);
+}
+
+/* ── TERMINAL GLOW ENHANCEMENT ── */
+.terminal {
+  position: relative;
+}
+
+.terminal::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(139,92,246,0.2), rgba(0,255,136,0.1));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.terminal:hover::before {
+  opacity: 1;
+}
+
+/* ── CODE RUNNER GLOW ── */
+.code-runner {
+  transition: box-shadow 0.3s ease;
+  position: relative;
+}
+.code-runner:focus-within {
+  box-shadow: 0 0 0 2px rgba(0,240,255,0.4), 0 20px 50px rgba(0,0,0,0.8);
+}
+
+/* ── STEP LIST HOVER TRAIL ── */
+.step-list li {
+  position: relative;
+  overflow: hidden;
+}
+.step-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease;
+}
+.step-list li:hover::before,
+.step-list li.active::before {
+  transform: scaleY(1);
+}
+
+/* ── VAR BOX PULSE ── */
+.var-value-box {
+  animation: varPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes varPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0, 240, 255, 0.25); }
+  50%      { box-shadow: 0 0 25px rgba(0, 240, 255, 0.55), 0 0 50px rgba(0, 240, 255, 0.15); }
+}
+
+.var-value-box.purple {
+  animation-name: varPulsePurple;
+}
+@keyframes varPulsePurple {
+  0%, 100% { box-shadow: 0 0 12px rgba(139,92,246,0.25); }
+  50%      { box-shadow: 0 0 25px rgba(139,92,246,0.55), 0 0 50px rgba(139,92,246,0.15); }
+}
+
+.var-value-box.green {
+  animation-name: varPulseGreen;
+}
+@keyframes varPulseGreen {
+  0%, 100% { box-shadow: 0 0 12px rgba(16,185,129,0.25); }
+  50%      { box-shadow: 0 0 25px rgba(16,185,129,0.55), 0 0 50px rgba(16,185,129,0.15); }
+}
+
+/* ── MEME CARD ENHANCED ── */
+.meme-card {
+  position: relative;
+  overflow: hidden;
+}
+.meme-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(139,92,246,0.08) 0%,
+    rgba(0,240,255,0.05) 50%,
+    rgba(139,92,246,0.08) 100%);
+  background-size: 200% 200%;
+  animation: memeShimmer 4s ease-in-out infinite;
+}
+
+@keyframes memeShimmer {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+/* ── DOMAIN ITEMS HOVER GLOW ── */
+.domain-item {
+  position: relative;
+  overflow: hidden;
+}
+.domain-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.domain-item:hover::after {
+  opacity: 1;
+}
+.domain-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+.domain-item:hover .domain-icon {
+  transform: scale(1.35) translateY(-3px);
+}
+
+/* ── WEEK CARD BORDER GLOW ── */
+.week-card {
+  position: relative;
+  overflow: hidden;
+}
+.week-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: inherit;
+  filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.week-card:hover::after {
+  opacity: 0.8;
+}
+
+/* ── LOOP BOX GLOW ── */
+.loop-box.active-step {
+  box-shadow: 0 0 25px rgba(0,240,255,0.6), 0 0 50px rgba(0,240,255,0.25), inset 0 0 10px rgba(0,240,255,0.1) !important;
+  border-color: var(--accent-cyan) !important;
+  animation: loopBlink 0.4s ease-in-out !important;
+}
+
+@keyframes loopBlink {
+  0%  { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100%{ transform: scale(1.08); }
+}
+
+/* ── HUD PROGRESS BAR ANIMATED GLOW ── */
+.prog-bar-fill {
+  position: relative;
+  overflow: visible !important;
+}
+.prog-bar-fill::before {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: -3px;
+  width: 8px;
+  height: 11px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-cyan), 0 0 25px var(--accent-cyan);
+  filter: blur(1px);
+}
+
+/* ── FLOATING DOCK UPGRADE ── */
+#floating-dock {
+  background: rgba(5, 8, 18, 0.92);
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(0, 255, 136, 0.08),
+    0 0 40px rgba(0, 255, 136, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.dock-btn {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dock-btn:hover {
+  background: rgba(0, 255, 136, 0.15);
+  border-color: rgba(0, 255, 136, 0.5);
+  color: #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.35);
+}
+
+/* ── WORKSHOP PROGRESS TOP BAR ── */
+#workshop-progress {
+  background: rgba(2, 8, 5, 0.92);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 136, 0.06);
+}
+
+#workshop-progress .prog-bar-fill {
+  background: linear-gradient(90deg, #00ff88, #00f0ff, #8b5cf6);
+  background-size: 200% 100%;
+  animation: progBarFlow 3s linear infinite;
+}
+
+@keyframes progBarFlow {
+  0%   { background-position: 0%   50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── MODAL WINDOW ENHANCED ── */
+.modal-window {
+  background: rgba(5, 8, 18, 0.97);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  box-shadow:
+    0 30px 60px -12px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 60px rgba(0, 255, 136, 0.08);
+}
+
+/* ── SLIDE HEADER DIVIDER ANIMATION ── */
+.divider {
+  background: linear-gradient(90deg, #00ff88, #00f0ff, #8b5cf6);
+  background-size: 200% 100%;
+  animation: dividerFlow 4s ease-in-out infinite;
+  height: 3px;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}
+
+@keyframes dividerFlow {
+  0%   { background-position: 0%;   }
+  50%  { background-position: 100%; }
+  100% { background-position: 0%;   }
+}
+
+/* ── MCQ OPTION ENHANCED HOVER ── */
+.mcq-option {
+  position: relative;
+  overflow: hidden;
+}
+.mcq-option::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent-cyan);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+.mcq-option:hover::before {
+  transform: scaleY(1);
+}
+.mcq-option.correct::before {
+  background: var(--accent-green);
+  transform: scaleY(1);
+}
+.mcq-option.wrong::before {
+  background: var(--accent-pink);
+  transform: scaleY(1);
+}
+
+/* ── XP CHIP ANIMATION ── */
+#hud-streak-chip {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+/* ── ATTENDANCE SLIDER STYLING ── */
+#attendance-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent-cyan) var(--value, 50%), rgba(255,255,255,0.1) var(--value, 50%));
+  outline: none;
+  cursor: pointer;
+}
+#attendance-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0,240,255,0.6), 0 0 0 3px rgba(0,240,255,0.2);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#attendance-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 20px rgba(0,240,255,0.8), 0 0 0 4px rgba(0,240,255,0.25);
+}
+
+/* ── CODE EDITOR SYNTAX GLOW ── */
+.syn-kw  { text-shadow: 0 0 8px rgba(192, 132, 252, 0.6); }
+.syn-str { text-shadow: 0 0 8px rgba(134, 239, 172, 0.5); }
+.syn-num { text-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+.syn-fn  { text-shadow: 0 0 8px rgba(96, 165, 250, 0.5); }
+
+/* ── REVEAL.JS SLIDE TRANSITION ENHANCE ── */
+.reveal .slides section {
+  will-change: transform, opacity;
+}
+
+/* ── LOADING SHIMMER SKELETON ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(0,255,136,0.08) 50%,
+    rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ── REVEAL CONTROLS STYLE ── */
+.reveal .controls {
+  bottom: 56px !important;
+}
+.reveal .controls button {
+  color: rgba(0, 255, 136, 0.6) !important;
+  transition: color 0.2s, filter 0.2s !important;
+}
+.reveal .controls button:hover {
+  color: #00ff88 !important;
+  filter: drop-shadow(0 0 8px #00ff88) !important;
+}
+
+/* ── SCROLL BAR (global upgrade) ── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ff88, #00f0ff);
+  border-radius: 99px;
+}
+
+/* ── LINK HOVER GLOW ── */
+.reveal a:hover {
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.6) !important;
+  color: #00ff88 !important;
+}
+
+/* ── CERT CARD ANIMATED BORDER ── */
+.cert-card {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+.cert-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #fbbf24, #00f0ff, #00ff88, #8b5cf6, #fbbf24);
+  background-size: 300% 300%;
+  animation: certBorderSpin 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes certBorderSpin {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ── RESPONSIVE SCALE ── */
+@media (max-width: 900px) {
+  #three-canvas { opacity: 0.6; }
+  .cursor-trail-dot { display: none; }
+}

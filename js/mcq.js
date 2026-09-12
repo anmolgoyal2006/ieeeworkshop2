@@ -161,6 +161,11 @@ class MCQ {
       if (ptsEl) ptsEl.textContent = `+${gained} XP`;
       if (window.showToast) window.showToast(`+${gained} XP! Streak: ${window.WorkshopScore.streak} 🔥`, 'success');
 
+      // Fire XP animation
+      if (window.animateXP) window.animateXP(gained);
+      // Dispatch event for other listeners
+      document.dispatchEvent(new CustomEvent('mcqCorrect', { detail: { points: this.points } }));
+
       if (feedback) {
         feedback.className = 'mcq-feedback correct';
         feedback.innerHTML = `<strong>✅ Brilliant!</strong> ${this.explain}`;

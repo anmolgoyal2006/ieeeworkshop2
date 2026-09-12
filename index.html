@@ -1,20 +1,53 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Intro to Programming 🚀 — CS Chapter Workshop</title>
+  <title>Intro to Programming &#x1F680; &mdash; CS Chapter Workshop</title>
+
   <link rel="stylesheet" href="dist/reveal.css" />
   <link rel="stylesheet" href="dist/theme/black.css" />
   <link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
   <link rel="stylesheet" href="css/workshop.css" />
   <link rel="stylesheet" href="css/components.css" />
+
+  <!-- Three.js r128 CDN — NO defer, must be synchronous so scene starts immediately -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- GSAP 3 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <style>
+    #three-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 1;           /* above Reveal background (z:0), below slides (z:2+) */
+      pointer-events: none;
+      display: block !important;
+      opacity: 1;
+    }
+    body { background: #020a04; }
+
+    /* Ensure Reveal slides sit above the Three.js canvas */
+    .reveal-viewport { z-index: 2 !important; background: transparent !important; }
+    .reveal          { z-index: 2 !important; }
+    .reveal .slides  { z-index: 2 !important; }
+    @keyframes scanlines {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 40px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Ambient Cyber Background -->
-<canvas id="ambient-canvas"></canvas>
-<div class="bg-mesh"></div>
+<!-- Three.js Living Forest 3D Scene -->
+<canvas id="three-canvas"></canvas>
+<canvas id="ambient-canvas" style="display:none"></canvas>
+<div class="bg-forest-overlay"></div>
 
 <!-- Sci-Fi Laser Pointer -->
 <div id="laser-pointer"></div>
@@ -22,13 +55,13 @@
 <!-- Top Workshop Navigation & HUD Progress Bar -->
 <div id="workshop-progress">
   <div class="prog-left">
-    <span class="prog-label"><span>⚡ SLIDE 1 / 19</span></span>
+    <span class="prog-label"><span>&#x26A1; SLIDE 1 / 19</span></span>
     <span class="badge badge-purple badge-live">CS CHAPTER</span>
   </div>
   <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:5%"></div></div>
   <div class="prog-right">
-    <div id="hud-streak-chip" class="hud-chip">🏆 XP: 0</div>
-    <span style="font-size:0.85em;color:var(--text-muted)">⏱ ~45 min</span>
+    <div id="hud-streak-chip" class="hud-chip">&#x1F3C6; XP: 0</div>
+    <span style="font-size:0.85em;color:var(--text-muted)">&#x23F1; ~45 min</span>
   </div>
 </div>
 
@@ -38,73 +71,103 @@
 <!-- ====================================================
      SLIDE 1 — HERO / ICEBREAKER
      ==================================================== -->
-<section class="hero-slide" data-background-color="#070913">
-  <div class="hero-eyebrow">✦ CS CHAPTER WORKSHOP ✦</div>
+<section class="hero-slide" data-background-color="#020a04">
+
+  <div style="position:absolute;inset:0;pointer-events:none;z-index:0;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.015) 2px,rgba(0,255,136,0.015) 4px);
+    animation:scanlines 8s linear infinite;opacity:0.6"></div>
+
+  <div class="hero-eyebrow">&#x2736; CS CHAPTER WORKSHOP &#x2736;</div>
   <h1 class="hero-title">INTRO TO<br>PROGRAMMING</h1>
-  <p class="hero-subtitle">From Absolute Zero to Your First Working Code 🚀</p>
+  <p class="hero-subtitle">From Absolute Zero to Your First Working Code &#x1F680;</p>
   <div class="hero-meta">
     <span class="badge">BEGINNERS WELCOME</span>
     <span class="badge badge-purple">~45 MINUTES</span>
     <span class="badge badge-green">INTERACTIVE LIVE</span>
   </div>
 
-  <div class="card card-accent-top" style="max-width:580px;width:100%;margin-top:4px">
-    <p style="font-weight:700;font-size:0.95em;margin:0 0 6px;color:var(--accent-cyan)">🎤 Quick Poll — Be 100% Honest:</p>
-    <p style="font-weight:900;font-size:1.25em;margin:0 0 16px;color:var(--text-primary)">Who here has NEVER written a line of code?</p>
-    <div class="icebreaker-opts" style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="never">😭 NEVER WRITTEN</button>
-      <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="little">🤏 A LITTLE BIT</button>
-      <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="regular">💻 I CODE REGULARLY</button>
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;position:relative;z-index:1">
+    <div class="card card-accent-top" style="max-width:480px;width:100%;flex-shrink:0;border-top-color:#00ff88;box-shadow:0 0 30px rgba(0,255,136,0.12)">
+      <p style="font-weight:700;font-size:0.95em;margin:0 0 6px;color:#00ff88">&#x1F3A4; Quick Poll &mdash; Be 100% Honest:</p>
+      <p style="font-weight:900;font-size:1.2em;margin:0 0 16px;color:var(--text-primary)">Who here has NEVER written a line of code?</p>
+      <div class="icebreaker-opts" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="never">&#x1F62D; NEVER WRITTEN</button>
+        <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="little">&#x1F90F; A LITTLE BIT</button>
+        <button class="btn btn-outline btn-sm ice-opt-btn" data-ice-type="regular">&#x1F4BB; I CODE REGULARLY</button>
+      </div>
+      <div class="ice-response" id="ice-response" style="display:none;margin-top:12px;padding:12px 16px;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.25);border-radius:8px;font-size:0.88em"></div>
     </div>
-    <div class="ice-response" id="ice-response" style="display:none;margin-top:12px;padding:12px 16px;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.25);border-radius:8px;font-size:0.88em"></div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:180px">
+      <div class="card" style="padding:14px 18px;text-align:center;border-color:rgba(0,255,136,0.25);background:rgba(0,20,8,0.7)">
+        <div style="font-family:var(--font-mono);font-size:0.68em;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:4px">SESSION LIVE</div>
+        <div style="font-size:1.6em;font-weight:900;color:#00ff88;text-shadow:0 0 15px rgba(0,255,136,0.6)" id="live-clock">--:--</div>
+        <div style="font-size:0.72em;color:var(--text-muted);margin-top:2px">Current Time</div>
+      </div>
+      <div class="card" style="padding:14px 18px;text-align:center;border-color:rgba(0,240,255,0.25);background:rgba(0,10,20,0.7)">
+        <div style="font-family:var(--font-mono);font-size:0.68em;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:4px">SLIDES TOTAL</div>
+        <div style="font-size:1.6em;font-weight:900;color:var(--accent-cyan);text-shadow:0 0 15px rgba(0,240,255,0.5)">19</div>
+        <div style="font-size:0.72em;color:var(--text-muted);margin-top:2px">~45 Min</div>
+      </div>
+    </div>
   </div>
 
-  <div class="meme-card" style="position:absolute;right:48px;top:50%;transform:translateY(-50%);max-width:270px">
-    <span class="meme-top">🧑‍💻</span>
+  <div class="meme-card" style="position:absolute;right:48px;top:50%;transform:translateY(-50%);max-width:260px">
+    <span class="meme-top">&#x1F9D1;&#x200D;&#x1F4BB;</span>
     <div class="meme-title">"Day 1 in Computer Science"</div>
     <div class="meme-caption">"I have no idea what is happening, but I am here."</div>
   </div>
 
+  <script>
+    (function() {
+      var el = document.getElementById('live-clock');
+      if (!el) return;
+      function tick() {
+        var n = new Date();
+        el.textContent = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+
   <aside class="notes">
 SLIDE 1 — ICEBREAKER (~2 min)
-"Hey everyone, welcome to the CS Chapter Workshop! Super glad you're here."
-"Real quick before we start — totally honest question."
-Click the icebreaker buttons. Ask the room to raise hands first.
-NEVER → "Perfect. You're EXACTLY who this is built for. Zero experience? You're starting fresh. Best way."
-A LITTLE → "Nice, small head start. Feel free to help your neighbour."
-REGULARLY → "Bro. Don't spoil the answers. Stick around — it gets fun."
-Goal: Relax the room. Zero intimidation. Make everyone feel safe.
-Transition: "Alright — so what IS programming, actually? Let me explain with food."
+Click the icebreaker buttons, ask the room to raise hands first.
+NEVER: "Perfect. You're EXACTLY who this is built for."
+A LITTLE: "Nice, small head start."
+REGULARLY: "Don't spoil the answers. Stick around — it gets fun."
+Transition: "What IS programming? Let me explain with food."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 2 — THE MAGGI ROBOT
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 2</span>
-    <h2>🍜 How Would You Teach a Robot to Make Maggi?</h2>
+    <h2>&#x1F35C; How Would You Teach a Robot to Make Maggi?</h2>
     <div class="divider"></div>
-    <p class="muted">Computers do <em>exactly</em> what you tell them — step by step. Nothing more, nothing less.</p>
+    <p class="muted">Computers do <em>exactly</em> what you tell them &mdash; step by step. Nothing more, nothing less.</p>
   </div>
 
   <div class="slide-two-col ratio-40-60" style="align-items:start">
     <div>
       <div class="card card-accent-top" style="text-align:center;padding:24px">
-        <div style="font-size:3.2em;animation:bounceIn 1s infinite alternate">🤖</div>
+        <div style="font-size:3.2em;animation:bounceIn 1s infinite alternate">&#x1F916;</div>
         <div style="font-weight:900;font-size:1.2em;margin:8px 0;color:var(--text-primary)">CHEF ROBOT v1.0</div>
         <div style="font-family:var(--font-mono);color:var(--text-muted);font-size:0.82em">Waiting for algorithm...</div>
       </div>
       <div style="margin-top:14px;text-align:center">
-        <button class="btn btn-primary btn-sm" id="maggi-reveal-btn">▶ Reveal Step 1</button>
+        <button class="btn btn-primary btn-sm" id="maggi-reveal-btn">&#x25B6; Reveal Step 1</button>
       </div>
       <div id="maggi-result-q" style="display:none;margin-top:14px" class="card card-accent-top yellow animate-fadeinup">
-        <p style="font-weight:700;margin:0 0 10px;color:var(--accent-yellow);font-size:0.9em">⚡ What if we forget to boil the water?</p>
+        <p style="font-weight:700;margin:0 0 10px;color:var(--accent-yellow);font-size:0.9em">&#x26A1; What if we forget to boil the water?</p>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="😐 Robots don't 'figure things out' — they execute instructions literally. Missing a step = ruined noodles." style="text-align:left;font-size:0.82em">🤔 Robot figures it out</button>
-          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="✅ Exactly! Missing or wrong instructions → wrong results. That's programming in a nutshell." style="text-align:left;font-size:0.82em">📋 Robot follows instructions blindly</button>
-          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="😂 Dramatic, but true. Cooking without water = crunchy raw noodles." style="text-align:left;font-size:0.82em">💀 Kitchen Disaster</button>
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="Robots don't 'figure things out' — they execute instructions literally. Missing a step = ruined noodles." style="text-align:left;font-size:0.82em">&#x1F914; Robot figures it out</button>
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="Exactly! Missing or wrong instructions = wrong results. That's programming in a nutshell." style="text-align:left;font-size:0.82em">&#x1F4CB; Robot follows instructions blindly</button>
+          <button class="maggi-resp-btn btn btn-outline btn-sm" data-response="Dramatic, but true. Cooking without water = crunchy raw noodles." style="text-align:left;font-size:0.82em">&#x1F4A5; Kitchen Disaster</button>
         </div>
         <div id="maggi-resp" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.2);border-radius:8px;font-size:0.82em;color:var(--text-primary)"></div>
       </div>
@@ -112,19 +175,19 @@ Transition: "Alright — so what IS programming, actually? Let me explain with f
 
     <div>
       <ul class="step-list" id="maggi-steps">
-        <li><span class="step-num">01</span>Take 1.5 cups of water 💧</li>
-        <li><span class="step-num">02</span>Boil the water on the stove 🔥</li>
-        <li><span class="step-num">03</span>Break and add noodle cake 🍜</li>
-        <li><span class="step-num">04</span>Add the magic tastemaker packet 🌶️</li>
-        <li><span class="step-num">05</span>Cook on medium flame for 2 minutes ⏱️</li>
-        <li><span class="step-num">06</span>Serve hot &amp; enjoy 🍽️</li>
+        <li><span class="step-num">01</span>Take 1.5 cups of water &#x1F4A7;</li>
+        <li><span class="step-num">02</span>Boil the water on the stove &#x1F525;</li>
+        <li><span class="step-num">03</span>Break and add noodle cake &#x1F35C;</li>
+        <li><span class="step-num">04</span>Add the magic tastemaker packet &#x1F336;&#xFE0F;</li>
+        <li><span class="step-num">05</span>Cook on medium flame for 2 minutes &#x23F1;&#xFE0F;</li>
+        <li><span class="step-num">06</span>Serve hot &amp; enjoy &#x1F37D;&#xFE0F;</li>
       </ul>
       <div class="card mt-2" style="background:rgba(0,240,255,0.05);border-color:rgba(0,240,255,0.2)">
         <div class="flow-h" style="justify-content:flex-start;gap:10px;flex-wrap:wrap">
           <div class="flow-node secondary" style="min-width:90px;padding:8px 12px;font-size:0.82em">PROBLEM</div>
-          <div class="flow-arrow-h">→</div>
+          <div class="flow-arrow-h">&rarr;</div>
           <div class="flow-node secondary" style="min-width:90px;padding:8px 12px;font-size:0.82em">INSTRUCTIONS</div>
-          <div class="flow-arrow-h">→</div>
+          <div class="flow-arrow-h">&rarr;</div>
           <div class="flow-node accent" style="min-width:90px;padding:8px 12px;font-size:0.82em">RESULT</div>
         </div>
         <p style="margin:10px 0 0;font-size:0.85em;color:var(--text-muted)">
@@ -136,37 +199,33 @@ Transition: "Alright — so what IS programming, actually? Let me explain with f
 
   <aside class="notes">
 SLIDE 2 — MAGGI ROBOT (~3 min)
-"Okay forget code for a second. Imagine you're teaching a ROBOT to make Maggi."
-"Not a smart robot. A dumb one. Does EXACTLY what you say. Nothing more."
 Click to reveal steps one by one. Let students call them out before you reveal.
-"What if we skip step 2 — the boiling?" Ask the room. Then reveal response.
 KEY POINT: "The computer is the robot. YOUR code is the recipe."
-Transition: "So how does the computer read our recipe in the first place?"
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 3 — HOW DOES CODE BECOME A PROGRAM?
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge">SLIDE 3</span>
-    <h2>⚙️ How Does Code Become a Running Program?</h2>
+    <h2>&#x2699;&#xFE0F; How Does Code Become a Running Program?</h2>
     <div class="divider"></div>
   </div>
 
   <div class="slide-two-col">
     <div style="display:flex;flex-direction:column;align-items:center;gap:4px" id="compiler-pipeline">
-      <div class="flow-node primary" style="width:200px">👤 YOU (Developer)</div>
-      <div class="flow-arrow">↓<span>writes source in</span></div>
-      <div class="flow-node secondary" style="width:200px">📝 C++ Source Code</div>
-      <div class="flow-arrow">↓<span>passes into</span></div>
-      <div class="flow-node secondary" style="width:200px">🔧 COMPILER (g++)</div>
-      <div class="flow-arrow">↓<span>translates to 0s &amp; 1s for</span></div>
-      <div class="flow-node secondary" style="width:200px">💻 CPU / Hardware</div>
-      <div class="flow-arrow">↓<span>produces</span></div>
-      <div class="flow-node accent" style="width:200px">✅ OUTPUT / APPLICATION</div>
-      <button class="btn btn-primary btn-sm mt-2" id="pipeline-play-btn">▶ Animate Translation Pipeline</button>
+      <div class="flow-node primary" style="width:200px">&#x1F464; YOU (Developer)</div>
+      <div class="flow-arrow">&darr;<span>writes source in</span></div>
+      <div class="flow-node secondary" style="width:200px">&#x1F4DD; C++ Source Code</div>
+      <div class="flow-arrow">&darr;<span>passes into</span></div>
+      <div class="flow-node secondary" style="width:200px">&#x1F527; COMPILER (g++)</div>
+      <div class="flow-arrow">&darr;<span>translates to 0s &amp; 1s for</span></div>
+      <div class="flow-node secondary" style="width:200px">&#x1F4BB; CPU / Hardware</div>
+      <div class="flow-arrow">&darr;<span>produces</span></div>
+      <div class="flow-node accent" style="width:200px">&#x2705; OUTPUT / APPLICATION</div>
+      <button class="btn btn-primary btn-sm mt-2" id="pipeline-play-btn">&#x25B6; Animate Translation Pipeline</button>
     </div>
 
     <div>
@@ -184,21 +243,18 @@ Transition: "So how does the computer read our recipe in the first place?"
 
   <aside class="notes">
 SLIDE 3 — COMPILER (~2 min)
-"Computers don't speak C++. They speak machine code — billions of 0s and 1s."
-"The compiler is a translator. It converts our human-readable code into CPU instructions."
-Click ▶ Animate — watch the pipeline light up.
-MCQ: "Does a computer directly understand C++?" → Answer B (No)
-Transition: "Time to write our first actual program."
+Click Animate — watch the pipeline light up.
+MCQ: "Does a computer directly understand C++?" — Answer B (No)
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 4 — YOUR FIRST PROGRAM
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 4</span>
-    <h2>🖥️ Your First Program: Anatomy of C++</h2>
+    <h2>&#x1F5A5;&#xFE0F; Your First Program: Anatomy of C++</h2>
     <div class="divider"></div>
     <p class="muted">Take a guess on what this outputs before we check.</p>
   </div>
@@ -236,7 +292,7 @@ int main() {
     <div>
       <div id="mcq-helloworld-container"></div>
       <div class="meme-card mt-2">
-        <span class="meme-top">😲</span>
+        <span class="meme-top">&#x1F62E;</span>
         <div class="meme-title">"First Program Compiles"</div>
         <div class="meme-caption">"Wait... I just told a computer what to do and it did it?!"</div>
       </div>
@@ -246,19 +302,16 @@ int main() {
   <aside class="notes">
 SLIDE 4 — FIRST PROGRAM (~3 min)
 Show code. Ask the MCQ. Reveal: A — Hello World!
-Walk through structure: #include iostream, using namespace std, int main(), cout, return 0.
-"Don't memorise everything today. The ONE thing that matters: cout prints stuff."
-Transition: "Let's actually RUN one live. Right now."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 5 — LIVE CODE RUNNER
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 5</span>
-    <h2>⚡ Interactive Live Code Runner</h2>
+    <h2>&#x26A1; Interactive Live Code Runner</h2>
     <div class="divider"></div>
     <p class="muted">Run real C++ simulation right inside your browser.</p>
   </div>
@@ -274,8 +327,8 @@ Transition: "Let's actually RUN one live. Right now."
         </div>
         <div class="code-editor-area"></div>
         <div class="cr-btn-row">
-          <button class="cr-run-btn">▶ Run Code</button>
-          <button class="cr-reset-btn">↺ Reset</button>
+          <button class="cr-run-btn">&#x25B6; Run Code</button>
+          <button class="cr-reset-btn">&#x21BA; Reset</button>
           <div class="cr-extra-btns"></div>
         </div>
         <div class="code-output">
@@ -287,7 +340,7 @@ Transition: "Let's actually RUN one live. Right now."
 
     <div>
       <div class="card card-accent-top purple">
-        <h3 style="margin-top:0">✏️ Personalise Your Code</h3>
+        <h3 style="margin-top:0">&#x270F;&#xFE0F; Personalise Your Code</h3>
         <p style="color:var(--text-muted);font-size:0.88em;margin-bottom:12px">
           Type your custom message below. Watch the source code update dynamically, then hit <strong>Run Code</strong>!
         </p>
@@ -295,12 +348,12 @@ Transition: "Let's actually RUN one live. Right now."
         <input id="hello-msg-input" type="text" placeholder="Hello, Future Coder!"
           style="width:100%;background:var(--bg-terminal);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--accent-cyan);font-family:var(--font-mono);font-size:0.9em;outline:none;box-sizing:border-box" />
         <p style="margin:12px 0 0;font-size:0.82em;color:var(--text-muted)">
-          💡 You just modified a computer program. You are officially coding.
+          &#x1F4A1; You just modified a computer program. You are officially coding.
         </p>
       </div>
 
       <div class="card mt-2" style="background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.3)">
-        <p style="margin:0;font-size:0.92em;font-weight:800;color:var(--accent-green)">🎯 MILESTONE #1 — I CAN CODE</p>
+        <p style="margin:0;font-size:0.92em;font-weight:800;color:var(--accent-green)">&#x1F3AF; MILESTONE #1 &mdash; I CAN CODE</p>
         <p style="margin:6px 0 0;font-size:0.84em;color:var(--text-secondary)">
           You altered the instructions. You compiled and ran it. You commanded a machine.
         </p>
@@ -310,20 +363,17 @@ Transition: "Let's actually RUN one live. Right now."
 
   <aside class="notes">
 SLIDE 5 — LIVE RUNNER (~4 min)
-Click ▶ Run. Watch output animate.
-Get a volunteer. Type their name in input. Run again.
-"Congratulations. You just ran your first program."
-Transition: "What if code needs to react to user inputs and numbers?"
+Click Run. Watch output animate. Get a volunteer. Type their name in input.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 6 — INPUT → PROCESS → OUTPUT
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge">SLIDE 6</span>
-    <h2>📥 Input → Process → Output Pattern</h2>
+    <h2>&#x1F4E5; Input &rarr; Process &rarr; Output Pattern</h2>
     <div class="divider"></div>
     <p class="muted">Every software in the world follows this golden 3-step cycle.</p>
   </div>
@@ -331,11 +381,11 @@ Transition: "What if code needs to react to user inputs and numbers?"
   <div class="slide-two-col">
     <div>
       <div class="flow-h" style="gap:10px;margin-bottom:18px;flex-wrap:wrap">
-        <div class="flow-node secondary" style="min-width:90px">📥 INPUT<br><span style="font-size:0.75em;color:var(--accent-cyan)">cin &gt;&gt; a &gt;&gt; b</span></div>
-        <div class="flow-arrow-h">→</div>
-        <div class="flow-node primary" style="min-width:90px">⚙️ PROCESS<br><span style="font-size:0.75em;color:#c4b5fd">sum = a + b</span></div>
-        <div class="flow-arrow-h">→</div>
-        <div class="flow-node success" style="min-width:90px">📤 OUTPUT<br><span style="font-size:0.75em;color:#6ee7b7">cout &lt;&lt; sum</span></div>
+        <div class="flow-node secondary" style="min-width:90px">&#x1F4E5; INPUT<br><span style="font-size:0.75em;color:var(--accent-cyan)">cin &gt;&gt; a &gt;&gt; b</span></div>
+        <div class="flow-arrow-h">&rarr;</div>
+        <div class="flow-node primary" style="min-width:90px">&#x2699;&#xFE0F; PROCESS<br><span style="font-size:0.75em;color:#c4b5fd">sum = a + b</span></div>
+        <div class="flow-arrow-h">&rarr;</div>
+        <div class="flow-node success" style="min-width:90px">&#x1F4E4; OUTPUT<br><span style="font-size:0.75em;color:#6ee7b7">cout &lt;&lt; sum</span></div>
       </div>
 
       <div class="terminal" style="font-size:0.85em">
@@ -372,8 +422,8 @@ cout &lt;&lt; (a + b);      // Calculates &amp; prints sum
           <input type="text" class="cr-input-field" placeholder="15 25" />
         </div>
         <div class="cr-btn-row">
-          <button class="cr-run-btn">▶ Run Code</button>
-          <button class="cr-reset-btn">↺ Reset</button>
+          <button class="cr-run-btn">&#x25B6; Run Code</button>
+          <button class="cr-reset-btn">&#x21BA; Reset</button>
         </div>
         <div class="code-output">
           <div class="output-header">TERMINAL OUTPUT</div>
@@ -385,19 +435,17 @@ cout &lt;&lt; (a + b);      // Calculates &amp; prints sum
 
   <aside class="notes">
 SLIDE 6 — INPUT/OUTPUT (~3 min)
-"Every useful program: takes input, computes, gives output."
 Ask audience for 2 numbers. Run live.
-Transition: "Where does the computer store these numbers while working?"
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 7 — VARIABLES = BOXES IN MEMORY
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 7</span>
-    <h2>📦 Variables = Named Storage in RAM</h2>
+    <h2>&#x1F4E6; Variables = Named Storage in RAM</h2>
     <div class="divider"></div>
     <p class="muted">Think of a variable as a labeled container with a specific type and value.</p>
   </div>
@@ -441,7 +489,7 @@ bool   passed = true;     // Boolean true/false
 
     <div>
       <div id="type-demo">
-        <h3 style="margin-top:0;color:var(--accent-yellow)">🧪 Interactive RAM &amp; Type Explorer</h3>
+        <h3 style="margin-top:0;color:var(--accent-yellow)">&#x1F9EA; Interactive RAM &amp; Type Explorer</h3>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
           <button class="btn btn-outline btn-sm" data-type="int">int</button>
           <button class="btn btn-outline btn-sm" data-type="double">double</button>
@@ -450,7 +498,7 @@ bool   passed = true;     // Boolean true/false
           <button class="btn btn-outline btn-sm" data-type="bool">bool</button>
         </div>
         <div class="card" style="min-height:90px">
-          <div id="type-desc" style="color:var(--text-muted);font-size:0.85em;margin-bottom:10px">Click any data type above to inspect its RAM allocation →</div>
+          <div id="type-desc" style="color:var(--text-muted);font-size:0.85em;margin-bottom:10px">Click any data type above to inspect its RAM allocation &rarr;</div>
           <div style="display:flex;align-items:center;gap:14px">
             <div class="var-value-box" id="type-var-box" style="width:78px;height:50px;font-size:1.1em">?</div>
             <code id="type-code" style="font-family:var(--font-mono);font-size:0.85em;color:var(--text-muted)">select a type</code>
@@ -463,19 +511,17 @@ bool   passed = true;     // Boolean true/false
 
   <aside class="notes">
 SLIDE 7 — VARIABLES (~3 min)
-"Variables are named boxes in computer memory."
-Click through types. Ask MCQ: Which type for age? → int.
-Transition: "Now — how does code make decisions based on these values?"
+Click through types. Ask MCQ: Which type for age? int.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 8 — IF / ELSE
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 8</span>
-    <h2>🔀 if / else — Making Decisions in Code</h2>
+    <h2>&#x1F500; if / else &mdash; Making Decisions in Code</h2>
     <div class="divider"></div>
     <p class="muted">Can I sit for the semester end exam?</p>
   </div>
@@ -493,15 +539,15 @@ Transition: "Now — how does code make decisions based on these values?"
 int attendance = 74;
 
 if (attendance &gt;= 75) {
-    cout &lt;&lt; "Allowed for Exam! 🎓";
+    cout &lt;&lt; "Allowed for Exam! &#x1F393;";
 } else {
-    cout &lt;&lt; "Debarred! ❌";
+    cout &lt;&lt; "Debarred! &#x274C;";
 }
         </div>
       </div>
 
       <div class="card card-accent-top">
-        <h3 style="margin-top:0;font-size:0.95em">🎚️ Live Attendance Simulator</h3>
+        <h3 style="margin-top:0;font-size:0.95em">&#x1F39A;&#xFE0F; Live Attendance Simulator</h3>
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
           <input type="range" id="attendance-slider" min="50" max="100" value="74"
             style="flex:1;accent-color:var(--accent-cyan);cursor:pointer;height:8px" />
@@ -509,7 +555,7 @@ if (attendance &gt;= 75) {
         </div>
         <div id="attendance-result"
           style="text-align:center;padding:12px 16px;border-radius:10px;font-family:var(--font-mono);font-weight:900;font-size:1.15em;transition:all 0.3s;border:1.5px solid var(--border)">
-          —
+          &mdash;
         </div>
       </div>
     </div>
@@ -519,22 +565,22 @@ if (attendance &gt;= 75) {
         <h3 style="margin-top:0">Logic Flowchart</h3>
         <div class="flow-diagram">
           <div class="flow-node secondary" style="width:100%">attendance = ?</div>
-          <div class="flow-arrow">↓</div>
-          <div class="flow-node primary" style="width:100%">IF attendance ≥ 75</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-node primary" style="width:100%">IF attendance &ge; 75</div>
           <div style="display:flex;gap:12px;width:100%;justify-content:space-around;margin-top:6px">
             <div style="text-align:center;flex:1">
               <div style="color:var(--accent-green);font-size:0.75em;font-weight:700;margin-bottom:4px">TRUE</div>
-              <div class="flow-node success" style="padding:10px;font-size:0.85em">✅ Allowed</div>
+              <div class="flow-node success" style="padding:10px;font-size:0.85em">&#x2705; Allowed</div>
             </div>
             <div style="text-align:center;flex:1">
               <div style="color:var(--accent-pink);font-size:0.75em;font-weight:700;margin-bottom:4px">FALSE</div>
-              <div class="flow-node" style="padding:10px;font-size:0.85em;background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#fda4af">❌ Debarred</div>
+              <div class="flow-node" style="padding:10px;font-size:0.85em;background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#fda4af">&#x274C; Debarred</div>
             </div>
           </div>
         </div>
       </div>
       <div class="meme-card">
-        <span class="meme-top">😰</span>
+        <span class="meme-top">&#x1F630;</span>
         <div class="meme-title">"Attendance = 74.9%"</div>
         <div class="meme-caption">Me emailing the professor at 2 AM asking for 0.1% grace.</div>
       </div>
@@ -543,20 +589,17 @@ if (attendance &gt;= 75) {
 
   <aside class="notes">
 SLIDE 8 — IF/ELSE (~3 min)
-"Who has checked attendance at midnight?"
-Drag slider: 74 → Not Allowed, 75 → Allowed.
-"Every app decision (UPI balance check, login check) uses if/else."
-Transition: "Let's test your output prediction skills."
+Drag slider: 74 = Not Allowed, 75 = Allowed.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 9 — GUESS THE OUTPUT
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 9</span>
-    <h2>🎯 Code Prediction Challenge</h2>
+    <h2>&#x1F3AF; Code Prediction Challenge</h2>
     <div class="divider"></div>
     <p class="muted">Trace through the logic step-by-step before answering.</p>
   </div>
@@ -567,17 +610,17 @@ Transition: "Let's test your output prediction skills."
     </div>
     <div>
       <div class="card card-accent-top yellow">
-        <h3 style="margin-top:0;color:var(--accent-yellow)">🧠 Step-by-Step Logic Trace</h3>
+        <h3 style="margin-top:0;color:var(--accent-yellow)">&#x1F9E0; Step-by-Step Logic Trace</h3>
         <ul class="step-list" style="gap:8px">
           <li><span class="step-num">1</span>Variable <code>marks</code> is set to <strong>35</strong></li>
-          <li><span class="step-num">2</span>Evaluate condition: <code>35 &gt;= 40</code> → <strong style="color:#f43f5e">FALSE</strong></li>
+          <li><span class="step-num">2</span>Evaluate condition: <code>35 &gt;= 40</code> &rarr; <strong style="color:#f43f5e">FALSE</strong></li>
           <li><span class="step-num">3</span>Jump directly into the <code>else</code> branch</li>
           <li><span class="step-num">4</span>Print <strong style="color:#f43f5e">"FAIL"</strong> to screen</li>
         </ul>
       </div>
       <div class="card mt-2" style="background:rgba(0,240,255,0.06);border-color:rgba(0,240,255,0.25)">
         <p style="margin:0;font-size:0.9em">
-          <strong style="color:var(--accent-cyan)">🎯 MILESTONE #2 — TRACING CODE</strong><br>
+          <strong style="color:var(--accent-cyan)">&#x1F3AF; MILESTONE #2 &mdash; TRACING CODE</strong><br>
           <span style="color:var(--text-secondary)">You just mentally executed a program before running it. That is the core skill of a true software engineer.</span>
         </p>
       </div>
@@ -586,39 +629,37 @@ Transition: "Let's test your output prediction skills."
 
   <aside class="notes">
 SLIDE 9 — GUESS OUTPUT (~2 min)
-"Predict output without guessing randomly."
 Reveal answer: FAIL.
-Follow-up: "What if marks = 40?" → PASS. Inclusive boundary.
-Transition: "What if we need to repeat an action 100 times?"
+Follow-up: "What if marks = 40?" PASS. Inclusive boundary.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 10 — LOOPS
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 10</span>
-    <h2>🔁 Loops — Stop Repeating Yourself</h2>
+    <h2>&#x1F501; Loops &mdash; Stop Repeating Yourself</h2>
     <div class="divider"></div>
   </div>
 
   <div class="slide-two-col">
     <div>
       <div class="card mb-2" style="border-color:rgba(244,63,94,0.3);background:rgba(244,63,94,0.05)">
-        <p style="color:#f43f5e;font-weight:800;font-size:0.85em;margin:0 0 8px">❌ WITHOUT Loops (Print 1 to 5):</p>
+        <p style="color:#f43f5e;font-weight:800;font-size:0.85em;margin:0 0 8px">&#x274C; WITHOUT Loops (Print 1 to 5):</p>
         <div style="font-family:var(--font-mono);font-size:0.8em;color:var(--text-muted);line-height:1.9">
           cout &lt;&lt; 1;<br>
           cout &lt;&lt; 2;<br>
           cout &lt;&lt; 3;<br>
           cout &lt;&lt; 4;<br>
           cout &lt;&lt; 5;<br>
-          <span style="color:#f43f5e">...doing this 1000 times = Impossible 💀</span>
+          <span style="color:#f43f5e">...doing this 1000 times = Impossible &#x1F480;</span>
         </div>
       </div>
 
       <div class="card" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05)">
-        <p style="color:var(--accent-green);font-weight:800;font-size:0.85em;margin:0 0 8px">✅ WITH a Loop (Same result, 3 lines):</p>
+        <p style="color:var(--accent-green);font-weight:800;font-size:0.85em;margin:0 0 8px">&#x2705; WITH a Loop (Same result, 3 lines):</p>
         <div class="terminal-body" style="font-size:0.85em;padding:0">
 for(int i = 1; i &lt;= 5; i++) {
     cout &lt;&lt; i &lt;&lt; " ";
@@ -628,7 +669,7 @@ for(int i = 1; i &lt;= 5; i++) {
       </div>
 
       <div class="meme-card mt-2">
-        <span class="meme-top">🤯</span>
+        <span class="meme-top">&#x1F92F;</span>
         <div class="meme-title">"Discovering Loops"</div>
         <div class="meme-caption">"You mean I didn't have to copy-paste the line 100 times?!"</div>
       </div>
@@ -639,22 +680,22 @@ for(int i = 1; i &lt;= 5; i++) {
       <div style="display:flex;gap:20px;align-items:flex-start">
         <div class="loop-viz">
           <div class="loop-box" id="loop-start">1. START<br><span style="font-size:0.75em;opacity:0.8">i = 1</span></div>
-          <div class="loop-arrow-small">↓</div>
+          <div class="loop-arrow-small">&darr;</div>
           <div class="loop-box" id="loop-check">2. CHECK<br><span style="font-size:0.75em">i &lt;= 5 ?</span></div>
-          <div class="loop-arrow-small">↓</div>
+          <div class="loop-arrow-small">&darr;</div>
           <div class="loop-box" id="loop-body">3. BODY<br><span style="font-size:0.75em">cout &lt;&lt; i</span></div>
-          <div class="loop-arrow-small">↓</div>
+          <div class="loop-arrow-small">&darr;</div>
           <div class="loop-box" id="loop-update">4. INCREMENT<br><span style="font-size:0.75em">i++</span></div>
-          <div class="loop-arrow-small" style="font-size:0.75em;color:var(--text-dim)">↺ loop back</div>
+          <div class="loop-arrow-small" style="font-size:0.75em;color:var(--text-dim)">&#x21BA; loop back</div>
           <div class="loop-box" id="loop-end">5. TERMINATE<br><span style="font-size:0.75em">i &gt; 5</span></div>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;padding-top:6px">
           <div class="loop-counter">
             <div class="lc-label">CPU REGISTER [ i ]</div>
-            <div class="lc-val" id="loop-counter-val">—</div>
+            <div class="lc-val" id="loop-counter-val">&mdash;</div>
             <div class="lc-iter" id="loop-iter-count">Press Play Below</div>
           </div>
-          <button class="btn btn-cyan btn-sm" id="loop-play-btn">▶ Play Loop</button>
+          <button class="btn btn-cyan btn-sm" id="loop-play-btn">&#x25B6; Play Loop</button>
         </div>
       </div>
     </div>
@@ -662,19 +703,17 @@ for(int i = 1; i &lt;= 5; i++) {
 
   <aside class="notes">
 SLIDE 10 — LOOPS (~3 min)
-Show ❌ vs ✅. Click ▶ Play Loop.
-Explain 3 parts: start (i=1), check (i<=5), update (i++).
-Transition: "Quick quiz on loop output."
+Show without vs with loops. Click Play Loop.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 11 — LOOP MCQ
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge">SLIDE 11</span>
-    <h2>🧠 Predict the Loop Output</h2>
+    <h2>&#x1F9E0; Predict the Loop Output</h2>
     <div class="divider"></div>
   </div>
 
@@ -687,19 +726,19 @@ Transition: "Quick quiz on loop output."
         <h3 style="margin-top:0">Loop Trace Table</h3>
         <div style="font-family:var(--font-mono);font-size:0.85em">
           <div style="display:grid;grid-template-columns:40px 80px 100px 70px;gap:6px;color:var(--text-dim);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px">
-            <span>i</span><span>i ≤ 3?</span><span>Prints</span><span>i++</span>
+            <span>i</span><span>i &le; 3?</span><span>Prints</span><span>i++</span>
           </div>
           <div style="display:grid;grid-template-columns:40px 80px 100px 70px;gap:6px;color:var(--accent-cyan);padding:4px 0">
-            <span>1</span><span style="color:var(--accent-green)">✓ TRUE</span><span><strong>1</strong></span><span>→ 2</span>
+            <span>1</span><span style="color:var(--accent-green)">&#x2713; TRUE</span><span><strong>1</strong></span><span>&rarr; 2</span>
           </div>
           <div style="display:grid;grid-template-columns:40px 80px 100px 70px;gap:6px;color:var(--accent-cyan);padding:4px 0">
-            <span>2</span><span style="color:var(--accent-green)">✓ TRUE</span><span><strong>2</strong></span><span>→ 3</span>
+            <span>2</span><span style="color:var(--accent-green)">&#x2713; TRUE</span><span><strong>2</strong></span><span>&rarr; 3</span>
           </div>
           <div style="display:grid;grid-template-columns:40px 80px 100px 70px;gap:6px;color:var(--accent-cyan);padding:4px 0">
-            <span>3</span><span style="color:var(--accent-green)">✓ TRUE</span><span><strong>3</strong></span><span>→ 4</span>
+            <span>3</span><span style="color:var(--accent-green)">&#x2713; TRUE</span><span><strong>3</strong></span><span>&rarr; 4</span>
           </div>
           <div style="display:grid;grid-template-columns:40px 80px 100px 70px;gap:6px;color:var(--text-dim);padding:4px 0">
-            <span>4</span><span style="color:#f43f5e">✗ FALSE</span><span>STOP</span><span>—</span>
+            <span>4</span><span style="color:#f43f5e">&#x2717; FALSE</span><span>STOP</span><span>&mdash;</span>
           </div>
         </div>
         <p style="margin:12px 0 0;font-weight:800;color:var(--accent-green);font-family:var(--font-mono)">Final Output: 123 (Executed 3 times)</p>
@@ -710,17 +749,16 @@ Transition: "Quick quiz on loop output."
   <aside class="notes">
 SLIDE 11 — LOOP MCQ (~2 min)
 Walk through table. Answer is 123.
-Transition: "How do you combine conditions and loops into real problem solving?"
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 12 — THINK BEFORE YOU CODE
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-yellow">SLIDE 12</span>
-    <h2>🧠 Think Before You Code: Algorithm First</h2>
+    <h2>&#x1F9E0; Think Before You Code: Algorithm First</h2>
     <div class="divider"></div>
     <p class="muted">The best software engineers think 80% of the time and type 20%.</p>
   </div>
@@ -728,14 +766,14 @@ Transition: "How do you combine conditions and loops into real problem solving?"
   <div class="slide-two-col">
     <div>
       <div class="card card-accent-top yellow mb-2">
-        <h3 style="margin-top:0;color:var(--accent-yellow)">🎯 Problem Statement</h3>
+        <h3 style="margin-top:0;color:var(--accent-yellow)">&#x1F3AF; Problem Statement</h3>
         <p style="font-size:1.05em;font-weight:700;color:var(--text-primary);margin:0">Find the <strong>larger</strong> of two numbers.</p>
       </div>
 
       <div class="card mb-2">
         <p style="font-weight:700;color:var(--accent-cyan);margin:0 0 10px;font-size:0.88em">Step-by-Step Logic Plan (No Syntax Yet!):</p>
         <ul class="step-list" id="algo-steps" style="min-height:60px"></ul>
-        <button class="btn btn-primary btn-sm" id="algo-reveal-btn" style="margin-top:12px">▶ Reveal Step 1 / 5</button>
+        <button class="btn btn-primary btn-sm" id="algo-reveal-btn" style="margin-top:12px">&#x25B6; Reveal Step 1 / 5</button>
       </div>
 
       <div id="algo-code-reveal" style="display:none">
@@ -760,17 +798,17 @@ else
       <div class="card card-accent-top purple">
         <h3 style="margin-top:0">The Engineering Process</h3>
         <div class="flow-diagram">
-          <div class="flow-node secondary" style="width:100%">🧩 1. UNDERSTAND PROBLEM</div>
-          <div class="flow-arrow">↓</div>
-          <div class="flow-node primary" style="width:100%">📋 2. FORMULATE ALGORITHM (Logic)</div>
-          <div class="flow-arrow">↓</div>
-          <div class="flow-node secondary" style="width:100%">💻 3. WRITE C++ SYNTAX</div>
-          <div class="flow-arrow">↓</div>
-          <div class="flow-node accent" style="width:100%">✅ 4. RUN &amp; TEST OUTPUT</div>
+          <div class="flow-node secondary" style="width:100%">&#x1F9E9; 1. UNDERSTAND PROBLEM</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-node primary" style="width:100%">&#x1F4CB; 2. FORMULATE ALGORITHM (Logic)</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-node secondary" style="width:100%">&#x1F4BB; 3. WRITE C++ SYNTAX</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-node accent" style="width:100%">&#x2705; 4. RUN &amp; TEST OUTPUT</div>
         </div>
       </div>
       <div class="card mt-2" style="background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.25)">
-        <p style="margin:0;font-size:0.88em;font-weight:700;color:var(--accent-yellow)">💡 An algorithm is simply a recipe for the computer.</p>
+        <p style="margin:0;font-size:0.88em;font-weight:700;color:var(--accent-yellow)">&#x1F4A1; An algorithm is simply a recipe for the computer.</p>
         <p style="margin:6px 0 0;font-size:0.82em;color:var(--text-muted)">Plan it on paper first. Then type the code. Thinking is what makes you an engineer.</p>
       </div>
     </div>
@@ -779,30 +817,28 @@ else
   <aside class="notes">
 SLIDE 12 — THINK BEFORE CODE (~3 min)
 Click step by step. Reveal algorithm. Then reveal code.
-"The thinking took effort. The code was only 4 lines."
-Transition: "Your turn! Live coding challenge."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 13 — MINI CODING CHALLENGE
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 13</span>
-    <h2>⚔️ Live Coding Challenge: Even or Odd?</h2>
+    <h2>&#x2694;&#xFE0F; Live Coding Challenge: Even or Odd?</h2>
     <div class="divider"></div>
   </div>
 
   <div class="slide-two-col">
     <div>
       <div class="card card-accent-top mb-2">
-        <h3 style="margin-top:0">🎯 MISSION</h3>
+        <h3 style="margin-top:0">&#x1F3AF; MISSION</h3>
         <p style="font-size:1.05em;color:var(--text-primary);margin:0">Given any integer <code>n</code>, print <strong>"Even"</strong> if divisible by 2, otherwise print <strong>"Odd"</strong>.</p>
       </div>
 
       <div class="card mb-2">
-        <p style="font-weight:700;color:var(--accent-yellow);font-size:0.85em;margin:0 0 10px">💡 Progressive Hints</p>
+        <p style="font-weight:700;color:var(--accent-yellow);font-size:0.85em;margin:0 0 10px">&#x1F4A1; Progressive Hints</p>
         <div style="display:flex;flex-direction:column;gap:8px">
           <div>
             <button class="btn btn-outline btn-sm hint-btn" data-hint-target="hint1">HINT 1</button>
@@ -822,7 +858,7 @@ Transition: "Your turn! Live coding challenge."
       <div class="card" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.3);text-align:center;padding:16px">
         <div style="font-family:var(--font-mono);font-size:2.5em;font-weight:900;color:#c4b5fd" id="challenge-timer">2:30</div>
         <div style="font-size:0.75em;color:var(--text-dim);margin-bottom:8px">THINK TIME REMAINING</div>
-        <button class="btn btn-outline btn-sm" id="timer-start-btn">▶ Start Timer</button>
+        <button class="btn btn-outline btn-sm" id="timer-start-btn">&#x25B6; Start Timer</button>
       </div>
     </div>
 
@@ -840,8 +876,8 @@ Transition: "Your turn! Live coding challenge."
           <input type="text" class="cr-input-field" placeholder="e.g. 7" />
         </div>
         <div class="cr-btn-row">
-          <button class="cr-run-btn">▶ Test Solution</button>
-          <button class="cr-reset-btn">↺ Reset</button>
+          <button class="cr-run-btn">&#x25B6; Test Solution</button>
+          <button class="cr-reset-btn">&#x21BA; Reset</button>
         </div>
         <div class="code-output">
           <div class="output-header">TERMINAL OUTPUT</div>
@@ -850,7 +886,7 @@ Transition: "Your turn! Live coding challenge."
       </div>
 
       <div class="card mt-2" style="border-color:rgba(251,191,36,0.3)">
-        <button class="btn btn-yellow btn-sm w-full" id="solution-reveal-btn">👁 Reveal Solution Code</button>
+        <button class="btn btn-yellow btn-sm w-full" id="solution-reveal-btn">&#x1F441;&#xFE0F; Reveal Solution Code</button>
         <div id="solution-block" style="display:none;margin-top:12px">
           <div class="terminal">
             <div class="terminal-body" style="font-size:0.82em">
@@ -867,19 +903,17 @@ else
 
   <aside class="notes">
 SLIDE 13 — CHALLENGE (~5 min)
-Start timer. Let them solve it.
-Reveal solution and test live with numbers from the audience (4, 7, 100).
-Transition: "What happens when your code has bugs?"
+Start timer. Let them solve it. Reveal solution and test live.
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 14 — DEBUGGING
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-red">SLIDE 14</span>
-    <h2>💀 Debugging — When Code Breaks</h2>
+    <h2>&#x1F480; Debugging &mdash; When Code Breaks</h2>
     <div class="divider"></div>
     <p class="muted">Every single developer breaks code daily. Debugging is half the craft.</p>
   </div>
@@ -887,18 +921,18 @@ Transition: "What happens when your code has bugs?"
   <div class="slide-two-col">
     <div>
       <div class="card mb-2" style="border-color:rgba(244,63,94,0.3);background:rgba(244,63,94,0.05)">
-        <p style="color:#f43f5e;font-weight:800;font-size:0.88em;margin:0 0 10px">🐛 Spot the Bug in this snippet:</p>
+        <p style="color:#f43f5e;font-weight:800;font-size:0.88em;margin:0 0 10px">&#x1F41B; Spot the Bug in this snippet:</p>
         <div class="terminal-body" id="debug-code" style="padding:12px 16px;font-size:0.85em;background:var(--bg-terminal);border-radius:8px">
 int marks = 50;
 
 if (marks = 40)
     cout &lt;&lt; "Pass";
         </div>
-        <button class="btn btn-red btn-sm mt-2" id="debug-reveal-btn">🔍 Diagnose Bug</button>
+        <button class="btn btn-red btn-sm mt-2" id="debug-reveal-btn">&#x1F50D; Diagnose Bug</button>
         <div id="debug-fix" style="display:none;margin-top:12px;padding:12px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:0.85em">
           <strong style="color:var(--accent-green)">Fix:</strong>
           <code style="font-family:var(--font-mono)"> marks = 40 </code>
-          <span style="color:var(--text-muted)">→</span>
+          <span style="color:var(--text-muted)">&rarr;</span>
           <code style="font-family:var(--font-mono);color:var(--accent-cyan)"> marks == 40</code>
           <div style="margin-top:8px;color:var(--text-muted);font-size:0.88em">
             <strong style="color:#f43f5e">=</strong> assigns a value &nbsp;|&nbsp;
@@ -923,12 +957,12 @@ if (marks = 40)
           </div>
           <div style="padding:12px 14px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.25);border-radius:10px">
             <span class="badge badge-purple" style="margin-bottom:4px">LOGICAL ERROR</span>
-            <p style="font-size:0.82em;color:var(--text-secondary);margin:4px 0 0">Runs smoothly but outputs wrong math/answer. Hardest to detect!</p>
+            <p style="font-size:0.82em;color:var(--text-secondary);margin:4px 0 0">Runs smoothly but outputs wrong answer. Hardest to detect!</p>
           </div>
         </div>
       </div>
       <div class="meme-card">
-        <span class="meme-top">😤</span>
+        <span class="meme-top">&#x1F624;</span>
         <div class="meme-title">"The Missing Semicolon"</div>
         <div class="meme-caption">One tiny ; on line 42 crashed the entire project. Rite of passage.</div>
       </div>
@@ -938,17 +972,16 @@ if (marks = 40)
   <aside class="notes">
 SLIDE 14 — DEBUGGING (~3 min)
 "Errors don't mean you're bad at programming. Errors mean you ARE programming."
-Transition: "Where does this foundation take you?"
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 15 — WHAT CAN YOU BUILD?
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 15</span>
-    <h2>🚀 What Can You Build with Code?</h2>
+    <h2>&#x1F680; What Can You Build with Code?</h2>
     <div class="divider"></div>
     <p class="muted">Programming is the superpower. What you build is completely up to your imagination.</p>
   </div>
@@ -956,29 +989,29 @@ Transition: "Where does this foundation take you?"
   <div class="slide-two-col">
     <div>
       <div class="flow-diagram">
-        <div class="flow-node primary" style="width:230px">🧱 PROGRAMMING BASICS<br><span style="font-size:0.72em;opacity:0.8">← You are here today</span></div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node secondary" style="width:230px">🧩 PROBLEM SOLVING</div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node secondary" style="width:230px">📊 DATA STRUCTURES &amp; ALGORITHMS</div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node secondary" style="width:230px">🏗️ REAL PROJECTS &amp; APPS</div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node accent" style="width:230px">💼 TOP TECH INTERNSHIPS</div>
+        <div class="flow-node primary" style="width:230px">&#x1F9F1; PROGRAMMING BASICS<br><span style="font-size:0.72em;opacity:0.8">&larr; You are here today</span></div>
+        <div class="flow-arrow">&darr;</div>
+        <div class="flow-node secondary" style="width:230px">&#x1F9E9; PROBLEM SOLVING</div>
+        <div class="flow-arrow">&darr;</div>
+        <div class="flow-node secondary" style="width:230px">&#x1F4CA; DATA STRUCTURES &amp; ALGORITHMS</div>
+        <div class="flow-arrow">&darr;</div>
+        <div class="flow-node secondary" style="width:230px">&#x1F3D7;&#xFE0F; REAL PROJECTS &amp; APPS</div>
+        <div class="flow-arrow">&darr;</div>
+        <div class="flow-node accent" style="width:230px">&#x1F4BC; TOP TECH INTERNSHIPS</div>
       </div>
     </div>
 
     <div>
       <h3 style="margin-top:0">Tech Domains Awaiting You</h3>
       <div class="domains-grid">
-        <div class="domain-item"><span class="domain-icon">🌐</span><span class="domain-name">Web Dev</span></div>
-        <div class="domain-item"><span class="domain-icon">📱</span><span class="domain-name">Mobile Apps</span></div>
-        <div class="domain-item"><span class="domain-icon">🤖</span><span class="domain-name">AI / ML</span></div>
-        <div class="domain-item"><span class="domain-icon">🔐</span><span class="domain-name">Cybersecurity</span></div>
-        <div class="domain-item"><span class="domain-icon">⚙️</span><span class="domain-name">Systems &amp; OS</span></div>
-        <div class="domain-item"><span class="domain-icon">🎮</span><span class="domain-name">Game Dev</span></div>
-        <div class="domain-item"><span class="domain-icon">☁️</span><span class="domain-name">Cloud Systems</span></div>
-        <div class="domain-item"><span class="domain-icon">🏆</span><span class="domain-name">Competitive</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F310;</span><span class="domain-name">Web Dev</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F4F1;</span><span class="domain-name">Mobile Apps</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F916;</span><span class="domain-name">AI / ML</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F510;</span><span class="domain-name">Cybersecurity</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x2699;&#xFE0F;</span><span class="domain-name">Systems &amp; OS</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F3AE;</span><span class="domain-name">Game Dev</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x2601;&#xFE0F;</span><span class="domain-name">Cloud Systems</span></div>
+        <div class="domain-item"><span class="domain-icon">&#x1F3C6;</span><span class="domain-name">Competitive</span></div>
       </div>
       <div class="card mt-2" style="background:rgba(0,240,255,0.05);border-color:rgba(0,240,255,0.2)">
         <p style="margin:0;font-size:0.88em;color:var(--text-secondary)">
@@ -991,18 +1024,17 @@ Transition: "Where does this foundation take you?"
 
   <aside class="notes">
 SLIDE 15 — DOMAINS (~2 min)
-Walk through domains. "None is better than others. It's about what excites you."
-Transition: "Let's map out your concrete First-Year roadmap."
+"None is better than others. It's about what excites you."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 16 — FIRST-YEAR ROADMAP
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-purple">SLIDE 16</span>
-    <h2>🗺️ Your First-Year Blueprint</h2>
+    <h2>&#x1F5FA;&#xFE0F; Your First-Year Blueprint</h2>
     <div class="divider"></div>
   </div>
 
@@ -1017,7 +1049,7 @@ Transition: "Let's map out your concrete First-Year roadmap."
       </div>
 
       <div class="card mb-2" style="border-left:4px solid var(--accent-purple)">
-        <div style="font-family:var(--font-mono);font-size:0.75em;color:var(--accent-purple);font-weight:800">MONTH 2–3</div>
+        <div style="font-family:var(--font-mono);font-size:0.75em;color:var(--accent-purple);font-weight:800">MONTH 2&ndash;3</div>
         <h4 style="margin:4px 0 6px;color:var(--text-primary)">Data Structures &amp; Problem Solving</h4>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <span class="badge badge-purple">Arrays</span><span class="badge badge-purple">Strings</span><span class="badge badge-purple">Searching &amp; Sorting</span><span class="badge badge-purple">LeetCode Easy</span>
@@ -1036,10 +1068,10 @@ Transition: "Let's map out your concrete First-Year roadmap."
     <div>
       <h3 style="margin-top:0">Personalized Path Finder</h3>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn btn-outline btn-sm path-btn" data-path-type="building" style="text-align:left;justify-content:flex-start">🏗️ I like building visual apps</button>
-        <button class="btn btn-outline btn-sm path-btn" data-path-type="solving" style="text-align:left;justify-content:flex-start">🧩 I like mathematical problem solving</button>
-        <button class="btn btn-outline btn-sm path-btn" data-path-type="ai" style="text-align:left;justify-content:flex-start">🤖 Interested in AI &amp; Machine Learning</button>
-        <button class="btn btn-outline btn-sm path-btn" data-path-type="unknown" style="text-align:left;justify-content:flex-start">🤷 I'm exploring (Recommended)</button>
+        <button class="btn btn-outline btn-sm path-btn" data-path-type="building" style="text-align:left;justify-content:flex-start">&#x1F3D7;&#xFE0F; I like building visual apps</button>
+        <button class="btn btn-outline btn-sm path-btn" data-path-type="solving" style="text-align:left;justify-content:flex-start">&#x1F9E9; I like mathematical problem solving</button>
+        <button class="btn btn-outline btn-sm path-btn" data-path-type="ai" style="text-align:left;justify-content:flex-start">&#x1F916; Interested in AI &amp; Machine Learning</button>
+        <button class="btn btn-outline btn-sm path-btn" data-path-type="unknown" style="text-align:left;justify-content:flex-start">&#x1F937; I'm exploring (Recommended)</button>
       </div>
       <div id="path-result"></div>
     </div>
@@ -1048,17 +1080,16 @@ Transition: "Let's map out your concrete First-Year roadmap."
   <aside class="notes">
 SLIDE 16 — ROADMAP (~3 min)
 "Screenshot this slide. It is your cheat code for 1st Year."
-Transition: "Let's turn this into an actionable 30-Day sprint."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 17 — 30-DAY ACTION PLAN
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 17</span>
-    <h2>📅 30-Day Action Plan</h2>
+    <h2>&#x1F4C5; 30-Day Action Plan</h2>
     <div class="divider"></div>
   </div>
 
@@ -1095,7 +1126,7 @@ Transition: "Let's turn this into an actionable 30-Day sprint."
     </div>
     <div class="week-card" style="border-top:3px solid var(--accent-green)">
       <div class="wk-header">WEEK 4</div>
-      <div class="wk-title">Mini Project 🚀</div>
+      <div class="wk-title">Mini Project &#x1F680;</div>
       <ul>
         <li>Pick ONE project</li>
         <li>CLI Quiz / Game</li>
@@ -1107,7 +1138,7 @@ Transition: "Let's turn this into an actionable 30-Day sprint."
 
   <div class="card mt-2" style="padding:14px 18px">
     <p style="margin:0 0 6px;font-weight:800;font-size:0.9em;color:var(--accent-cyan)">
-      💡 "Watching 5 hours of YouTube tutorials ≠ Coding for 5 hours."
+      &#x1F4A1; "Watching 5 hours of YouTube tutorials &ne; Coding for 5 hours."
     </p>
     <div class="ratio-bar">
       <div class="rb-learn">20% Learn</div>
@@ -1123,27 +1154,26 @@ Transition: "Let's turn this into an actionable 30-Day sprint."
       <span class="badge badge-yellow">Calculator</span>
     </div>
     <div style="font-size:0.85em">
-      <a href="practice.html" target="_blank" style="color:var(--accent-cyan);font-weight:700">Open 10 Practice Problems 🏋️</a> &nbsp;|&nbsp;
-      <a href="cheatsheet.html" target="_blank" style="color:var(--accent-purple);font-weight:700">Open Cheat Sheet 📋</a>
+      <a href="practice.html" target="_blank" style="color:var(--accent-cyan);font-weight:700">Open 10 Practice Problems &#x1F3CB;&#xFE0F;</a> &nbsp;|&nbsp;
+      <a href="cheatsheet.html" target="_blank" style="color:var(--accent-purple);font-weight:700">Open Cheat Sheet &#x1F4CB;</a>
     </div>
   </div>
 
   <aside class="notes">
 SLIDE 17 — 30-DAY PLAN (~2 min)
 "Point at the 80/20 ratio. You learn by coding, not by passive watching."
-Transition: "Final rapid knowledge check."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 18 — RAPID QUIZ
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-yellow">SLIDE 18</span>
-    <h2>🎯 Final Knowledge Check</h2>
+    <h2>&#x1F3AF; Final Knowledge Check</h2>
     <div class="divider"></div>
-    <p class="muted">4 quick questions — let's test what stuck today!</p>
+    <p class="muted">4 quick questions &mdash; let's test what stuck today!</p>
   </div>
 
   <div id="rapid-quiz-container" style="max-width:720px;margin:0 auto"></div>
@@ -1151,24 +1181,23 @@ Transition: "Final rapid knowledge check."
   <aside class="notes">
 SLIDE 18 — QUIZ (~2 min)
 4 interactive questions. Auto advances. Score celebrates at the end.
-Transition: "One final closing mission."
   </aside>
 </section>
 
 <!-- ====================================================
      SLIDE 19 — MISSION COMPLETE
      ==================================================== -->
-<section data-background-color="#070913">
+<section data-background-color="#020a04">
   <div class="slide-header">
     <span class="badge badge-green">SLIDE 19</span>
-    <h2>🏁 Final Milestone: Mission Complete</h2>
+    <h2>&#x1F3C1; Final Milestone: Mission Complete</h2>
     <div class="divider"></div>
   </div>
 
   <div class="slide-two-col">
     <div>
       <div class="card card-accent-top mb-2">
-        <h3 style="margin-top:0">🎓 Final Test Program</h3>
+        <h3 style="margin-top:0">&#x1F393; Final Test Program</h3>
         <p style="font-size:0.9em;color:var(--text-secondary);margin:0 0 10px">Enter marks (0-100) to evaluate pass/fail criteria:</p>
       </div>
 
@@ -1181,12 +1210,12 @@ Transition: "One final closing mission."
         </div>
         <div class="code-editor-area"></div>
         <div class="cr-input-section">
-          <span class="cr-input-label">Enter marks (0–100):</span>
+          <span class="cr-input-label">Enter marks (0&ndash;100):</span>
           <input type="text" class="cr-input-field" placeholder="e.g. 75" />
         </div>
         <div class="cr-btn-row">
-          <button class="cr-run-btn">▶ Run Final Test</button>
-          <button class="cr-reset-btn">↺ Reset</button>
+          <button class="cr-run-btn">&#x25B6; Run Final Test</button>
+          <button class="cr-reset-btn">&#x21BA; Reset</button>
         </div>
         <div class="code-output">
           <div class="output-header">TERMINAL OUTPUT</div>
@@ -1197,30 +1226,30 @@ Transition: "One final closing mission."
 
     <div>
       <div class="card card-accent-top yellow mb-2">
-        <p style="font-weight:800;font-size:0.95em;color:var(--accent-yellow);margin:0 0 6px">🤔 At the START of this workshop:</p>
+        <p style="font-weight:800;font-size:0.95em;color:var(--accent-yellow);margin:0 0 6px">&#x1F914; At the START of this workshop:</p>
         <p style="color:var(--text-muted);font-size:0.85em;margin:0 0 12px">"How many had never written code?"</p>
-        <p style="font-weight:800;font-size:0.95em;color:var(--accent-cyan);margin:0 0 6px">💡 Right NOW:</p>
+        <p style="font-weight:800;font-size:0.95em;color:var(--accent-cyan);margin:0 0 6px">&#x1F4A1; Right NOW:</p>
         <p style="color:var(--text-muted);font-size:0.85em;margin:0">"How many understand how to write and run this code?"</p>
       </div>
 
-      <button class="btn btn-green btn-lg w-full" id="mission-complete-btn">🎉 CELEBRATE &amp; COMPLETE</button>
+      <button class="btn btn-green btn-lg w-full" id="mission-complete-btn">&#x1F389; CELEBRATE &amp; COMPLETE</button>
 
       <div class="card mt-2 text-center" id="mission-complete-block" style="display:none;background:rgba(16,185,129,0.1);border-color:var(--accent-green)">
-        <div style="font-size:2.8em;margin-bottom:6px">🚀</div>
+        <div style="font-size:2.8em;margin-bottom:6px">&#x1F680;</div>
         <h3 style="color:var(--accent-green);margin:0 0 6px">WELCOME TO THE WORLD OF CODING</h3>
         <p style="font-size:0.88em;color:var(--text-secondary);margin:0 0 14px">
           You are now equipped with the foundations. Go break some code, debug it, and build awesome things!
         </p>
-        <button class="btn btn-yellow btn-sm" id="generate-cert-btn">📜 Get Your First-Year Coder Certificate</button>
+        <button class="btn btn-yellow btn-sm" id="generate-cert-btn">&#x1F4DC; Get Your First-Year Coder Certificate</button>
       </div>
 
       <div class="card mt-2" style="font-size:0.82em">
         <strong style="color:var(--accent-cyan);font-family:var(--font-mono)">CORE RESOURCES:</strong>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
-          <div>📖 <a href="https://learncpp.com" target="_blank">learncpp.com</a></div>
-          <div>🏋️ <a href="practice.html" target="_blank">Practice Problems Hub</a></div>
-          <div>🛠️ <a href="https://onlinegdb.com" target="_blank">onlinegdb.com</a></div>
-          <div>📋 <a href="cheatsheet.html" target="_blank">C++ Cheat Sheet</a></div>
+          <div>&#x1F4D6; <a href="https://learncpp.com" target="_blank">learncpp.com</a></div>
+          <div>&#x1F3CB;&#xFE0F; <a href="practice.html" target="_blank">Practice Problems Hub</a></div>
+          <div>&#x1F6E0;&#xFE0F; <a href="https://onlinegdb.com" target="_blank">onlinegdb.com</a></div>
+          <div>&#x1F4CB; <a href="cheatsheet.html" target="_blank">C++ Cheat Sheet</a></div>
         </div>
       </div>
     </div>
@@ -1228,10 +1257,7 @@ Transition: "One final closing mission."
 
   <aside class="notes">
 SLIDE 19 — CLOSING (~2 min)
-Ask the hands up question: "Who had never coded vs who can write it now?"
-Click CELEBRATE & COMPLETE.
-"You learned more in 45 minutes than most people think is possible."
-"Now go break some code! 💻"
+Click CELEBRATE & COMPLETE. Launch confetti!
   </aside>
 </section>
 
@@ -1240,22 +1266,22 @@ Click CELEBRATE & COMPLETE.
 
 <!-- Floating Cyber HUD Dock -->
 <div id="floating-dock">
-  <button class="dock-btn" id="dock-slides-btn" data-tip="Slide Navigator (G)">🗂️</button>
-  <button class="dock-btn" id="dock-laser-btn" data-tip="Laser Pointer (L)">🔴</button>
-  <button class="dock-btn active" id="dock-audio-btn" data-tip="Toggle Audio (M)">🔊</button>
+  <button class="dock-btn" id="dock-slides-btn" data-tip="Slide Navigator (G)">&#x1F5C2;&#xFE0F;</button>
+  <button class="dock-btn" id="dock-laser-btn" data-tip="Laser Pointer (L)">&#x1F534;</button>
+  <button class="dock-btn active" id="dock-audio-btn" data-tip="Toggle Audio (M)">&#x1F50A;</button>
   <div class="dock-separator"></div>
-  <a href="cheatsheet.html" target="_blank" class="dock-btn" data-tip="C++ Cheat Sheet">📋</a>
-  <a href="practice.html" target="_blank" class="dock-btn" data-tip="Practice Hub">🏋️</a>
+  <a href="cheatsheet.html" target="_blank" class="dock-btn" data-tip="C++ Cheat Sheet">&#x1F4CB;</a>
+  <a href="practice.html" target="_blank" class="dock-btn" data-tip="Practice Hub">&#x1F3CB;&#xFE0F;</a>
   <div class="dock-separator"></div>
-  <button class="dock-btn" id="dock-fs-btn" data-tip="Fullscreen (F)">🖵</button>
-  <button class="dock-btn" id="dock-help-btn" data-tip="Shortcuts (?)">⌨️</button>
+  <button class="dock-btn" id="dock-fs-btn" data-tip="Fullscreen (F)">&#x26F6;</button>
+  <button class="dock-btn" id="dock-help-btn" data-tip="Shortcuts (?)">&#x2328;&#xFE0F;</button>
 </div>
 
 <!-- Modal 1: Slide Jump Navigator -->
 <div class="modal-overlay" id="slide-jump-modal">
   <div class="modal-window">
     <button class="modal-close-btn">&times;</button>
-    <h3 style="margin:0 0 6px;color:var(--accent-cyan)">🗂️ Slide Navigator</h3>
+    <h3 style="margin:0 0 6px;color:var(--accent-cyan)">&#x1F5C2;&#xFE0F; Slide Navigator</h3>
     <p style="margin:0;font-size:0.85em;color:var(--text-muted)">Click any slide to jump instantly:</p>
     <div class="slide-nav-grid" id="slide-grid-container"></div>
   </div>
@@ -1265,11 +1291,11 @@ Click CELEBRATE & COMPLETE.
 <div class="modal-overlay" id="shortcuts-modal">
   <div class="modal-window">
     <button class="modal-close-btn">&times;</button>
-    <h3 style="margin:0 0 6px;color:var(--accent-cyan)">⌨️ Presentation Keyboard Shortcuts</h3>
+    <h3 style="margin:0 0 6px;color:var(--accent-cyan)">&#x2328;&#xFE0F; Presentation Keyboard Shortcuts</h3>
     <p style="margin:0;font-size:0.85em;color:var(--text-muted)">Master presenter controls for smooth delivery:</p>
     <div class="shortcut-grid">
-      <div class="shortcut-row"><span>Next Slide</span><span class="kbd-badge">Space / →</span></div>
-      <div class="shortcut-row"><span>Previous Slide</span><span class="kbd-badge">←</span></div>
+      <div class="shortcut-row"><span>Next Slide</span><span class="kbd-badge">Space / &rarr;</span></div>
+      <div class="shortcut-row"><span>Previous Slide</span><span class="kbd-badge">&larr;</span></div>
       <div class="shortcut-row"><span>Toggle Laser Pointer</span><span class="kbd-badge">L</span></div>
       <div class="shortcut-row"><span>Toggle Sound FX</span><span class="kbd-badge">M</span></div>
       <div class="shortcut-row"><span>Fullscreen Mode</span><span class="kbd-badge">F</span></div>
@@ -1280,7 +1306,7 @@ Click CELEBRATE & COMPLETE.
   </div>
 </div>
 
-<!-- Modal 3: First-Year Coder Certificate Generator -->
+<!-- Modal 3: Certificate Generator -->
 <div class="modal-overlay" id="cert-modal">
   <div class="modal-window" style="max-width:760px">
     <button class="modal-close-btn">&times;</button>
@@ -1289,9 +1315,8 @@ Click CELEBRATE & COMPLETE.
       <input type="text" id="cert-name-input" placeholder="e.g. Alex Kumar"
         style="width:100%;background:var(--bg-terminal);border:1.5px solid var(--accent-cyan);border-radius:8px;padding:10px 16px;color:#fff;font-family:var(--font-sans);font-size:1.1em;font-weight:700;outline:none" />
     </div>
-
     <div class="cert-card">
-      <div class="cert-logo">🏆</div>
+      <div class="cert-logo">&#x1F3C6;</div>
       <div class="cert-heading">Certificate of Achievement</div>
       <div class="cert-sub">Presented by CS Chapter for Completing the Intro to Programming Sprint</div>
       <div class="cert-name" id="cert-display-name">FUTURE TECH LEADER</div>
@@ -1300,125 +1325,149 @@ Click CELEBRATE & COMPLETE.
       </p>
       <div class="cert-footer">
         <div><strong>ISSUED BY:</strong> CS Chapter Workshop</div>
-        <div><strong>STATUS:</strong> Verified Level 1 Developer ⚡</div>
+        <div><strong>STATUS:</strong> Verified Level 1 Developer &#x26A1;</div>
       </div>
     </div>
-
     <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px">
-      <button class="btn btn-cyan btn-sm" id="print-cert-btn">🖨️ Print / Save Certificate</button>
+      <button class="btn btn-cyan btn-sm" id="print-cert-btn">&#x1F5A8;&#xFE0F; Print / Save Certificate</button>
     </div>
   </div>
 </div>
 
 <!-- Inline Interactive Listeners -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Icebreaker buttons
-  const iceResponses = {
-    never: '🌟 <strong>Welcome!</strong> You are in the best possible position — starting fresh with zero bad habits. This workshop is custom built for you!',
-    little: '⚡ <strong>Awesome!</strong> You already have a spark. Today we solidify the logic and give you an unfair advantage.',
-    regular: '🚀 <strong>Pro!</strong> Stay tuned — help out your batchmates and test your speed on the coding challenges!'
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* Icebreaker */
+  var iceResponses = {
+    never:   '<strong style="color:#00ff88">Welcome!</strong> You are in the best possible position &mdash; starting fresh with zero bad habits. This workshop is built for you!',
+    little:  '<strong style="color:#00f0ff">Awesome!</strong> You already have a spark. Today we solidify the logic.',
+    regular: '<strong style="color:#c4b5fd">Pro!</strong> Stay tuned &mdash; help out your batchmates and test your speed on the challenges!'
   };
-  document.querySelectorAll('.ice-opt-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+  document.querySelectorAll('.ice-opt-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playClick();
-      document.querySelectorAll('.ice-opt-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const box = document.getElementById('ice-response');
+      document.querySelectorAll('.ice-opt-btn').forEach(function(b) { b.classList.remove('btn-cyan'); });
+      btn.classList.add('btn-cyan');
+      var box = document.getElementById('ice-response');
       if (box) {
         box.innerHTML = iceResponses[btn.dataset.iceType] || '';
         box.style.display = 'block';
-        box.classList.add('animate-fadeinup');
+        if (typeof gsap !== 'undefined') gsap.fromTo(box, {opacity:0,y:-8},{opacity:1,y:0,duration:0.4});
       }
     });
   });
 
-  // Challenge timer
-  let timerInterval = null, timerSeconds = 150;
-  const timerBtn = document.getElementById('timer-start-btn');
-  const timerDisp = document.getElementById('challenge-timer');
+  /* Challenge timer */
+  var timerInterval = null, timerSeconds = 150;
+  var timerBtn  = document.getElementById('timer-start-btn');
+  var timerDisp = document.getElementById('challenge-timer');
   if (timerBtn && timerDisp) {
-    timerBtn.addEventListener('click', () => {
+    timerBtn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playClick();
       if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        timerSeconds = 150;
-        timerDisp.textContent = '2:30';
-        timerDisp.style.color = '#c4b5fd';
-        timerBtn.textContent = '▶ Start Timer';
+        clearInterval(timerInterval); timerInterval = null;
+        timerSeconds = 150; timerDisp.textContent = '2:30';
+        timerDisp.style.color = '#c4b5fd'; timerBtn.textContent = '&#x25B6; Start Timer';
         return;
       }
-      timerBtn.textContent = '⏸ Reset';
-      timerInterval = setInterval(() => {
+      timerBtn.innerHTML = '&#x23F9; Reset';
+      timerInterval = setInterval(function() {
         timerSeconds--;
-        const m = Math.floor(timerSeconds / 60);
-        const s = timerSeconds % 60;
-        timerDisp.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        var m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+        timerDisp.textContent = m + ':' + (s < 10 ? '0' : '') + s;
         if (timerSeconds <= 30) timerDisp.style.color = '#f43f5e';
         if (timerSeconds <= 0) {
-          clearInterval(timerInterval);
-          timerInterval = null;
+          clearInterval(timerInterval); timerInterval = null;
           timerDisp.textContent = "TIME'S UP!";
-          if (window.soundEngine) window.soundEngine.playSuccess();
-          if (window.launchConfetti) window.launchConfetti(0.5, 0.5, 60);
+          if (window.soundEngine) window.soundEngine.playError();
+          if (window.launchConfetti) window.launchConfetti(0.5,0.5,60);
         }
       }, 1000);
     });
   }
 
-  // Solution reveal
-  const solBtn = document.getElementById('solution-reveal-btn');
-  const solBlock = document.getElementById('solution-block');
+  /* Solution reveal */
+  var solBtn   = document.getElementById('solution-reveal-btn');
+  var solBlock = document.getElementById('solution-block');
   if (solBtn && solBlock) {
-    solBtn.addEventListener('click', () => {
+    solBtn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playClick();
       solBlock.style.display = 'block';
-      solBlock.classList.add('animate-fadeinup');
+      if (typeof gsap !== 'undefined') gsap.fromTo(solBlock,{opacity:0,scaleY:0,transformOrigin:'top'},{opacity:1,scaleY:1,duration:0.4,ease:'back.out(1.4)'});
       solBtn.style.display = 'none';
     });
   }
 
-  // Debug reveal
-  const debugBtn = document.getElementById('debug-reveal-btn');
-  const debugFix = document.getElementById('debug-fix');
+  /* Debug reveal */
+  var debugBtn = document.getElementById('debug-reveal-btn');
+  var debugFix = document.getElementById('debug-fix');
   if (debugBtn && debugFix) {
-    debugBtn.addEventListener('click', () => {
+    debugBtn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playSuccess();
       debugFix.style.display = 'block';
-      debugFix.classList.add('animate-fadeinup');
+      if (typeof gsap !== 'undefined') gsap.fromTo(debugFix,{opacity:0,y:-10},{opacity:1,y:0,duration:0.4,ease:'back.out(1.5)'});
       debugBtn.style.display = 'none';
     });
   }
 
-  // Progressive hints
-  document.querySelectorAll('.hint-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+  /* Hint buttons */
+  document.querySelectorAll('.hint-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playClick();
-      const target = document.getElementById(btn.dataset.hintTarget);
-      if (target) {
-        target.style.display = target.style.display === 'block' ? 'none' : 'block';
-        target.classList.add('animate-fadeinup');
-      }
+      var target = document.getElementById(btn.dataset.hintTarget);
+      if (!target) return;
+      var hidden = target.style.display === 'none' || !target.style.display;
+      target.style.display = hidden ? 'block' : 'none';
+      btn.classList.toggle('btn-cyan', hidden);
+      if (hidden && typeof gsap !== 'undefined') gsap.fromTo(target,{opacity:0,y:-8},{opacity:1,y:0,duration:0.3});
     });
   });
 
-  // Mission complete celebration
-  const mcBtn = document.getElementById('mission-complete-btn');
-  const mcBlock = document.getElementById('mission-complete-block');
+  /* Mission complete */
+  var mcBtn   = document.getElementById('mission-complete-btn');
+  var mcBlock = document.getElementById('mission-complete-block');
   if (mcBtn && mcBlock) {
-    mcBtn.addEventListener('click', () => {
+    mcBtn.addEventListener('click', function() {
       if (window.soundEngine) window.soundEngine.playVictory();
       if (window.launchConfetti) {
-        window.launchConfetti(0.3, 0.4, 60);
-        setTimeout(() => window.launchConfetti(0.7, 0.4, 60), 300);
-        setTimeout(() => window.launchConfetti(0.5, 0.3, 80), 600);
+        window.launchConfetti(0.3,0.4,60);
+        setTimeout(function(){ window.launchConfetti(0.7,0.4,60); },300);
+        setTimeout(function(){ window.launchConfetti(0.5,0.3,80); },600);
       }
+      if (window.animateXP) window.animateXP(50);
       mcBlock.style.display = 'block';
-      mcBlock.classList.add('animate-bouncein');
+      if (typeof gsap !== 'undefined') gsap.fromTo(mcBlock,{opacity:0,scale:0.7,y:30},{opacity:1,scale:1,y:0,duration:0.7,ease:'back.out(1.8)'});
       mcBtn.style.display = 'none';
     });
   }
+
+  /* Certificate name input */
+  var certInput   = document.getElementById('cert-name-input');
+  var certDisplay = document.getElementById('cert-display-name');
+  if (certInput && certDisplay) {
+    certInput.addEventListener('input', function() {
+      certDisplay.textContent = certInput.value.trim() || 'FUTURE TECH LEADER';
+    });
+  }
+
+  /* Generate cert button */
+  var genBtn   = document.getElementById('generate-cert-btn');
+  var certModal = document.getElementById('cert-modal');
+  if (genBtn && certModal) {
+    genBtn.addEventListener('click', function() {
+      if (window.soundEngine) window.soundEngine.playVictory();
+      if (window.launchConfetti) window.launchConfetti(0.5,0.4,80);
+      certModal.classList.add('open');
+    });
+  }
+
+  /* Print cert */
+  var printBtn = document.getElementById('print-cert-btn');
+  if (printBtn) {
+    printBtn.addEventListener('click', function() { window.print(); });
+  }
+
 });
 </script>
 
@@ -1433,6 +1482,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="js/codeRunner.js"></script>
 <script src="js/mcq.js"></script>
 <script src="js/workshop.js"></script>
+
+<!-- Three.js Forest Scene — NO defer, runs right after Reveal boots -->
+<script src="js/three-scene.js"></script>
+
+<!-- Micro-interactions & GSAP Animations -->
+<script src="js/interactions.js" defer></script>
 
 </body>
 </html>
